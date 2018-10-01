@@ -1,8 +1,11 @@
 # Laravel Advanced Nova Media Library
 
-This package is designed to be used with the [awesome media library package from Spatie](https://github.com/spatie/laravel-medialibrary). 
-It is inspired by the basic [nova media library](https://github.com/jameslkingsley/nova-media-library) which lacks upload
-of multiple images and ordering. This package is one of the dependencies, so you can use it beside this package.
+Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple 
+images and order them by drag and drop.
+
+This package is inspired by the basic [nova media library](https://github.com/jameslkingsley/nova-media-library) 
+which lacks the upload of multiple images and ordering. This package is one of the dependencies, so you can use it 
+beside this package.
 
 ## Install
 ```bash
@@ -44,7 +47,7 @@ public function fields(Request $request)
     ];
 }
 ```
-
+ 
 ## Multiple image upload
 
 If you enable the multiple upload ability, you can **order the images via drag & drop**.
