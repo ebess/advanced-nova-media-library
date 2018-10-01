@@ -1,7 +1,7 @@
 # Laravel Advanced Nova Media Library
 
 This package is designed to be used with the [awesome media library package from Spatie](https://github.com/spatie/laravel-medialibrary). 
-It is inspired by the basic [nova media library](hhttps://github.com/jameslkingsley/nova-media-library) which lacks upload
+It is inspired by the basic [nova media library](https://github.com/jameslkingsley/nova-media-library) which lacks upload
 of multiple images and ordering. This package is one of the dependencies, so you can use it beside this package.
 
 ## Install
@@ -70,6 +70,6 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 
 ## File media management
 
-To manage files just use the [nova media library](hhttps://github.com/jameslkingsley/nova-media-library) fields which
+To manage files just use the [nova media library](https://github.com/jameslkingsley/nova-media-library) fields which
 are already required in this package.
 
