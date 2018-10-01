@@ -1,0 +1,14 @@
+version: '3'
+services:
+    composer:
+        image: composer
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: composer install
+    node:
+        image: node:10.11
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: sh -c "yarn install && yarn prod"
