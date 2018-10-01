@@ -47,7 +47,7 @@ public function fields(Request $request)
 
 ## Multiple image upload
 
-If you enable the multiple upload ability, you can order the images via drag & drop.
+If you enable the multiple upload ability, you can **order the images via drag & drop**.
 
 ![Multiple image upload](docs/multiple-images.png)
 
