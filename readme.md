@@ -4,6 +4,11 @@ This package is designed to be used with the [awesome media library package from
 It is inspired by the basic [nova media library](hhttps://github.com/jameslkingsley/nova-media-library) which lacks upload
 of multiple images and ordering. This package is one of the dependencies, so you can use it beside this package.
 
+## Install
+```bash
+composer require ebess/advanced-nova-media-library
+```
+
 ## Model media configuration
 
 Let's assume you configured your model to use the media library like following:
@@ -44,7 +49,7 @@ public function fields(Request $request)
 
 If you enable the multiple upload ability, you can order the images via drag & drop.
 
-![Multiple image upload](docs/multiple-image.png)
+![Multiple image upload](docs/multiple-images.png)
 
 ```php
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
