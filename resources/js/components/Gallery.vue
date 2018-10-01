@@ -12,7 +12,7 @@
     <span v-if="editable" class="form-file">
       <input :id="field.name" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
       <label :for="field.name" class="form-file-btn btn btn-default btn-primary">
-          {{__(editable ? 'Add new Image' : 'Replace Image')}}
+          {{__(multiple ? 'Add new Image' : 'Replace Image')}}
       </label>
     </span>
 
@@ -71,7 +71,9 @@
           reader.onload = () => {
             const fileData = {
               file: file,
-              full_url: reader.result,
+              full_urls: {
+                default: reader.result,
+              },
             };
 
             if (this.multiple) {
