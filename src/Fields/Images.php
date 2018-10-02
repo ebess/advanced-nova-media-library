@@ -56,9 +56,12 @@ class Images extends Field
 
 		Validator::make($data, $this->rules)->validate();
 
-		$remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-		$newIds = $this->addNewImages($data, $model, $attribute);
-		$this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+		$class = get_class($model);
+		$class::saved(function ($model) use ($data, $attribute) {
+			$remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
+			$newIds = $this->addNewImages($data, $model, $attribute);
+			$this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+		});
 	}
 
 	private function setOrder($ids)
