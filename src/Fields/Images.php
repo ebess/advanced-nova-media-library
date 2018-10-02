@@ -2,7 +2,7 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
-use App\Modules\Images\Models\Media;
+use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
