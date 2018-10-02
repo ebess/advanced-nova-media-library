@@ -2,7 +2,6 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
-use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -64,7 +63,8 @@ class Images extends Field
 
 	private function setOrder($ids)
 	{
-		Media::setNewOrder($ids);
+		$mediaClass = config('medialibrary.media_model');
+		$mediaClass::setNewOrder($ids);
 	}
 
 	private function addNewImages($data, HasMedia $model, string $collection): Collection
