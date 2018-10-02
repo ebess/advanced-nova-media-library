@@ -16,6 +16,7 @@ composer require ebess/advanced-nova-media-library
 
 Let's assume you configured your model to use the media library like following:
 ```php
+use Spatie\MediaLibrary\Models\Media;
 
 public function registerMediaConversions(Media $media = null)
 {
