@@ -11,110 +11,111 @@ use Illuminate\Support\Facades\Validator;
 
 class Images extends Field
 {
-	public $component = 'advanced-media-library-field';
+    public $component = 'advanced-media-library-field';
 
     private $singleImageRules = [];
 
-	public function thumbnail(string $thumbnail): self
-	{
-		return $this->withMeta(compact('thumbnail'));
-	}
-	
-	public function defaultConversion(string $conversion = 'large'): self
-    	{
-        	return $this->withMeta(compact('conversion'));
-    	}
+    public function thumbnail(string $thumbnail): self
+    {
+        return $this->withMeta(compact('thumbnail'));
+    }
 
-	public function multiple(): self
-	{
-		return $this->withMeta(['multiple' => true]);
-	}
+    public function defaultConversion(string $conversion): self
+    {
+        return $this->withMeta(compact('conversion'));
+    }
 
-	public function fullSize(): self
-	{
-		return $this->withMeta(['fullSize' => true]);
-	}
+    public function multiple(): self
+    {
+        return $this->withMeta(['multiple' => true]);
+    }
 
-	public function singleImageRules($singleImageRules): self
-	{
-		$this->singleImageRules = $singleImageRules;
+    public function fullSize(): self
+    {
+        return $this->withMeta(['fullSize' => true]);
+    }
 
-		return $this;
-	}
+    public function singleImageRules($singleImageRules): self
+    {
+        $this->singleImageRules = $singleImageRules;
 
-	/**
-	 * @param HasMedia $model
-	 */
-	protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
-	{
-		$data = request($requestAttribute, []);
+        return $this;
+    }
 
-		collect($data)
-			->filter(function ($value) {
-				return $value instanceof UploadedFile;
-			})
-			->each(function($image) use ($requestAttribute) {
-				Validator::make([$requestAttribute => $image], [
-					$requestAttribute => array_merge(['image'], (array) $this->singleImageRules),
-				])->validate();
-			});
+    /**
+     * @param HasMedia $model
+     */
+    protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
+    {
+        $data = request($requestAttribute, []);
 
-		Validator::make($data, $this->rules)->validate();
+        collect($data)
+            ->filter(function ($value) {
+                return $value instanceof UploadedFile;
+            })
+            ->each(function ($image) use ($requestAttribute) {
+                Validator::make([$requestAttribute => $image], [
+                    $requestAttribute => array_merge(['image'], (array)$this->singleImageRules),
+                ])->validate();
+            });
 
-		$class = get_class($model);
-		$class::saved(function ($model) use ($data, $attribute) {
-			$remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-			$newIds = $this->addNewImages($data, $model, $attribute);
-			$this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
-		});
-	}
+        Validator::make($data, $this->rules)->validate();
 
-	private function setOrder($ids)
-	{
-		$mediaClass = config('medialibrary.media_model');
-		$mediaClass::setNewOrder($ids);
-	}
+        $class = get_class($model);
+        $class::saved(function ($model) use ($data, $attribute) {
+            $remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
+            $newIds = $this->addNewImages($data, $model, $attribute);
+            $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+        });
+    }
 
-	private function addNewImages($data, HasMedia $model, string $collection): Collection
-	{
-		return collect($data)
-			->filter(function ($value) {
-				return $value instanceof UploadedFile;
-			})->map(function (UploadedFile $file) use ($model, $collection) {
-				return $model->addMedia($file)
-					->toMediaCollection($collection)
-					->getKey();
-			});
-	}
+    private function setOrder($ids)
+    {
+        $mediaClass = config('medialibrary.media_model');
+        $mediaClass::setNewOrder($ids);
+    }
 
-	private function removeDeletedImages($data, Collection $medias): Collection
-	{
-		$remainingIds = collect($data)->filter(function ($value) {
-			return !$value instanceof UploadedFile;
-		})->map(function ($value) {
-			return (int)$value;
-		});
+    private function addNewImages($data, HasMedia $model, string $collection): Collection
+    {
+        return collect($data)
+            ->filter(function ($value) {
+                return $value instanceof UploadedFile;
+            })->map(function (UploadedFile $file) use ($model, $collection) {
+                return $model->addMedia($file)
+                    ->toMediaCollection($collection)
+                    ->getKey();
+            });
+    }
 
-		$medias->pluck('id')->diff($remainingIds)->each(function($id) use ($medias) {
-			/** @var Media $media */
-			if ($media = $medias->where('id', $id)->first()) {
-				$media->delete();
-			}
-		});
+    private function removeDeletedImages($data, Collection $medias): Collection
+    {
+        $remainingIds = collect($data)->filter(function ($value) {
+            return !$value instanceof UploadedFile;
+        })->map(function ($value) {
+            return (int)$value;
+        });
 
-		return $remainingIds;
-	}
+        $medias->pluck('id')->diff($remainingIds)->each(function ($id) use ($medias) {
+            /** @var Media $media */
+            if ($media = $medias->where('id', $id)->first()) {
+                $media->delete();
+            }
+        });
 
-	/**
-	 * @param HasMedia $resource
-	 * @param null $attribute
-	 */
-	public function resolve($resource, $attribute = null)
-	{
+        return $remainingIds;
+    }
+
+    /**
+     * @param HasMedia $resource
+     * @param null $attribute
+     */
+    public function resolve($resource, $attribute = null)
+    {
         $this->value = $resource->getMedia($attribute ?? $this->attribute)
-            ->map(function(\Spatie\MediaLibrary\Models\Media $media) {
+            ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
+                $conversion = $this->meta['conversion'] ?? null;
                 $urls = [
-                    'default' => $media->getFullUrl($this->meta['conversion'] ?? 'large')
+                    'default' => $conversion ? $media->getFullUrl($this->meta['conversion']) : $media->getFullUrl(),
                 ];
 
                 if ($thumbnail = $this->meta['thumbnail'] ?? null) {
@@ -122,12 +123,11 @@ class Images extends Field
                 }
 
                 return array_merge($media->toArray(), ['full_urls' => $urls]);
-            })
-        ;
+            });
 
-		if ($data = $this->value->first()) {
-			$thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
-			$this->withMeta(compact('thumbnailUrl'));
-		}
-	}
+        if ($data = $this->value->first()) {
+            $thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
+            $this->withMeta(compact('thumbnailUrl'));
+        }
+    }
 }
