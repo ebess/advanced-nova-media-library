@@ -19,6 +19,11 @@ class Images extends Field
 	{
 		return $this->withMeta(compact('thumbnail'));
 	}
+	
+	public function defaultConversion(string $conversion = 'large'): self
+    	{
+        	return $this->withMeta(compact('conversion'));
+    	}
 
 	public function multiple(): self
 	{
@@ -109,7 +114,7 @@ class Images extends Field
         $this->value = $resource->getMedia($attribute ?? $this->attribute)
             ->map(function(\Spatie\MediaLibrary\Models\Media $media) {
                 $urls = [
-                    'default' => $media->getFullUrl()
+                    'default' => $media->getFullUrl($this->meta['conversion'] ?? 'large')
                 ];
 
                 if ($thumbnail = $this->meta['thumbnail'] ?? null) {
