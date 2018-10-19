@@ -115,7 +115,7 @@ class Images extends Field
             ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
                 $conversion = $this->meta['conversion'] ?? null;
                 $urls = [
-                    'default' => $conversion ? $media->getFullUrl($this->meta['conversion']) : $media->getFullUrl(),
+    'default' => $media->getFullUrl($this->meta['conversion'] ?? ''),
                 ];
 
                 if ($thumbnail = $this->meta['thumbnail'] ?? null) {
