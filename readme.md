@@ -62,6 +62,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
     {
         return [
             Images::make('Images', 'my_multi_collection'), // second parameter is the media collection name
+                ->conversion('medium-size') // conversion used to display the "original" image
                 ->thumbnail('thumb') // conversion used to display the image
                 ->multiple() // enable upload of multiple images - also ordering
                 ->fullSize() // full size column
