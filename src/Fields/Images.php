@@ -20,7 +20,7 @@ class Images extends Field
         return $this->withMeta(compact('thumbnail'));
     }
 
-    public function defaultConversion(string $conversion): self
+    public function conversion(string $conversion): self
     {
         return $this->withMeta(compact('conversion'));
     }
