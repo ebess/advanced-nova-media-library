@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 class Images extends Field
 {
     public $component = 'advanced-media-library-field';
+    
+    protected $setFileNameCallback;
 
     private $singleImageRules = [];
 
@@ -81,9 +83,17 @@ class Images extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file) use ($model, $collection) {
-                return $model->addMedia($file)
-                    ->toMediaCollection($collection)
-                    ->getKey();
+                $media = $model->addMedia($file);
+			    
+			    if(is_callable($this->setFileNameCallback)) {
+                    $media->setFileName(
+                        call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
+                    );
+                }
+			    
+				return $media
+					->toMediaCollection($collection)
+					->getKey();
             });
     }
 
@@ -129,5 +139,18 @@ class Images extends Field
             $thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
             $this->withMeta(compact('thumbnailUrl'));
         }
+    }
+    
+    /**
+     * Set a filename callable callback
+     * 
+     * @param callable $callback
+     *
+     * @return $this
+     */
+	public function setFileName($callback) {
+	    $this->setFileNameCallback = $callback;
+	    
+	    return $this;
     }
 }
