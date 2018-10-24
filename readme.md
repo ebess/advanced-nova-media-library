@@ -73,6 +73,24 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
     }
 ```
 
+## Names of uploaded images
+
+The default filename of the new uploaded file is the original filename. You can change this with the help of the function `setFileName`, which takes a callback function as the only param. This callback function has three params: `$originalFilename` (the original filename like `Fotolia 4711.jpg`), `$extension` (file extension like `jpg`), `$model` (the current model). Here are just 2 examples of what you can do:
+
+```php
+// Set the filename to the MD5 Hash of original filename
+Images::make('Image 1', 'img1')
+    ->setFileName(function($originalFilename, $extension, $model){
+        return md5($originalFilename) . '.' . $extension;
+    });
+    
+// Set the filename to the model name
+Images::make('Image 2', 'img2')
+    ->setFileName(function($originalFilename, $extension, $model){
+        return $model->name . '.' . $extension;
+    });
+```
+
 ## File media management
 
 To manage files just use the [nova media library](https://github.com/jameslkingsley/nova-media-library) fields which
