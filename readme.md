@@ -87,7 +87,7 @@ Images::make('Image 1', 'img1')
 // Set the filename to the model name
 Images::make('Image 2', 'img2')
     ->setFileName(function($originalFilename, $extension, $model){
-        return $model->name . '.' . $extension;
+        return str_slug($model->name) . '.' . $extension;
     });
 ```
 
