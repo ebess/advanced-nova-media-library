@@ -3,10 +3,6 @@
 Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple 
 images and order them by drag and drop.
 
-This package is inspired by the basic [nova media library](https://github.com/jameslkingsley/nova-media-library) 
-which lacks the upload of multiple images and ordering. This package is one of the dependencies, so you can use it 
-beside this package.
-
 ## Install
 ```bash
 composer require ebess/advanced-nova-media-library
@@ -96,3 +92,7 @@ Images::make('Image 2', 'img2')
 To manage files just use the [nova media library](https://github.com/jameslkingsley/nova-media-library) fields which
 are already required in this package.
 
+
+# Credits
+
+* [nova media library](https://github.com/jameslkingsley/nova-media-library)
