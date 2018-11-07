@@ -57,14 +57,14 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
     public function fields(Request $request)
     {
         return [
-            Images::make('Images', 'my_multi_collection'), // second parameter is the media collection name
+            Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
                 ->conversion('medium-size') // conversion used to display the "original" image
                 ->thumbnail('thumb') // conversion used to display the image
                 ->multiple() // enable upload of multiple images - also ordering
                 ->fullSize() // full size column
-                ->rules('required|size:3'), // validation rules for the collection of images
+                ->rules('required', 'size:3') // validation rules for the collection of images
                 // validation rules for the collection of images
-                ->singleImageRules('dimension:min_width=100'),
+                ->singleImageRules('dimensions:min_width=100'),
         ];
     }
 ```
