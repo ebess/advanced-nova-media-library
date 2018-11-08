@@ -65,15 +65,15 @@ class Images extends Field
 
         $class = get_class($model);
         $class::saved(function ($model) use ($data, $attribute) {
-        	$this->handleImages($model, $attribute, $data);
+            $this->handleImages($model, $attribute, $data);
         });
     }
 
-	protected function handleImages($model, $attribute, $data)
-	{
-		$remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-		$newIds = $this->addNewImages($data, $model, $attribute);
-		$this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+    protected function handleImages($model, $attribute, $data)
+    {
+        $remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
+        $newIds = $this->addNewImages($data, $model, $attribute);
+        $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
     }
 
     private function setOrder($ids)
@@ -89,16 +89,16 @@ class Images extends Field
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file) use ($model, $collection) {
                 $media = $model->addMedia($file);
-			    
-			    if(is_callable($this->setFileNameCallback)) {
+                
+                if(is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
                         call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
                     );
                 }
-			    
-				return $media
-					->toMediaCollection($collection)
-					->getKey();
+                
+                return $media
+                    ->toMediaCollection($collection)
+                    ->getKey();
             });
     }
 
@@ -153,9 +153,9 @@ class Images extends Field
      *
      * @return $this
      */
-	public function setFileName($callback) {
-	    $this->setFileNameCallback = $callback;
-	    
-	    return $this;
+    public function setFileName($callback) {
+        $this->setFileNameCallback = $callback;
+        
+        return $this;
     }
 }
