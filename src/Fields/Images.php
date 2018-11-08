@@ -65,10 +65,15 @@ class Images extends Field
 
         $class = get_class($model);
         $class::saved(function ($model) use ($data, $attribute) {
-            $remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-            $newIds = $this->addNewImages($data, $model, $attribute);
-            $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+        	$this->handleImages($model, $attribute, $data);
         });
+    }
+
+	protected function handleImages($model, $attribute, $data)
+	{
+		$remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
+		$newIds = $this->addNewImages($data, $model, $attribute);
+		$this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
     }
 
     private function setOrder($ids)
