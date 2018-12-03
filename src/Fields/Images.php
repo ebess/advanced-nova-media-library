@@ -12,10 +12,15 @@ use Illuminate\Support\Facades\Validator;
 class Images extends Field
 {
     public $component = 'advanced-media-library-field';
-    
+
     protected $setFileNameCallback;
 
     private $singleImageRules = [];
+
+    public function withCustomProperties(array $customProperties): self
+    {
+        return $this->withMeta(compact('customProperties'));
+    }
 
     public function thumbnail(string $thumbnail): self
     {
@@ -88,14 +93,14 @@ class Images extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file) use ($model, $collection) {
-                $media = $model->addMedia($file);
-                
-                if(is_callable($this->setFileNameCallback)) {
+                $media = $model->addMedia($file)->withCustomProperties($this->meta['customProperties'] ?? []);
+
+                if (is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
                         call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
                     );
                 }
-                
+
                 return $media
                     ->toMediaCollection($collection)
                     ->getKey();
@@ -145,17 +150,18 @@ class Images extends Field
             $this->withMeta(compact('thumbnailUrl'));
         }
     }
-    
+
     /**
      * Set a filename callable callback
-     * 
+     *
      * @param callable $callback
      *
      * @return $this
      */
-    public function setFileName($callback) {
+    public function setFileName($callback)
+    {
         $this->setFileNameCallback = $callback;
-        
+
         return $this;
     }
 }
