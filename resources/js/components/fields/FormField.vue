@@ -3,7 +3,7 @@
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" v-model="value" editable :field="field" :multiple="field.multiple"
-                 :has-error="hasError" :first-error="firstError"/>
+                 :has-error="hasError" :first-error="firstError" v-if="hasSetInitialValue"/>
       </div>
     </template>
   </component>
@@ -21,6 +21,11 @@
       FullWidthField,
     },
     props: ['resourceName', 'resourceId', 'field'],
+    data() {
+      return {
+        hasSetInitialValue: false,
+      }
+    },
 
     methods: {
       /*
@@ -28,12 +33,13 @@
        */
       setInitialValue() {
         let value = this.field.value || [];
-
+          
         if (!this.field.multiple) {
           value = value.slice(0, 1);
         }
 
         this.value = value;
+        this.hasSetInitialValue = true;
       },
 
       /**
