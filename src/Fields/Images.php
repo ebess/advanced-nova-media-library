@@ -15,6 +15,8 @@ class Images extends Field
 
     protected $setFileNameCallback;
 
+    protected $serializeMediaCallback;
+
     protected $customPropertiesFields = [];
 
     private $singleImageRules = [];
@@ -34,6 +36,13 @@ class Images extends Field
         $this->customPropertiesFields = collect($customPropertiesFields);
 
         return $this->withMeta(compact('customPropertiesFields'));
+    }
+
+    public function serializeMediaUsing(callable $serializeMediaUsing): self
+    {
+        $this->serializeMediaCallback = $serializeMediaUsing;
+
+        return $this;
     }
 
     public function multiple(): self
@@ -181,13 +190,22 @@ class Images extends Field
                     $urls[$thumbnail] = $media->getFullUrl($thumbnail);
                 }
 
-                return array_merge($media->toArray(), ['full_urls' => $urls]);
+                return array_merge($this->serializeMedia($media), ['full_urls' => $urls]);
             });
 
         if ($data = $this->value->first()) {
             $thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
             $this->withMeta(compact('thumbnailUrl'));
         }
+    }
+
+    public function serializeMedia(\Spatie\MediaLibrary\Models\Media $media): array
+    {
+        if ($this->serializeMediaCallback) {
+            return call_user_func($this->serializeMediaCallback, $media);
+        }
+
+        return $media->toArray();
     }
 
     /**
