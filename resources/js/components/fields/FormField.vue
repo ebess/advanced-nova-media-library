@@ -13,6 +13,7 @@
   import { FormField, HandlesValidationErrors } from 'laravel-nova'
   import Gallery from '../Gallery';
   import FullWidthField from '../FullWidthField';
+  import objectToFormData from 'object-to-formdata';
 
   export default {
     mixins: [FormField, HandlesValidationErrors],
@@ -45,7 +46,19 @@
           const isNewImage = !file.id;
 
           formData.append(`${field}[${index}]`, isNewImage ? file.file : file.id);
+
+          objectToFormData({
+            [`${field}-custom-properties[${index}]`]: this.getImageCustomProperties(file)
+          }, {}, formData);
         });
+      },
+
+      getImageCustomProperties(image) {
+        return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
+          properties[property] = _.get(image, `custom_properties.${property}`);
+
+          return properties;
+        }, {})
       },
 
       /**

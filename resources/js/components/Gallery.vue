@@ -4,9 +4,23 @@
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
       <single-image v-for="(image, index) in images" class="mb-3 p-3 mr-3"
-                    :key="index" :image="image" :thumbnail="field.thumbnailUrl" :removable="editable"
-                    @remove="remove(index)"/>
+                    :key="index"
+                    :image="image"
+                    :thumbnail="field.thumbnailUrl"
+                    :removable="editable"
+                    :is-custom-properties-editable="customPropertiesFields.length > 0"
+                    @remove="remove(index)"
+                    @editCustomProperties="customPropertiesImageIndex = index"
+      />
     </component>
+
+    <CustomProperties
+      v-if="customPropertiesImageIndex !== null"
+      v-model="images[customPropertiesImageIndex]"
+      :fields="customPropertiesFields"
+      @close="customPropertiesImageIndex = null"
+    />
+
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
@@ -24,12 +38,14 @@
 
 <script>
   import SingleImage from './SingleImage';
+  import CustomProperties from './CustomProperties';
   import Draggable from 'vuedraggable';
 
   export default {
     components: {
       Draggable,
       SingleImage,
+      CustomProperties,
     },
     props: {
       hasError: Boolean,
@@ -42,11 +58,15 @@
     data() {
       return {
         images: this.value,
+        customPropertiesImageIndex: null,
       };
     },
     computed: {
       draggable() {
         return this.editable && this.multiple;
+      },
+      customPropertiesFields() {
+        return this.field.customPropertiesFields || [];
       },
     },
     watch: {
