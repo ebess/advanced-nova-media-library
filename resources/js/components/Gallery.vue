@@ -12,7 +12,7 @@
     <span v-if="editable" class="form-file">
       <input :id="field.name" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
       <label :for="field.name" class="form-file-btn btn btn-default btn-primary">
-          {{__(multiple ? 'Add new Image' : 'Replace Image')}}
+          {{ label }}
       </label>
     </span>
 
@@ -48,6 +48,13 @@
       draggable() {
         return this.editable && this.multiple;
       },
+      label() {
+        if (this.multiple) {
+          return this.field.type === 'image' ? this.__('Add New Image') : this.__('Add New File');
+        }
+
+        return this.field.type === 'image' ? this.__('Replace Image') : this.__('Replace File')
+      }
     },
     watch: {
       images() {
@@ -74,6 +81,7 @@
               full_urls: {
                 default: reader.result,
               },
+              name: file.name,
             };
 
             if (this.multiple) {

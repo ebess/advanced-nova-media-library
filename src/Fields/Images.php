@@ -17,6 +17,10 @@ class Images extends Field
 
     private $singleImageRules = [];
 
+    protected $defaultValidatorRules = ['image'];
+
+    public $meta = ['type' => 'image'];
+
     public function thumbnail(string $thumbnail): self
     {
         return $this->withMeta(compact('thumbnail'));
@@ -57,7 +61,7 @@ class Images extends Field
             })
             ->each(function ($image) use ($requestAttribute) {
                 Validator::make([$requestAttribute => $image], [
-                    $requestAttribute => array_merge(['image'], (array)$this->singleImageRules),
+                    $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleImageRules),
                 ])->validate();
             });
 

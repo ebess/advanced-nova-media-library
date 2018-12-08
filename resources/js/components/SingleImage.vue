@@ -8,7 +8,10 @@
         <icon type="search" view-box="0 0 20 20" width="30" height="30" />
       </a>
     </div>
-    <img :src="src" :alt="image.name" class="gallery-image">
+    <img :src="src" :alt="image.name" class="gallery-image" v-if="isImage">
+    <div class="gallery-image" v-else>
+      {{ image.name }}
+    </div>
   </div>
 </template>
 
@@ -23,6 +26,9 @@
 
         return this.image.full_urls.default;
       },
+      isImage() {
+        return this.src.match(/\.(jpeg|jpg|gif|png)$/) !== null
+      }
     },
   };
 </script>
