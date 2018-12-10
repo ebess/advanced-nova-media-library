@@ -7705,7 +7705,7 @@ function singularOrPlural(value, suffix) {
 
 /**
  * Javascript inflector
- *
+ * 
  * @author Dida Nurwanda <didanurwanda@gmail.com>
  * @since 1.0
  */
@@ -7804,7 +7804,7 @@ var _Inflector = {
     Inflector.pluralize('person')           -> 'people'
     Inflector.pluralize('octopus')          -> 'octopi'
     Inflector.pluralize('Hat')              -> 'Hats'
-    Inflector.pluralize('person', 'guys')   -> 'guys'
+    Inflector.pluralize('person', 'guys')   -> 'guys'    
     */
     pluralize: function(str, plural) {
         return this.applyRules(
@@ -7825,7 +7825,7 @@ var _Inflector = {
         return this.applyRules(
             str,
             this.singularRules,
-            this.uncountableWords,
+            this.uncountableWords, 
             singular
         );
     },
@@ -7849,7 +7849,7 @@ var _Inflector = {
         }
         str = str_path.join('::');
 
-        // fix
+        // fix 
         if (lowFirstLetter === true) {
           var first = str.charAt(0).toLowerCase();
           var last = str.slice(1);
@@ -7863,7 +7863,7 @@ var _Inflector = {
     Inflector.underscore('MessageProperties')       -> 'message_properties'
     Inflector.underscore('messageProperties')       -> 'message_properties'
     */
-    underscore: function(str) {
+    underscore: function(str) { 
         var str_path = str.split('::');
         for (var i = 0; i < str_path.length; i++)
         {
@@ -7969,7 +7969,7 @@ var _Inflector = {
     /*
     Inflector.foreignKey('MessageBusProperty')       -> 'message_bus_property_id'
     Inflector.foreignKey('MessageBusProperty', true) -> 'message_bus_propertyid'
-    */
+    */   
     foreignKey: function(str, dropIdUbar) {
         str = this.underscore(this.demodulize(str)) + ((dropIdUbar) ? ('') : ('_')) + 'id';
         return str;
