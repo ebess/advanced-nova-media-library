@@ -14,10 +14,11 @@ class Images extends Field
     public $component = 'advanced-media-library-field';
 
     protected $setFileNameCallback;
-
     protected $serializeMediaCallback;
 
     protected $customPropertiesFields = [];
+
+    protected $setNameCallback;
 
     private $singleImageRules = [];
 
@@ -117,12 +118,16 @@ class Images extends Field
                     );
                 }
 
-                $media = $media->toMediaCollection($collection);
+                if(is_callable($this->setNameCallback)) {
+                    $media->setName(
+                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
+                    );
+                }
 
-                // fill custom properties for recently created media
-                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+                return $media
+                    ->toMediaCollection($collection)
+                    ->getKey();
 
-                return $media->getKey();
             });
     }
 
@@ -217,6 +222,19 @@ class Images extends Field
      */
     public function setFileName($callback) {
         $this->setFileNameCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set a name callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setName($callback) {
+        $this->setNameCallback = $callback;
 
         return $this;
     }
