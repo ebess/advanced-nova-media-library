@@ -87,6 +87,14 @@ Images::make('Image 2', 'img2')
     });
 ```
 
+By default, the "name" field on the Media object is set to the original filename without the extension. To change this, you can use the `setName` function. Like `setFileName` above, it takes a callback function as the only param. This callback function has two params: `$originalFilename` and `$model`.
+
+```php
+Images::make('Image 1', 'img1')
+    ->setName(function($originalFilename, $model){
+        return md5($originalFilename);
+    });
+```
 
 # Credits
 
