@@ -87,11 +87,6 @@ Images::make('Image 2', 'img2')
     });
 ```
 
-## File media management
-
-To manage files just use the [nova media library](https://github.com/jameslkingsley/nova-media-library) fields which
-are already required in this package.
-
 
 # Credits
 
