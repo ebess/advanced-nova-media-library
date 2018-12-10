@@ -15,6 +15,8 @@ class Images extends Field
     
     protected $setFileNameCallback;
 
+    protected $setNameCallback;
+
     private $singleImageRules = [];
 
     public function thumbnail(string $thumbnail): self
@@ -95,6 +97,12 @@ class Images extends Field
                         call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
                     );
                 }
+
+                if(is_callable($this->setNameCallback)) {
+                    $media->setName(
+                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
+                    );
+                }
                 
                 return $media
                     ->toMediaCollection($collection)
@@ -156,6 +164,19 @@ class Images extends Field
     public function setFileName($callback) {
         $this->setFileNameCallback = $callback;
         
+        return $this;
+    }
+
+    /**
+     * Set a name callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setName($callback) {
+        $this->setNameCallback = $callback;
+
         return $this;
     }
 }
