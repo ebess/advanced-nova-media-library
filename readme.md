@@ -59,7 +59,8 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
         return [
             Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
                 ->conversion('medium-size') // conversion used to display the "original" image
-                ->thumbnail('thumb') // conversion used to display the image
+                ->conversionOnView('thumb') // conversion used on the model's view
+                ->thumbnail('thumb') // conversion used to display the image on the model's index page
                 ->multiple() // enable upload of multiple images - also ordering
                 ->fullSize() // full size column
                 ->rules('required', 'size:3') // validation rules for the collection of images

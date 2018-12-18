@@ -46,6 +46,11 @@ class Images extends Field
         return $this;
     }
 
+    public function conversionOnView(string $conversionOnView): self
+    {
+        return $this->withMeta(compact('conversionOnView'));
+    }
+
     public function multiple(): self
     {
         return $this->withMeta(['multiple' => true]);
@@ -195,7 +200,11 @@ class Images extends Field
                     $urls[$thumbnail] = $media->getFullUrl($thumbnail);
                 }
 
-                return array_merge($this->serializeMedia($media), ['full_urls' => $urls]);
+                if ($conversionOnView = $this->meta['conversionOnView'] ?? null) {
+                    $urls[$conversionOnView] = $media->getFullUrl($conversionOnView);
+                }
+
+                return array_merge($media->toArray(), ['full_urls' => $urls]);
             });
 
         if ($data = $this->value->first()) {

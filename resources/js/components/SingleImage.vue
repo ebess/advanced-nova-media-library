@@ -20,6 +20,11 @@
     props: ['image', 'thumbnail', 'removable', 'isCustomPropertiesEditable'],
     computed: {
       src() {
+        // Return desired image conversion on view if it exists
+        if (this.image.id && this.conversionOnView && this.image.full_urls[this.conversionOnView]) {
+          return this.image.full_urls[this.conversionOnView];
+        }
+        // Return thumnail if conversion exists
         if (this.image.id && this.thumbnail && this.image.full_urls[this.thumbnail]) {
           return this.image.full_urls[this.thumbnail];
         }
