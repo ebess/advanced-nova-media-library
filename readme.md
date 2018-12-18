@@ -1,6 +1,6 @@
 # Laravel Advanced Nova Media Library
 
-Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple 
+Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple
 images and order them by drag and drop.
 
 ## Install
@@ -38,13 +38,13 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 public function fields(Request $request)
 {
     return [
-        Images::make('Main image', 'main') // second parameter is the media collection name 
+        Images::make('Main image', 'main') // second parameter is the media collection name
             ->thumbnail('thumb') // conversion used to display the image
             ->rules('required'), // validation rules
     ];
 }
 ```
- 
+
 ## Multiple image upload
 
 If you enable the multiple upload ability, you can **order the images via drag & drop**.
@@ -59,7 +59,8 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
         return [
             Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
                 ->conversion('medium-size') // conversion used to display the "original" image
-                ->thumbnail('thumb') // conversion used to display the image
+                ->conversionOnView('thumb') // conversion used on the model's view
+                ->thumbnail('thumb') // conversion used to display the image on the model's index page
                 ->multiple() // enable upload of multiple images - also ordering
                 ->fullSize() // full size column
                 ->rules('required', 'size:3') // validation rules for the collection of images
@@ -79,7 +80,7 @@ Images::make('Image 1', 'img1')
     ->setFileName(function($originalFilename, $extension, $model){
         return md5($originalFilename) . '.' . $extension;
     });
-    
+
 // Set the filename to the model name
 Images::make('Image 2', 'img2')
     ->setFileName(function($originalFilename, $extension, $model){

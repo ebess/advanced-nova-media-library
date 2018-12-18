@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class Images extends Field
 {
     public $component = 'advanced-media-library-field';
-    
+
     protected $setFileNameCallback;
 
     protected $setNameCallback;
@@ -27,6 +27,11 @@ class Images extends Field
     public function conversion(string $conversion): self
     {
         return $this->withMeta(compact('conversion'));
+    }
+
+    public function conversionOnView(string $conversionOnView): self
+    {
+        return $this->withMeta(compact('conversionOnView'));
     }
 
     public function multiple(): self
@@ -91,7 +96,7 @@ class Images extends Field
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file) use ($model, $collection) {
                 $media = $model->addMedia($file);
-                
+
                 if(is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
                         call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
@@ -103,7 +108,7 @@ class Images extends Field
                         call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
                     );
                 }
-                
+
                 return $media
                     ->toMediaCollection($collection)
                     ->getKey();
@@ -145,6 +150,10 @@ class Images extends Field
                     $urls[$thumbnail] = $media->getFullUrl($thumbnail);
                 }
 
+                if ($conversionOnView = $this->meta['conversionOnView'] ?? null) {
+                    $urls[$conversionOnView] = $media->getFullUrl($conversionOnView);
+                }
+
                 return array_merge($media->toArray(), ['full_urls' => $urls]);
             });
 
@@ -153,17 +162,17 @@ class Images extends Field
             $this->withMeta(compact('thumbnailUrl'));
         }
     }
-    
+
     /**
      * Set a filename callable callback
-     * 
+     *
      * @param callable $callback
      *
      * @return $this
      */
     public function setFileName($callback) {
         $this->setFileNameCallback = $callback;
-        
+
         return $this;
     }
 
