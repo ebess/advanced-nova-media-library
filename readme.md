@@ -3,6 +3,15 @@
 Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple
 images and order them by drag and drop.
 
+##### Table of Contents  
+[Install](#install)  
+[Model media configuration](#model-media-configuration)  
+[Generic file management](#generic-file-management)  
+[Single image upload](#single-image-upload)  
+[Multiple image upload](#multiple-image-upload)  
+[Names of uploaded images](#names-of-uploaded-images)  
+[Custom properties](#custom-properties)  
+
 ## Install
 ```bash
 composer require ebess/advanced-nova-media-library
@@ -26,6 +35,19 @@ public function registerMediaCollections()
     $this->addMediaCollection('main')->singleFile();
     $this->addMediaCollection('my_multi_collection');
 }
+```
+
+## Generic file management
+
+![Generic file management](docs/file-management.png)
+
+In order to be able to upload and handle generic files just go ahead and use the `Files` field.
+
+```php
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+
+Files::make('Single file', 'one_file'),
+Files::make('Multiple files', 'multiple_files')->multiple(),
 ```
 
 ## Single image upload
@@ -107,20 +129,6 @@ Images::make('Gallery')
         Boolean::make('Active'),
         Markdown::make('Description'),
     ]);
-```
-
-
-## Generic file management
-
-![Generic file management](docs/file-management.png)
-
-In order to be able to upload and handle generic files just go ahead and use the `Files` field.
-
-```php
-use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-
-Files::make('Single file', 'one_file'),
-Files::make('Multiple files', 'multiple_files')->multiple(),
 ```
 
 # Credits
