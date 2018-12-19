@@ -20,6 +20,8 @@ class Images extends Field
 
     protected $setNameCallback;
 
+    protected $setNameCallback;
+
     private $singleImageRules = [];
 
     public function thumbnail(string $thumbnail): self
@@ -231,6 +233,19 @@ class Images extends Field
      */
     public function setFileName($callback) {
         $this->setFileNameCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set a name callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setName($callback) {
+        $this->setNameCallback = $callback;
 
         return $this;
     }
