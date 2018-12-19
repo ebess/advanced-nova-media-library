@@ -39,7 +39,7 @@ public function registerMediaCollections()
 
 ## Generic file management
 
-![Generic file management](docs/file-management.png)
+![Generic file management](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/file-management.png)
 
 In order to be able to upload and handle generic files just go ahead and use the `Files` field.
 
@@ -52,7 +52,7 @@ Files::make('Multiple files', 'multiple_files')->multiple(),
 
 ## Single image upload
 
-![Single image upload](docs/single-image.png)
+![Single image upload](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/single-image.png)
 
 ```php
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -71,7 +71,7 @@ public function fields(Request $request)
 
 If you enable the multiple upload ability, you can **order the images via drag & drop**.
 
-![Multiple image upload](docs/multiple-images.png)
+![Multiple image upload](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/multiple-images.png)
 
 ```php
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -121,7 +121,7 @@ Images::make('Image 1', 'img1')
 
 ## Custom properties
 
-![Custom properties](docs/custom-properties.gif)
+![Custom properties](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/custom-properties.gif)
 
 ```php
 Images::make('Gallery')
