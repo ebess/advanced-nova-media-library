@@ -12,7 +12,8 @@
     "devDependencies": {
         "cross-env": "^5.0.0",
         "laravel-mix": "^1.0",
-        "laravel-nova": "^1.0"
+        "laravel-nova": "^1.0",
+        "object-to-formdata": "^1.5.2"
     },
     "dependencies": {
         "slug": "^0.9.1",

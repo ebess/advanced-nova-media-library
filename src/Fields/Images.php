@@ -14,8 +14,9 @@ class Images extends Field
     public $component = 'advanced-media-library-field';
 
     protected $setFileNameCallback;
-
     protected $setNameCallback;
+    protected $serializeMediaCallback;
+    protected $customPropertiesFields = [];
 
     private $singleImageRules = [];
 
@@ -33,6 +34,20 @@ class Images extends Field
         return $this->withMeta(compact('conversion'));
     }
 
+    public function customPropertiesFields(array $customPropertiesFields): self
+    {
+        $this->customPropertiesFields = collect($customPropertiesFields);
+
+        return $this->withMeta(compact('customPropertiesFields'));
+    }
+
+    public function serializeMediaUsing(callable $serializeMediaUsing): self
+    {
+        $this->serializeMediaCallback = $serializeMediaUsing;
+
+        return $this;
+    }
+  
     public function conversionOnView(string $conversionOnView): self
     {
         return $this->withMeta(compact('conversionOnView'));
@@ -75,15 +90,18 @@ class Images extends Field
         Validator::make($data, $this->rules)->validate();
 
         $class = get_class($model);
-        $class::saved(function ($model) use ($data, $attribute) {
-            $this->handleImages($model, $attribute, $data);
+        $class::saved(function ($model) use ($request, $data, $attribute) {
+            $this->handleImages($request, $model, $attribute, $data);
+
+            // fill custom properties for existing media
+            $this->fillCustomPropertiesFromRequest($request, $model, $attribute);
         });
     }
 
-    protected function handleImages($model, $attribute, $data)
+    protected function handleImages(NovaRequest $request, $model, $attribute, $data)
     {
         $remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-        $newIds = $this->addNewImages($data, $model, $attribute);
+        $newIds = $this->addNewImages($request, $data, $model, $attribute);
         $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
     }
 
@@ -93,12 +111,12 @@ class Images extends Field
         $mediaClass::setNewOrder($ids);
     }
 
-    private function addNewImages($data, HasMedia $model, string $collection): Collection
+    private function addNewImages(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
     {
         return collect($data)
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
-            })->map(function (UploadedFile $file) use ($model, $collection) {
+            })->map(function (UploadedFile $file, int $index) use ($request, $model, $collection) {
                 $media = $model->addMedia($file);
 
                 if(is_callable($this->setFileNameCallback)) {
@@ -112,11 +130,43 @@ class Images extends Field
                         call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
                     );
                 }
+          
+                $media = $media->toMediaCollection($collection);
 
-                return $media
-                    ->toMediaCollection($collection)
-                    ->getKey();
+                // fill custom properties for recently created media
+                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+
+                return $media->getKey();
             });
+    }
+
+    private function fillCustomPropertiesFromRequest(NovaRequest $request, HasMedia $model, string $collection)
+    {
+        $mediaItems = $model->getMedia($collection);
+
+        collect($request->{$collection})->reject(function ($value) {
+            return $value instanceof UploadedFile;
+        })->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
+            if (! $media = $mediaItems->where('id', $id)->first()) {
+                return;
+            }
+
+            $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+        });
+    }
+
+    private function fillMediaCustomPropertiesFromRequest(NovaRequest $request, $media, int $index, string $collection)
+    {
+        foreach ($this->customPropertiesFields as $field) {
+            $field->fillInto(
+                $request,
+                $media,
+                "custom_properties->{$field->attribute}",
+                "{$collection}-custom-properties.{$index}.{$field->attribute}"
+            );
+        }
+
+        $media->save();
     }
 
     private function removeDeletedImages($data, Collection $medias): Collection
@@ -157,14 +207,23 @@ class Images extends Field
                 if ($conversionOnView = $this->meta['conversionOnView'] ?? null) {
                     $urls[$conversionOnView] = $media->getFullUrl($conversionOnView);
                 }
-
-                return array_merge($media->toArray(), ['full_urls' => $urls]);
+              
+                return array_merge($this->serializeMedia($media), ['full_urls' => $urls]);
             });
 
         if ($data = $this->value->first()) {
             $thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
             $this->withMeta(compact('thumbnailUrl'));
         }
+    }
+
+    public function serializeMedia(\Spatie\MediaLibrary\Models\Media $media): array
+    {
+        if ($this->serializeMediaCallback) {
+            return call_user_func($this->serializeMediaCallback, $media);
+        }
+
+        return $media->toArray();
     }
 
     /**
