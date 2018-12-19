@@ -19,16 +19,21 @@
     components: {
       GalleryItem,
     },
-    props: ['image', 'thumbnail', 'removable'],
+    props: ['image', 'field', 'removable'],
     computed: {
       src() {
         // Return desired image conversion on view if it exists
-        if (this.image.id && this.conversionOnView && this.image.full_urls[this.conversionOnView]) {
-          return this.image.full_urls[this.conversionOnView];
+        let conversionOnView = this.field.conversionOnView;
+
+        if (this.image.id && conversionOnView && this.image.full_urls[conversionOnView]) {
+          return this.image.full_urls[conversionOnView];
         }
+        
         // Return thumnail if conversion exists
-        if (this.image.id && this.thumbnail && this.image.full_urls[this.thumbnail]) {
-          return this.image.full_urls[this.thumbnail];
+        let thumbnail = this.field.thumbnail;
+
+        if (this.image.id && thumbnail && this.image.full_urls[thumbnail]) {
+          return this.image.full_urls[thumbnail];
         }
 
         return this.image.full_urls.default;

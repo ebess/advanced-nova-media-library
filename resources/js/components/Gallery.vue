@@ -3,7 +3,7 @@
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
-                    :key="index" :image="image" :thumbnail="field.thumbnailUrl" :removable="editable"
+                    :key="index" :image="image" :field="field" :removable="editable"
                     @remove="remove(index)"/>
     </component>
 

@@ -18,7 +18,7 @@
   import GalleryItem from './GalleryItem';
 
   export default {
-    props: ['image', 'thumbnail', 'removable'],
+    props: ['image', 'removable'],
     components: {
       GalleryItem,
     },
