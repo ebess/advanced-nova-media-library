@@ -14,12 +14,15 @@ class Images extends Field
     public $component = 'advanced-media-library-field';
 
     protected $setFileNameCallback;
-
+    protected $setNameCallback;
     protected $serializeMediaCallback;
-
     protected $customPropertiesFields = [];
 
     private $singleImageRules = [];
+
+    protected $defaultValidatorRules = ['image'];
+
+    public $meta = ['type' => 'image'];
 
     public function thumbnail(string $thumbnail): self
     {
@@ -43,6 +46,11 @@ class Images extends Field
         $this->serializeMediaCallback = $serializeMediaUsing;
 
         return $this;
+    }
+  
+    public function conversionOnView(string $conversionOnView): self
+    {
+        return $this->withMeta(compact('conversionOnView'));
     }
 
     public function multiple(): self
@@ -75,7 +83,7 @@ class Images extends Field
             })
             ->each(function ($image) use ($requestAttribute) {
                 Validator::make([$requestAttribute => $image], [
-                    $requestAttribute => array_merge(['image'], (array)$this->singleImageRules),
+                    $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleImageRules),
                 ])->validate();
             });
 
@@ -117,6 +125,12 @@ class Images extends Field
                     );
                 }
 
+                if(is_callable($this->setNameCallback)) {
+                    $media->setName(
+                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
+                    );
+                }
+          
                 $media = $media->toMediaCollection($collection);
 
                 // fill custom properties for recently created media
@@ -190,6 +204,10 @@ class Images extends Field
                     $urls[$thumbnail] = $media->getFullUrl($thumbnail);
                 }
 
+                if ($conversionOnView = $this->meta['conversionOnView'] ?? null) {
+                    $urls[$conversionOnView] = $media->getFullUrl($conversionOnView);
+                }
+              
                 return array_merge($this->serializeMedia($media), ['full_urls' => $urls]);
             });
 
@@ -217,6 +235,19 @@ class Images extends Field
      */
     public function setFileName($callback) {
         $this->setFileNameCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set a name callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setName($callback) {
+        $this->setNameCallback = $callback;
 
         return $this;
     }

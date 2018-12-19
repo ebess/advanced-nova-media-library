@@ -59,7 +59,8 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
         return [
             Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
                 ->conversion('medium-size') // conversion used to display the "original" image
-                ->thumbnail('thumb') // conversion used to display the image
+                ->conversionOnView('thumb') // conversion used on the model's view
+                ->thumbnail('thumb') // conversion used to display the image on the model's index page
                 ->multiple() // enable upload of multiple images - also ordering
                 ->fullSize() // full size column
                 ->rules('required', 'size:3') // validation rules for the collection of images
@@ -98,10 +99,25 @@ Images::make('Gallery')
 ```
 
 ## File media management
+By default, the "name" field on the Media object is set to the original filename without the extension. To change this, you can use the `setName` function. Like `setFileName` above, it takes a callback function as the only param. This callback function has two params: `$originalFilename` and `$model`.
 
-To manage files just use the [nova media library](https://github.com/jameslkingsley/nova-media-library) fields which
-are already required in this package.
+```php
+Images::make('Image 1', 'img1')
+    ->setName(function($originalFilename, $model){
+        return md5($originalFilename);
+    });
+```
 
+## Generic file management
+
+In order to be able to upload and handle generic files just go ahead and use the `Files` field.
+
+```php
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+
+Files::make('Single file', 'one_file'),
+Files::make('Multiple files', 'multiple_files')->multiple(),
+```
 
 # Credits
 
