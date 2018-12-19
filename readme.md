@@ -96,6 +96,17 @@ Images::make('Image 1', 'img1')
     });
 ```
 
+## Generic file management
+
+In order to be able to upload and handle generic files just go ahead and use the `Files` field.
+
+```php
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+
+Files::make('Single file', 'one_file'),
+Files::make('Multiple files', 'multiple_files')->multiple(),
+```
+
 # Credits
 
 * [nova media library](https://github.com/jameslkingsley/nova-media-library)
