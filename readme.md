@@ -99,7 +99,7 @@ Images::make('Image 1', 'img1')
 
 ## Custom properties
 
-![Custom properties](docs/custom-properties.png)
+![Custom properties](docs/custom-properties.gif)
 
 ```php
 Images::make('Gallery')
