@@ -88,17 +88,6 @@ Images::make('Image 2', 'img2')
     });
 ```
 
-## Custom properties
-
-```php
-Images::make('Gallery')
-    ->customPropertiesFields([
-        Boolean::make('Active'),
-        Markdown::make('Description'),
-    ]);
-```
-
-## File media management
 By default, the "name" field on the Media object is set to the original filename without the extension. To change this, you can use the `setName` function. Like `setFileName` above, it takes a callback function as the only param. This callback function has two params: `$originalFilename` and `$model`.
 
 ```php
@@ -108,7 +97,22 @@ Images::make('Image 1', 'img1')
     });
 ```
 
+## Custom properties
+
+![Custom properties](docs/custom-properties.png)
+
+```php
+Images::make('Gallery')
+    ->customPropertiesFields([
+        Boolean::make('Active'),
+        Markdown::make('Description'),
+    ]);
+```
+
+
 ## Generic file management
+
+![Generic file management](docs/file-management.png)
 
 In order to be able to upload and handle generic files just go ahead and use the `Files` field.
 
