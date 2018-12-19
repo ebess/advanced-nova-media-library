@@ -4,13 +4,13 @@ Manage images of [spatie's media library package](https://github.com/spatie/lara
 images and order them by drag and drop.
 
 ##### Table of Contents  
-[Install](#install)  
-[Model media configuration](#model-media-configuration)  
-[Generic file management](#generic-file-management)  
-[Single image upload](#single-image-upload)  
-[Multiple image upload](#multiple-image-upload)  
-[Names of uploaded images](#names-of-uploaded-images)  
-[Custom properties](#custom-properties)  
+* [Install](#install)  
+* [Model media configuration](#model-media-configuration)  
+* [Generic file management](#generic-file-management)  
+* [Single image upload](#single-image-upload)  
+* [Multiple image upload](#multiple-image-upload)  
+* [Names of uploaded images](#names-of-uploaded-images)  
+* [Custom properties](#custom-properties)  
 
 ## Install
 ```bash
