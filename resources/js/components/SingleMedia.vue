@@ -41,6 +41,7 @@
 
         if (this.image.id && conversionOnView && this.image.full_urls[conversionOnView]) {
           this.src = this.image.full_urls[conversionOnView];
+          return;
         }
 
         // Return thumbnail if conversion exists
@@ -48,6 +49,7 @@
 
         if (this.image.id && thumbnail && this.image.full_urls[thumbnail]) {
           this.src = this.image.full_urls[thumbnail];
+          return;
         }
 
         if (this.isVideo(this.image.full_urls.default)) {
@@ -74,9 +76,14 @@
         };
         video.src = path;
       },
-      isVideo(mediaPath){
-          //TODO better video detection
-          return mediaPath.startsWith("data:video") || mediaPath.toLowerCase().endsWith(".mp4")
+      isVideo(mediaPath) {
+        if (mediaPath.startsWith("data:video"))
+          return true;
+        //TODO better video detection
+        const supportedExtensions = [".mp4", ".ogv", ".webm"];
+        return supportedExtensions.some((suffix) => {
+          return mediaPath.endsWith(suffix)
+        });
       }
     },
   };
