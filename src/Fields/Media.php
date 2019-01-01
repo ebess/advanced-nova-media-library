@@ -18,9 +18,9 @@ class Media extends Field
     protected $serializeMediaCallback;
     protected $customPropertiesFields = [];
 
-    private $singleImageRules = [];
+    protected $singleMediaRules = [];
 
-    protected $defaultValidatorRules = ['image'];
+    protected $defaultValidatorRules = [];
 
     public $meta = ['type' => 'media'];
 
@@ -63,9 +63,9 @@ class Media extends Field
         return $this->withMeta(['fullSize' => true]);
     }
 
-    public function singleImageRules($singleImageRules): self
+    public function singleMediaRules($singleMediaRules): self
     {
-        $this->singleImageRules = $singleImageRules;
+        $this->singleMediaRules = $singleMediaRules;
 
         return $this;
     }
@@ -81,9 +81,9 @@ class Media extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })
-            ->each(function ($image) use ($requestAttribute) {
-                Validator::make([$requestAttribute => $image], [
-                    $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleImageRules),
+            ->each(function ($media) use ($requestAttribute) {
+                Validator::make([$requestAttribute => $media], [
+                    $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleMediaRules),
                 ])->validate();
             });
 
@@ -91,17 +91,17 @@ class Media extends Field
 
         $class = get_class($model);
         $class::saved(function ($model) use ($request, $data, $attribute) {
-            $this->handleImages($request, $model, $attribute, $data);
+            $this->handleMedia($request, $model, $attribute, $data);
 
             // fill custom properties for existing media
             $this->fillCustomPropertiesFromRequest($request, $model, $attribute);
         });
     }
 
-    protected function handleImages(NovaRequest $request, $model, $attribute, $data)
+    protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
     {
-        $remainingIds = $this->removeDeletedImages($data, $model->getMedia($attribute));
-        $newIds = $this->addNewImages($request, $data, $model, $attribute);
+        $remainingIds = $this->removeDeletedMedia($data, $model->getMedia($attribute));
+        $newIds = $this->addNewMedia($request, $data, $model, $attribute);
         $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
     }
 
@@ -111,7 +111,7 @@ class Media extends Field
         $mediaClass::setNewOrder($ids);
     }
 
-    private function addNewImages(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
+    private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
     {
         return collect($data)
             ->filter(function ($value) {
@@ -169,7 +169,7 @@ class Media extends Field
         $media->save();
     }
 
-    private function removeDeletedImages($data, Collection $medias): Collection
+    private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
             return !$value instanceof UploadedFile;
