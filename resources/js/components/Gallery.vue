@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import SingleImage from './SingleImage';
+  import SingleMedia from './SingleMedia';
   import SingleFile from './SingleFile';
   import CustomProperties from './CustomProperties';
   import Draggable from 'vuedraggable';
@@ -40,7 +40,7 @@
   export default {
     components: {
       Draggable,
-      SingleImage,
+      SingleMedia,
       SingleFile,
       CustomProperties,
     },
@@ -56,7 +56,7 @@
       return {
         images: this.value,
         customPropertiesImageIndex: null,
-        singleComponent: this.field.type === 'image' ? SingleImage : SingleFile,
+        singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
       };
     },
     computed: {
@@ -67,7 +67,7 @@
         return this.field.customPropertiesFields || [];
       },
       label() {
-        const type = this.field.type === 'image' ? 'Image' : 'File';
+        const type = this.field.type === 'media' ? 'Media' : 'File';
 
         if (this.multiple || this.images.length === 0) {
           return this.__(`Add New ${type}`);
