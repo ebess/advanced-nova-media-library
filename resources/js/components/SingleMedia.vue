@@ -50,7 +50,7 @@
           this.src = this.image.full_urls[thumbnail];
         }
 
-        if (this.image.full_urls.default.startsWith("data:video")) {
+        if (this.isVideo(this.image.full_urls.default)) {
           //Seconds to seek to, to get thumbnail of video
           let seconds = 1;  //TODO get this from the field instead of hardcoding it here
           this.getVideoThumbnail(this.image.full_urls.default, seconds);
@@ -73,6 +73,10 @@
           this.src = canvas.toDataURL();
         };
         video.src = path;
+      },
+      isVideo(mediaPath){
+          //TODO better video detection
+          return mediaPath.startsWith("data:video") || mediaPath.toLowerCase().endsWith(".mp4")
       }
     },
   };
