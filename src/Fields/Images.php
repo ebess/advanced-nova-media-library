@@ -12,4 +12,17 @@ use Illuminate\Support\Facades\Validator;
 class Images extends Media
 {
 
+    protected $defaultValidatorRules = ['image'];
+
+    /**
+     * Do we deprecate this for SingleMediaRules?
+     * @param $singleImageRules
+     * @return Images
+     */
+    public function singleImageRules($singleImageRules): self
+    {
+        $this->singleMediaRules = $singleImageRules;
+
+        return $this;
+    }
 }
