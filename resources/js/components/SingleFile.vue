@@ -7,6 +7,9 @@
       <span class="label">
         {{ image.file_name }}
       </span>
+      <a v-if="isCustomPropertiesEditable" class="edit edit--file ml-2" href="#" @click.prevent="$emit('editCustomProperties')">
+        <icon type="edit" view-box="0 0 20 20" width="16" height="16" />
+      </a>
       <a v-if="removable" class="delete ml-2" href="#" @click.prevent="$emit('remove')">
         <icon type="delete" view-box="0 0 20 20" width="16" height="16" />
       </a>
@@ -18,7 +21,7 @@
   import GalleryItem from './GalleryItem';
 
   export default {
-    props: ['image', 'removable'],
+    props: ['image', 'removable', 'isCustomPropertiesEditable'],
     components: {
       GalleryItem,
     },
@@ -29,6 +32,12 @@
 </script>
 
 <style lang="scss">
+    .gallery .edit.edit--file {
+        position: relative;
+        top: auto;
+        right: auto;
+    }
+
   .gallery-item-file {
     &.gallery-item {
       width: 100%;

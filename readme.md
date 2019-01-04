@@ -11,6 +11,7 @@ images and order them by drag and drop.
 * [Multiple image upload](#multiple-image-upload)  
 * [Names of uploaded images](#names-of-uploaded-images)  
 * [Custom properties](#custom-properties)  
+* [Media Field (Video)](#media-field-video)  
 
 ## Install
 ```bash
@@ -76,20 +77,20 @@ If you enable the multiple upload ability, you can **order the images via drag &
 ```php
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 
-    public function fields(Request $request)
-    {
-        return [
-            Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
-                ->conversion('medium-size') // conversion used to display the "original" image
-                ->conversionOnView('thumb') // conversion used on the model's view
-                ->thumbnail('thumb') // conversion used to display the image on the model's index page
-                ->multiple() // enable upload of multiple images - also ordering
-                ->fullSize() // full size column
-                ->rules('required', 'size:3') // validation rules for the collection of images
-                // validation rules for the collection of images
-                ->singleImageRules('dimensions:min_width=100'),
-        ];
-    }
+public function fields(Request $request)
+{
+    return [
+        Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
+            ->conversion('medium-size') // conversion used to display the "original" image
+            ->conversionOnView('thumb') // conversion used on the model's view
+            ->thumbnail('thumb') // conversion used to display the image on the model's index page
+            ->multiple() // enable upload of multiple images - also ordering
+            ->fullSize() // full size column
+            ->rules('required', 'size:3') // validation rules for the collection of images
+            // validation rules for the collection of images
+            ->singleImageRules('dimensions:min_width=100'),
+    ];
+}
 ```
 
 ## Names of uploaded images
@@ -129,6 +130,43 @@ Images::make('Gallery')
         Boolean::make('Active'),
         Markdown::make('Description'),
     ]);
+    
+Files::make('Multiple files', 'multiple_files')->multiple()
+    ->customPropertiesFields([
+       Boolean::make('Active'),
+       Markdown::make('Description'),
+    ]);
+```
+
+## Media Field (Video)
+
+In order to handle videos with thumbnails you need to use the `Media` field instead of `Images`. This way you are able to upload videos as well.
+
+```php
+use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
+
+class Category extends Resource
+{
+    public function fields(Request $request)
+    {
+        Media::make('Gallery') // media handles videos
+            ->thumbnail('thumb')
+            ->singleMediaRules('max:5000'); // max 5000kb
+    }
+}
+
+// ..
+
+class YourModel extends Model implements HasMedia
+{
+    public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->extractVideoFrameAtSecond(1);
+    }
+}
 ```
 
 # Credits
