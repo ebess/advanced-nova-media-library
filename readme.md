@@ -147,8 +147,8 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
 
 class Category extends Resource
 {
-	public function fields(Request $request)
-	{
+    public function fields(Request $request)
+    {
         Media::make('Gallery') // media handles videos
             ->thumbnail('thumb')
             ->singleMediaRules('max:5000'); // max 5000kb
