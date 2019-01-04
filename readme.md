@@ -145,8 +145,28 @@ In order to handle videos with thumbnails you need to use the `Media` field inst
 ```php
 use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
 
-Media::make('Gallery')
-    ->singleMediaRules('max:5000'); // max 5000kb
+class Category extends Resource
+{
+	public function fields(Request $request)
+	{
+        Media::make('Gallery') // media handles videos
+            ->thumbnail('thumb')
+            ->singleMediaRules('max:5000'); // max 5000kb
+    }
+}
+
+// ..
+
+class YourModel extends Model implements HasMedia
+{
+	public function registerMediaConversions(Media $media = null)
+	{
+		$this->addMediaConversion('thumb')
+			->width(368)
+			->height(232)
+			->extractVideoFrameAtSecond(1);
+	}
+}
 ```
 
 # Credits
