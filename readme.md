@@ -159,13 +159,13 @@ class Category extends Resource
 
 class YourModel extends Model implements HasMedia
 {
-	public function registerMediaConversions(Media $media = null)
-	{
-		$this->addMediaConversion('thumb')
-			->width(368)
-			->height(232)
-			->extractVideoFrameAtSecond(1);
-	}
+    public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->extractVideoFrameAtSecond(1);
+    }
 }
 ```
 
