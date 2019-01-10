@@ -17,6 +17,7 @@ class Media extends Field
     protected $setNameCallback;
     protected $serializeMediaCallback;
     protected $customPropertiesFields = [];
+    protected $customProperties = [];
 
     protected $singleMediaRules = [];
 
@@ -39,6 +40,13 @@ class Media extends Field
         $this->customPropertiesFields = collect($customPropertiesFields);
 
         return $this->withMeta(compact('customPropertiesFields'));
+    }
+    
+    public function customPropertiesFields(array $customProperties): self
+    {
+        $this->customProperties = $customProperties);
+
+        return $this;
     }
 
     public function serializeMediaUsing(callable $serializeMediaUsing): self
@@ -117,7 +125,7 @@ class Media extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file, int $index) use ($request, $model, $collection) {
-                $media = $model->addMedia($file);
+                $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
                 if (is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
