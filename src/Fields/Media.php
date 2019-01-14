@@ -42,9 +42,9 @@ class Media extends Field
         return $this->withMeta(compact('customPropertiesFields'));
     }
     
-    public function customPropertiesFields(array $customProperties): self
+    public function customProperties(array $customProperties): self
     {
-        $this->customProperties = $customProperties);
+        $this->customProperties = $customProperties;
 
         return $this;
     }
