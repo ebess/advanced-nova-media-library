@@ -133,8 +133,15 @@ Images::make('Gallery')
     
 Files::make('Multiple files', 'multiple_files')->multiple()
     ->customPropertiesFields([
-       Boolean::make('Active'),
-       Markdown::make('Description'),
+        Boolean::make('Active'),
+        Markdown::make('Description'),
+    ]);
+    
+// custom properties without user input
+Files::make('Multiple files', 'multiple_files')->multiple()
+    ->customProperties([
+        'foo' => auth()->user()->foo,
+        'bar' => $api->getNeededData(),
     ]);
 ```
 
