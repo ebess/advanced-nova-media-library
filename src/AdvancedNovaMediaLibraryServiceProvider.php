@@ -1,6 +1,6 @@
 <?php
 
-namespace Ebess\AdvancedNovaMediaLibrary;
+namespace Sietzekeuning\AdvancedNovaMediaLibrary;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
