@@ -1,11 +1,11 @@
 <?php
 
-namespace Sietzekeuning\AdvancedNovaMediaLibrary\Fields;
+namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
 /**
  * Class Files
  *
- * @package Sietzekeuning\AdvancedNovaMediaLibrary\Fields
+ * @package Ebess\AdvancedNovaMediaLibrary\Fields
  */
 class Files extends Images
 {
