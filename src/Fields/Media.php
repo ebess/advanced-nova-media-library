@@ -246,7 +246,7 @@ class Media extends Field
      *
      * @return $this
      */
-    public function setResponsive($responsive = true)
+    public function withResponsiveImages($responsive = true)
     {
         $this->responsive = $responsive;
 
