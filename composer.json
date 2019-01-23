@@ -13,13 +13,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Sietzekeuning\\AdvancedNovaMediaLibrary\\": "src/"
+            "Ebess\\AdvancedNovaMediaLibrary\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Sietzekeuning\\AdvancedNovaMediaLibrary\\AdvancedNovaMediaLibraryServiceProvider"
+                "Ebess\\AdvancedNovaMediaLibrary\\AdvancedNovaMediaLibraryServiceProvider"
             ]
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sietzekeuning\AdvancedNovaMediaLibrary\Fields;
+namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
