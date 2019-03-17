@@ -2,27 +2,27 @@
   <div class="gallery" :class="{editable}">
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
-               
+
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
                     :key="index" :image="image" :field="field" :removable="editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @editCustomProperties="customPropertiesImageIndex = index"
                     />
-                    
+
       <CustomProperties
         v-if="customPropertiesImageIndex !== null"
         v-model="images[customPropertiesImageIndex]"
         :fields="customPropertiesFields"
         @close="customPropertiesImageIndex = null"
       />
-      
+
     </component>
 
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
-      <input :id="field.name" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
-      <label :for="field.name" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
+      <input :id="field.attribute" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
+      <label :for="field.attribute" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
     </span>
 
     <p v-if="hasError" class="my-2 text-danger">
