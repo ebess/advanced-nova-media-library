@@ -98,7 +98,7 @@ class Media extends Field
 
         Validator::make($data, $this->rules)->validate();
 
-        return function ($model) use ($request, $data, $attribute, $model) {
+        return function () use ($request, $data, $attribute, $model) {
             $this->handleMedia($request, $model, $attribute, $data);
 
             // fill custom properties for existing media
