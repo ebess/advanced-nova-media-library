@@ -5,7 +5,7 @@
                
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
                     :key="index" :image="image" :field="field" :removable="editable" @remove="remove(index)"
-                    :is-custom-properties-editable="customPropertiesFields.length > 0"
+                    :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @editCustomProperties="customPropertiesImageIndex = index"
                     />
                     
@@ -51,6 +51,10 @@
       value: Array,
       editable: Boolean,
       multiple: Boolean,
+      customProperties: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
