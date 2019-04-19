@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Validator;
 
 class Media extends Field
 {
+    use HandlesCustomPropertiesTrait;
+
     public $component = 'advanced-media-library-field';
 
     protected $setFileNameCallback;
     protected $setNameCallback;
     protected $serializeMediaCallback;
-    protected $customPropertiesFields = [];
-    protected $customProperties = [];
     protected $responsive = false;
 
     protected $singleMediaRules = [];
@@ -34,20 +34,6 @@ class Media extends Field
     public function conversion(string $conversion): self
     {
         return $this->withMeta(compact('conversion'));
-    }
-
-    public function customPropertiesFields(array $customPropertiesFields): self
-    {
-        $this->customPropertiesFields = collect($customPropertiesFields);
-
-        return $this->withMeta(compact('customPropertiesFields'));
-    }
-    
-    public function customProperties(array $customProperties): self
-    {
-        $this->customProperties = $customProperties;
-
-        return $this;
     }
 
     public function serializeMediaUsing(callable $serializeMediaUsing): self
@@ -98,13 +84,12 @@ class Media extends Field
 
         Validator::make($data, $this->rules)->validate();
 
-        $class = get_class($model);
-        $class::saved(function ($model) use ($request, $data, $attribute) {
+        return function () use ($request, $data, $attribute, $model) {
             $this->handleMedia($request, $model, $attribute, $data);
 
             // fill custom properties for existing media
             $this->fillCustomPropertiesFromRequest($request, $model, $attribute);
-        });
+        };
     }
 
     protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
@@ -153,34 +138,6 @@ class Media extends Field
             });
     }
 
-    private function fillCustomPropertiesFromRequest(NovaRequest $request, HasMedia $model, string $collection)
-    {
-        $mediaItems = $model->getMedia($collection);
-
-        collect($request->{$collection})->reject(function ($value) {
-            return $value instanceof UploadedFile;
-        })->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
-            if (!$media = $mediaItems->where('id', $id)->first()) {
-                return;
-            }
-
-            $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
-        });
-    }
-
-    private function fillMediaCustomPropertiesFromRequest(NovaRequest $request, $media, int $index, string $collection)
-    {
-        foreach ($this->customPropertiesFields as $field) {
-            $field->fillInto(
-                $request,
-                $media,
-                "custom_properties->{$field->attribute}",
-                "{$collection}-custom-properties.{$index}.{$field->attribute}"
-            );
-        }
-
-        $media->save();
-    }
 
     private function removeDeletedMedia($data, Collection $medias): Collection
     {

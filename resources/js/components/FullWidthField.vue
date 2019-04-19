@@ -2,7 +2,7 @@
   <field-wrapper>
     <div class="py-6">
       <div class="px-8">
-        <form-label :for="field.name" :class="{
+        <form-label :for="field.attribute" :class="{
                       'mb-2': field.helpText && showHelpText
                   }">
           {{ fieldLabel }}
