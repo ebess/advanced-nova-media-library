@@ -84,13 +84,12 @@ class Media extends Field
 
         Validator::make($data, $this->rules)->validate();
 
-        $class = get_class($model);
-        $class::saved(function ($model) use ($request, $data, $attribute) {
+        return function () use ($request, $data, $attribute, $model) {
             $this->handleMedia($request, $model, $attribute, $data);
 
             // fill custom properties for existing media
             $this->fillCustomPropertiesFromRequest($request, $model, $attribute);
-        });
+        };
     }
 
     protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
