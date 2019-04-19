@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class Media extends Field
 {
-	use HandlesCustomPropertiesTrait;
+    use HandlesCustomPropertiesTrait;
 
     public $component = 'advanced-media-library-field';
 

@@ -13,10 +13,10 @@ class Files extends Images
 
     public $meta = ['type' => 'file'];
 
-	public function __construct($name, $attribute = null, $resolveCallback = null)
-	{
-		parent::__construct($name, $attribute, $resolveCallback);
+    public function __construct($name, $attribute = null, $resolveCallback = null)
+    {
+        parent::__construct($name, $attribute, $resolveCallback);
 
-		$this->hideFromIndex();
-	}
+        $this->hideFromIndex();
+    }
 }
