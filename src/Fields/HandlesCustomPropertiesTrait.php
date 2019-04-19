@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\FileBag;
 
 /**
  * @mixin Media
@@ -32,16 +33,24 @@ trait HandlesCustomPropertiesTrait
 	private function fillCustomPropertiesFromRequest(NovaRequest $request, HasMedia $model, string $collection)
 	{
 		$mediaItems = $model->getMedia($collection);
+		$items = $request->{$collection};
 
-		collect($request->{$collection})->reject(function ($value) {
-			return $value instanceof UploadedFile;
-		})->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
-			if (!$media = $mediaItems->where('id', $id)->first()) {
-				return;
-			}
+		// do not handle files as custom properties on files are not supported yet
+		if ($items instanceof FileBag) {
+			return;
+		}
 
-			$this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
-		});
+		collect($items)
+			->reject(function ($value) {
+				return $value instanceof UploadedFile || $value instanceof FileBag;
+			})
+			->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
+				if (!$media = $mediaItems->where('id', $id)->first()) {
+					return;
+				}
+
+				$this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+			});
 	}
 
 	/**
