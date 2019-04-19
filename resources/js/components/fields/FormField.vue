@@ -2,7 +2,7 @@
   <component :is="field.fullSize ? 'full-width-field' : 'default-field'" :field="field">
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
-        <gallery slot="value" v-model="value" editable :field="field" :multiple="field.multiple"
+        <gallery slot="value" v-model="value" editable custom-properties :field="field" :multiple="field.multiple"
                  :has-error="hasError" :first-error="firstError" v-if="hasSetInitialValue"/>
       </div>
     </template>
