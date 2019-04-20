@@ -165,7 +165,6 @@ class Media extends Field
     {
         $this->value = $resource->getMedia($attribute ?? $this->attribute)
             ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
-                $conversion = $this->meta['conversion'] ?? null;
                 $urls = [
                     'default' => $media->getFullUrl($this->meta['conversion'] ?? ''),
                 ];

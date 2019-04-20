@@ -4,6 +4,9 @@
       <a class="download mr-2" :href="image.full_urls.default" target="_blank">
         <icon type="search" view-box="0 0 20 20" width="16" height="16" />
       </a>
+      <a v-if="downloadUrl" class="download mr-2" :href="downloadUrl">
+        <icon type="download" view-box="0 0 20 22" width="16" height="16" />
+      </a>
       <span class="label">
         {{ image.file_name }}
       </span>
@@ -25,8 +28,10 @@
     components: {
       GalleryItem,
     },
-    computed() {
-      console.log(this.image);
+    computed: {
+      downloadUrl() {
+        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
+      },
     }
   };
 </script>
