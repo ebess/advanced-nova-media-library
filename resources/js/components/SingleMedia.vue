@@ -1,10 +1,13 @@
 <template>
   <gallery-item class="gallery-item-image">
     <div class="gallery-item-info p-3">
-      <a v-if="removable" class="delete" href="#" @click.prevent="$emit('remove')">
+      <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
+        <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
+      </a>
+      <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
         <icon type="delete" view-box="0 0 20 20" width="16" height="16"/>
       </a>
-      <a v-if="isCustomPropertiesEditable" class="edit" href="#" @click.prevent="$emit('editCustomProperties')">
+      <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('editCustomProperties')" title="Edit custom properties">
         <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a class="preview" :href="image.full_urls.default" target="_blank">
@@ -27,6 +30,11 @@
       return {
         src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
       }
+    },
+    computed: {
+      downloadUrl() {
+        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
+      },
     },
     watch: {
       image: {
@@ -122,9 +130,7 @@
         }
 
         .delete {
-          position: absolute;
           right: 10px;
-          top: 10px;
           color: var(--danger);
         }
       }
@@ -137,11 +143,18 @@
       }
     }
 
-    .edit {
+    .icon {
       position: absolute;
-      right: 30px;
       top: 10px;
       color: var(--info);
+    }
+
+    .edit {
+      right: 30px;
+    }
+
+    .download {
+      left: 10px;
     }
   }
 </style>
