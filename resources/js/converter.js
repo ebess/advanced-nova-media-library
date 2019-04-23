@@ -1,0 +1,28 @@
+export default (base64, mime, fileName) => {
+  mime = mime || '';
+
+  base64 = base64.replace(`data:${mime};base64,`, '');
+  const sliceSize = 1024;
+
+  const byteChars = window.atob(base64);
+  const byteArrays = [];
+
+  for (let offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
+    let slice = byteChars.slice(offset, offset + sliceSize);
+
+    let byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    let byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  const file = new Blob(byteArrays, {type: mime});
+
+  file.name = fileName;
+
+  return file;
+}

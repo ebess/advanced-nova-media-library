@@ -66,6 +66,48 @@ class Media extends Field
     }
 
     /**
+     * Set the responsive mode, which enables the creation of responsive images on upload
+     *
+     * @param boolean $responsive
+     *
+     * @return $this
+     */
+    public function withResponsiveImages($responsive = true)
+    {
+        $this->responsive = $responsive;
+
+        return $this;
+    }
+
+    /**
+     * Set a filename callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setFileName($callback)
+    {
+        $this->setFileNameCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set a name callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setName($callback)
+    {
+        $this->setNameCallback = $callback;
+
+        return $this;
+    }
+
+    /**
      * @param HasMedia $model
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
@@ -166,6 +208,8 @@ class Media extends Field
         $this->value = $resource->getMedia($attribute ?? $this->attribute)
             ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
                 $urls = [
+                    // original needed several purposes like cropping
+                    '__original__' => $media->getFullUrl(),
                     'default' => $media->getFullUrl($this->meta['conversion'] ?? ''),
                 ];
 
@@ -193,47 +237,5 @@ class Media extends Field
         }
 
         return $media->toArray();
-    }
-
-    /**
-     * Set the responsive mode, which enables the creation of responsive images on upload
-     *
-     * @param boolean $responsive
-     *
-     * @return $this
-     */
-    public function withResponsiveImages($responsive = true)
-    {
-        $this->responsive = $responsive;
-
-        return $this;
-    }
-
-    /**
-     * Set a filename callable callback
-     *
-     * @param callable $callback
-     *
-     * @return $this
-     */
-    public function setFileName($callback)
-    {
-        $this->setFileNameCallback = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Set a name callable callback
-     *
-     * @param callable $callback
-     *
-     * @return $this
-     */
-    public function setName($callback)
-    {
-        $this->setNameCallback = $callback;
-
-        return $this;
     }
 }

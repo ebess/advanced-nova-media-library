@@ -10,8 +10,11 @@
       <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('editCustomProperties')" title="Edit custom properties">
         <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
       </a>
-      <a class="preview" :href="image.full_urls.default" target="_blank">
+      <a class="preview" href="#" @click.prevent="showPreview">
         <icon type="search" view-box="0 0 20 20" width="30" height="30"/>
+      </a>
+      <a v-if="croppable" class="icon crop" href="#" @click.prevent="$emit('crop-start', image)">
+        <scissors-icon brand="var(--info)" view-box="0 0 20 20" width="16" height="16"/>
       </a>
     </div>
     <img :src="src" :alt="image.name" class="gallery-image">
@@ -19,21 +22,27 @@
 </template>
 
 <script>
+  import ScissorsIcon from './icons/Scissors';
   import GalleryItem from './GalleryItem';
 
   export default {
     components: {
+      ScissorsIcon,
       GalleryItem,
     },
-    props: ['image', 'field', 'removable', 'isCustomPropertiesEditable'],
-    data() {
-      return {
-        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
-      }
-    },
+    props: ['image', 'field', 'removable', 'editable', 'isCustomPropertiesEditable'],
+    data: () => ({
+      acceptedMimeTypes: ['image/jpg', 'image/jpeg', 'image/png'],
+      src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+    }),
     computed: {
       downloadUrl() {
         return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
+      },
+      croppable() {
+        return this.editable &&
+          this.field.croppable &&
+          this.acceptedMimeTypes.includes(this.image.mime_type || this.image.file.type);
       },
     },
     watch: {
@@ -43,6 +52,10 @@
       }
     },
     methods: {
+      showPreview() {
+        const blobUrl = this.image.file ? URL.createObjectURL(this.image.file) : this.image.full_urls.default;
+        window.open(blobUrl, '_blank');
+      },
       getImage() {
         // Return desired image conversion on view if it exists
         let conversionOnView = this.field.conversionOnView;
@@ -133,6 +146,12 @@
           right: 10px;
           color: var(--danger);
         }
+
+        .crop {
+          left: 10px;
+          top: auto;
+          bottom: 10px;
+        }
       }
 
       .gallery-image {
@@ -144,6 +163,7 @@
     }
 
     .icon {
+      cursor: pointer;
       position: absolute;
       top: 10px;
       color: var(--info);

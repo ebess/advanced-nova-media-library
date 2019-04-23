@@ -10,7 +10,8 @@ images and order them by drag and drop.
 * [Single image upload](#single-image-upload)  
 * [Multiple image upload](#multiple-image-upload)  
 * [Names of uploaded images](#names-of-uploaded-images)  
-* [Custom properties](#custom-properties)  
+* [Image cropping](#image-cropping)
+* [Custom properties](#custom-properties)
 * [Media Field (Video)](#media-field-video)  
 
 ## Install
@@ -128,6 +129,22 @@ If you want to use responsive image functionality from the [Spatie MediaLibrary]
 Images::make('Image 1', 'img1')
     ->withResponsiveImages();
 
+```
+
+## Image cropping
+
+![Cropping](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/cropping.gif)
+
+By default you are able to crop / rotate images by clicking the scissors in the left bottom corner on the edit view. 
+The [vue-js-clipper](https://github.com/timtnleeProject/vuejs-clipper) is used for this purpose. The cropping feature is 
+limited to mime type of `image/jpg`, `image/jpeg` and `image/png`.
+
+**Important:** By cropping an existing image the original media model is deleted and replaced by the cropped image. 
+All custom properties are copied form the old to the new model.
+
+To disable this feature use the `croppable` method:
+```php
+Images::make('Gallery')->croppable(false);
 ```
 
 ## Custom properties

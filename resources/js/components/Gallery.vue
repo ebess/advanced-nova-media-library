@@ -1,12 +1,15 @@
 <template>
   <div class="gallery" :class="{editable}">
+    <cropper v-if="editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage"/>
+
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
 
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
-                    :key="index" :image="image" :field="field" :removable="editable" @remove="remove(index)"
+                    :key="index" :image="image" :field="field" :editable="editable" :removable="editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
-                    @editCustomProperties="customPropertiesImageIndex = index"
+                    @edit-custom-properties="customPropertiesImageIndex = index"
+                    @crop-start="cropImage = $event"
                     />
 
       <CustomProperties
@@ -34,6 +37,7 @@
 <script>
   import SingleMedia from './SingleMedia';
   import SingleFile from './SingleFile';
+  import Cropper from './Cropper';
   import CustomProperties from './CustomProperties';
   import Draggable from 'vuedraggable';
 
@@ -43,6 +47,7 @@
       SingleMedia,
       SingleFile,
       CustomProperties,
+      Cropper,
     },
     props: {
       hasError: Boolean,
@@ -58,6 +63,7 @@
     },
     data() {
       return {
+        cropImage: null,
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
@@ -93,6 +99,11 @@
         this.images = this.images.filter((value, i) => i !== index);
       },
 
+      onCroppedImage(image) {
+        let index = this.images.indexOf(this.cropImage);
+        this.images[index] = Object.assign(image, { custom_properties: this.cropImage.custom_properties });
+      },
+
       add() {
         Array.from(this.$refs.file.files).forEach(file => {
           file = new File([file], file.name, {type: file.type});
@@ -103,6 +114,7 @@
             const fileData = {
               file: file,
               full_urls: {
+                __original__: reader.result,
                 default: reader.result,
               },
               name: file.name,
@@ -116,6 +128,9 @@
             }
           };
         });
+
+        // reset file input so if you upload the same image sequentially
+        this.$refs.file.value = null;
       },
     },
   };
