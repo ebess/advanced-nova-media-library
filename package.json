@@ -18,6 +18,7 @@
     "dependencies": {
         "slug": "^0.9.1",
         "vue": "^2.5.0",
-        "vuedraggable": "^2.16.0"
+        "vuedraggable": "^2.16.0",
+        "vuejs-clipper": "^0.2.11"
     }
 }

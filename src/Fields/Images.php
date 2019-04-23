@@ -2,17 +2,16 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
-use Illuminate\Support\Collection;
-use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Validator;
-
 class Images extends Media
 {
-
     protected $defaultValidatorRules = ['image'];
+
+    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    {
+        parent::__construct($name, $attribute, $resolveCallback);
+
+        $this->croppable();
+    }
 
     /**
      * Do we deprecate this for SingleMediaRules?
@@ -24,5 +23,10 @@ class Images extends Media
         $this->singleMediaRules = $singleImageRules;
 
         return $this;
+    }
+
+    public function croppable(bool $croppable = true): self
+    {
+        return $this->withMeta(compact('croppable'));
     }
 }
