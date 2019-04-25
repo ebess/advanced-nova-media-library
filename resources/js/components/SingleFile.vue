@@ -10,7 +10,7 @@
       <span class="label">
         {{ image.file_name }}
       </span>
-      <a v-if="isCustomPropertiesEditable" class="edit edit--file ml-2" href="#" @click.prevent="$emit('editCustomProperties')">
+      <a v-if="isCustomPropertiesEditable" class="edit edit--file ml-2" href="#" @click.prevent="$emit('edit-custom-properties')">
         <icon type="edit" view-box="0 0 20 20" width="16" height="16" />
       </a>
       <a v-if="removable" class="delete ml-2" href="#" @click.prevent="$emit('remove')">

@@ -7,7 +7,7 @@
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
         <icon type="delete" view-box="0 0 20 20" width="16" height="16"/>
       </a>
-      <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('editCustomProperties')" title="Edit custom properties">
+      <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('edit-custom-properties')" title="Edit custom properties">
         <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a class="preview" href="#" @click.prevent="showPreview">
