@@ -24,7 +24,10 @@
 <script>
   export default {
     props: {
-      brand: 'var(--black)',
+      brand: {
+        type: String,
+        default: 'var(--black)'
+      },
     },
   };
 </script>
