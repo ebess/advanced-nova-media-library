@@ -155,6 +155,12 @@ To disable this feature use the `croppable` method:
 Images::make('Gallery')->croppable(false);
 ```
 
+You can set all configurations like ratio e.g. as following: 
+```php
+Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
+```
+Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
+
 ## Custom properties
 
 ![Custom properties](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/custom-properties.gif)
