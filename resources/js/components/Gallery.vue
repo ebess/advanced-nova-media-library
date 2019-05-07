@@ -1,6 +1,6 @@
 <template>
   <div class="gallery" :class="{editable}">
-    <cropper v-if="editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage"/>
+    <cropper v-if="editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
