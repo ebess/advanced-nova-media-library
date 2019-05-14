@@ -57,7 +57,7 @@ In order to be able to upload and handle generic files just go ahead and use the
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
 Files::make('Single file', 'one_file'),
-Files::make('Multiple files', 'multiple_files')->multiple(),
+Files::make('Multiple files', 'multiple_files'),
 ```
 
 ## Single image upload
@@ -71,7 +71,7 @@ public function fields(Request $request)
 {
     return [
         Images::make('Main image', 'main') // second parameter is the media collection name
-            ->thumbnail('thumb') // conversion used to display the image
+            ->conversionOnIndexView('thumb') // conversion used to display the image
             ->rules('required'), // validation rules
     ];
 }
@@ -90,10 +90,10 @@ public function fields(Request $request)
 {
     return [
         Images::make('Images', 'my_multi_collection') // second parameter is the media collection name
-            ->conversion('medium-size') // conversion used to display the "original" image
-            ->conversionOnView('thumb') // conversion used on the model's view
-            ->thumbnail('thumb') // conversion used to display the image on the model's index page
-            ->multiple() // enable upload of multiple images - also ordering
+            ->conversionOnPreview('medium-size') // conversion used to display the "original" image
+            ->conversionOnDetailView('thumb') // conversion used on the model's view
+            ->conversionOnIndexView('thumb') // conversion used to display the image on the model's index page
+            ->conversionOnForm('thumb') // conversion used to display the image on the model's form
             ->fullSize() // full size column
             ->rules('required', 'size:3') // validation rules for the collection of images
             // validation rules for the collection of images
@@ -172,14 +172,14 @@ Images::make('Gallery')
         Markdown::make('Description'),
     ]);
     
-Files::make('Multiple files', 'multiple_files')->multiple()
+Files::make('Multiple files', 'multiple_files')
     ->customPropertiesFields([
         Boolean::make('Active'),
         Markdown::make('Description'),
     ]);
     
 // custom properties without user input
-Files::make('Multiple files', 'multiple_files')->multiple()
+Files::make('Multiple files', 'multiple_files')
     ->customProperties([
         'foo' => auth()->user()->foo,
         'bar' => $api->getNeededData(),
@@ -198,7 +198,7 @@ class Category extends Resource
     public function fields(Request $request)
     {
         Media::make('Gallery') // media handles videos
-            ->thumbnail('thumb')
+            ->conversionOnIndexView('thumb')
             ->singleMediaRules('max:5000'); // max 5000kb
     }
 }

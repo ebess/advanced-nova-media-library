@@ -53,34 +53,28 @@
     },
     methods: {
       showPreview() {
-        const blobUrl = this.image.file ? URL.createObjectURL(this.image.file) : this.image.full_urls.default;
+        const blobUrl = this.image.file ? URL.createObjectURL(this.image.file) : this.image.__media_urls__.preview;
         window.open(blobUrl, '_blank');
       },
       getImage() {
-        // Return desired image conversion on view if it exists
-        let conversionOnView = this.field.conversionOnView;
-
-        if (this.image.id && conversionOnView && this.image.full_urls[conversionOnView]) {
-          this.src = this.image.full_urls[conversionOnView];
+        if (this.editable && this.image.__media_urls__.form) {
+          this.src = this.image.__media_urls__.form;
           return;
         }
 
-        // Return thumbnail if conversion exists
-        let thumbnail = this.field.thumbnail;
-
-        if (this.image.id && thumbnail && this.image.full_urls[thumbnail]) {
-          this.src = this.image.full_urls[thumbnail];
+        if (!this.editable && this.image.__media_urls__.detailView) {
+          this.src = this.image.__media_urls__.detailView;
           return;
         }
 
-        if (this.isVideo(this.image.full_urls.default)) {
+        if (this.isVideo(this.image.__media_urls__.__original__)) {
           //Seconds to seek to, to get thumbnail of video
           let seconds = 1;  //TODO get this from the field instead of hardcoding it here
-          this.getVideoThumbnail(this.image.full_urls.default, seconds);
+          this.getVideoThumbnail(this.image.__media_urls__.__original__, seconds);
           return;
         }
 
-        this.src = this.image.full_urls.default;
+        this.src = this.image.__media_urls__.__original__;
       },
       getVideoThumbnail(path, secs = 0) {
         const video = document.createElement('video');

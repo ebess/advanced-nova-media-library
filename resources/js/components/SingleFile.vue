@@ -1,7 +1,7 @@
 <template>
   <gallery-item class="gallery-item-file">
     <div class="gallery-item-info">
-      <a class="download mr-2" :href="image.full_urls.default" target="_blank">
+      <a class="download mr-2" :href="image.__media_urls__.__original__" target="_blank">
         <icon type="search" view-box="0 0 20 20" width="16" height="16" />
       </a>
       <a v-if="downloadUrl" class="download mr-2" :href="downloadUrl">

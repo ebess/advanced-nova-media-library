@@ -53,13 +53,13 @@
           const isNewImage = !file.id;
 
           if (isNewImage) {
-            formData.append(`${field}[${index}]`, file.file, file.name);
+            formData.append(`__media__[${field}][${index}]`, file.file, file.name);
           } else {
-            formData.append(`${field}[${index}]`, file.id);
+            formData.append(`__media__[${field}][${index}]`, file.id);
           }
 
           objectToFormData({
-            [`${field}-custom-properties[${index}]`]: this.getImageCustomProperties(file)
+            [`__media-custom-properties__[${field}][${index}]`]: this.getImageCustomProperties(file)
           }, {}, formData);
         });
       },

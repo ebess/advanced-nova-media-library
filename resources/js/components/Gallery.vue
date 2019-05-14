@@ -24,8 +24,8 @@
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
-      <input :id="field.attribute" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
-      <label :for="field.attribute" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
+      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
+      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
     </span>
 
     <p v-if="hasError" class="my-2 text-danger">
@@ -113,7 +113,7 @@
           reader.onload = () => {
             const fileData = {
               file: file,
-              full_urls: {
+              __media_urls__: {
                 __original__: reader.result,
                 default: reader.result,
               },

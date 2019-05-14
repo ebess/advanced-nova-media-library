@@ -6,12 +6,13 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 
 class Media extends Field
 {
-    use HandlesCustomPropertiesTrait;
+    use HandlesCustomPropertiesTrait, HandlesConversionsTrait;
 
     public $component = 'advanced-media-library-field';
 
@@ -26,31 +27,11 @@ class Media extends Field
 
     public $meta = ['type' => 'media'];
 
-    public function thumbnail(string $thumbnail): self
-    {
-        return $this->withMeta(compact('thumbnail'));
-    }
-
-    public function conversion(string $conversion): self
-    {
-        return $this->withMeta(compact('conversion'));
-    }
-
-    public function serializeMediaUsing(callable $serializeMediaUsing): self
+	public function serializeMediaUsing(callable $serializeMediaUsing): self
     {
         $this->serializeMediaCallback = $serializeMediaUsing;
 
         return $this;
-    }
-
-    public function conversionOnView(string $conversionOnView): self
-    {
-        return $this->withMeta(compact('conversionOnView'));
-    }
-
-    public function multiple(): self
-    {
-        return $this->withMeta(['multiple' => true]);
     }
 
     public function fullSize(): self
@@ -112,7 +93,8 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        $data = request($requestAttribute, []);
+    	$attr = request('__media__', []);
+        $data = $attr[$requestAttribute] ?? [];
 
         collect($data)
             ->filter(function ($value) {
@@ -180,7 +162,6 @@ class Media extends Field
             });
     }
 
-
     private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
@@ -200,34 +181,35 @@ class Media extends Field
     }
 
     /**
-     * @param HasMedia $resource
+     * @param HasMedia|HasMediaTrait $resource
      * @param null $attribute
      */
     public function resolve($resource, $attribute = null)
     {
-        $this->value = $resource->getMedia($attribute ?? $this->attribute)
+		$collectionName = $attribute ?? $this->attribute;
+
+		$this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
-                $urls = [
-                    // original needed several purposes like cropping
-                    '__original__' => $media->getFullUrl(),
-                    'default' => $media->getFullUrl($this->meta['conversion'] ?? ''),
-                ];
-
-                if ($thumbnail = $this->meta['thumbnail'] ?? null) {
-                    $urls[$thumbnail] = $media->getFullUrl($thumbnail);
-                }
-
-                if ($conversionOnView = $this->meta['conversionOnView'] ?? null) {
-                    $urls[$conversionOnView] = $media->getFullUrl($conversionOnView);
-                }
-
-                return array_merge($this->serializeMedia($media), ['full_urls' => $urls]);
+                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
             });
 
-        if ($data = $this->value->first()) {
-            $thumbnailUrl = $data['full_urls'][$this->meta['thumbnail'] ?? 'default'];
-            $this->withMeta(compact('thumbnailUrl'));
-        }
+		if ($collectionName) {
+			$this->checkCollectionIsMultiple($resource, $collectionName);
+		}
+    }
+
+	/**
+	 * @param HasMedia|HasMediaTrait $resource
+	 */
+	protected function checkCollectionIsMultiple(HasMedia $resource, string $collectionName)
+	{
+		$resource->registerMediaCollections();
+		$isSingle = collect($resource->mediaCollections)
+				->where('name', $collectionName)
+				->first()
+				->singleFile ?? false;
+
+		$this->withMeta(['multiple' => !$isSingle]);
     }
 
     public function serializeMedia(\Spatie\MediaLibrary\Models\Media $media): array
@@ -238,4 +220,39 @@ class Media extends Field
 
         return $media->toArray();
     }
+
+	/**
+	 * @deprecated not needed, field recognizes single/multi file media by itself
+	 */
+	public function multiple(): self
+	{
+		return $this;
+	}
+
+	/**
+	 * @deprecated
+	 * @see conversionOnIndexView
+	 */
+	public function thumbnail(string $conversionOnIndexView): self
+	{
+		return $this->withMeta(compact('conversionOnIndexView'));
+	}
+
+	/**
+	 * @deprecated
+	 * @see conversionOnPreview
+	 */
+	public function conversion(string $conversionOnPreview): self
+	{
+		return $this->withMeta(compact('conversionOnPreview'));
+	}
+
+	/**
+	 * @deprecated
+	 * @see conversionOnDetailView
+	 */
+	public function conversionOnView(string $conversionOnDetailView): self
+	{
+		return $this->withMeta(compact('conversionOnDetailView'));
+	}
 }

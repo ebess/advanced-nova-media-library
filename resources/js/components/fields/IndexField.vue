@@ -1,6 +1,6 @@
 <template>
   <div v-if="field.type === 'media'">
-    <img v-if="field.thumbnailUrl" :src="field.thumbnailUrl" style="object-fit: cover;" class="rounded-full w-8 h-8" />
+    <img v-if="value" :src="imageUrl" style="object-fit: cover;" class="rounded-full w-8 h-8" />
     <span v-else>&mdash;</span>
   </div>
   <div v-else>
@@ -14,5 +14,13 @@
 <script>
   export default {
     props: ['resourceName', 'field'],
+    computed: {
+      value() {
+        return this.field.value[0];
+      },
+      imageUrl() {
+        return this.value.__media_urls__.indexView;
+      },
+    },
   };
 </script>

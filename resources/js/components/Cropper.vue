@@ -39,7 +39,7 @@
         return this.image.mime_type || this.image.file.type;
       },
       imageUrl() {
-        return this.image ? this.image.full_urls.__original__ : null;
+        return this.image ? this.image.__media_urls__.__original__ : null;
       },
     },
     watch: {
@@ -57,7 +57,7 @@
 
         let fileData = {
           file,
-          full_urls: {
+          __media_urls__: {
             __original__: base64,
             default: base64,
           },

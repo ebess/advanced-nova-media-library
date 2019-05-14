@@ -33,7 +33,7 @@ trait HandlesCustomPropertiesTrait
     private function fillCustomPropertiesFromRequest(NovaRequest $request, HasMedia $model, string $collection)
     {
         $mediaItems = $model->getMedia($collection);
-        $items = $request->{$collection};
+        $items = $request->get('__media__', [])[$collection] ?? [];
 
         // do not handle files as custom properties on files are not supported yet
         if ($items instanceof FileBag) {
@@ -63,12 +63,10 @@ trait HandlesCustomPropertiesTrait
 
         /** @var Field $field */
         foreach ($this->customPropertiesFields as $field) {
-            $field->fillInto(
-                $request,
-                $media,
-                "custom_properties->{$field->attribute}",
-                "{$collection}-custom-properties.{$index}.{$field->attribute}"
-            );
+			$targetAttribute = "custom_properties->{$field->attribute}";
+			$requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
+
+			$field->fillInto($request, $media, $targetAttribute, $requestAttribute);
         }
 
         $media->save();
