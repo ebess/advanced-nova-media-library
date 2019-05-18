@@ -26,7 +26,7 @@
       image: Object,
       configs: {
         type: Object,
-        default: {},
+        default: => {},
       },
     },
     data: () => ({
