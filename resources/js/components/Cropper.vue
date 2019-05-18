@@ -9,7 +9,7 @@
         <div class="bg-30 px-6 py-3 footer rounded-lg">
           <button type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="$emit('close')">{{__('Cancel')}}</button>
 
-          <input class="input-range ml-4 mr-4" type="range" min="0" max="360" step="30" v-model="rotate">
+          <input class="input-range ml-4 mr-4" type="range" min="0" max="360" step="30" v-model.number="rotate">
 
           <button type="button" class="btn btn-default btn-primary" @click="onSave">{{__('Update')}}</button>
         </div>
