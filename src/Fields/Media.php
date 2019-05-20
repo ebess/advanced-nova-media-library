@@ -2,6 +2,7 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -21,6 +22,7 @@ class Media extends Field
     protected $serializeMediaCallback;
     protected $responsive = false;
 
+    protected $collectionMediaRules = [];
     protected $singleMediaRules = [];
 
     protected $defaultValidatorRules = [];
@@ -34,14 +36,21 @@ class Media extends Field
         return $this;
     }
 
-    public function fullSize(): self
+	public function fullSize(): self
     {
         return $this->withMeta(['fullSize' => true]);
     }
 
-    public function singleMediaRules($singleMediaRules): self
+	public function rules($rules): self
+	{
+		$this->collectionMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
+
+		return $this;
+	}
+
+    public function singleMediaRules($rules): self
     {
-        $this->singleMediaRules = $singleMediaRules;
+        $this->singleMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
 
         return $this;
     }
@@ -106,7 +115,8 @@ class Media extends Field
                 ])->validate();
             });
 
-        Validator::make($data, $this->rules)->validate();
+        Validator::make([$requestAttribute => $data], [$requestAttribute => $this->collectionMediaRules])
+			->validate();
 
         return function () use ($request, $data, $attribute, $model) {
             $this->handleMedia($request, $model, $attribute, $data);

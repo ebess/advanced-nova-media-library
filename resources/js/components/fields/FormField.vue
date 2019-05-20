@@ -1,5 +1,5 @@
 <template>
-  <component :is="field.fullSize ? 'full-width-field' : 'default-field'" :field="field">
+  <component :is="field.fullSize ? 'full-width-field' : 'default-field'" :field="field" full-width-content>
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
