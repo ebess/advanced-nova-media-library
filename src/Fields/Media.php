@@ -24,6 +24,8 @@ class Media extends Field
 
     protected $collectionMediaRules = [];
     protected $singleMediaRules = [];
+	
+    protected $customHeaders = [];
 
     protected $defaultValidatorRules = [];
 
@@ -53,6 +55,13 @@ class Media extends Field
         $this->singleMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
 
         return $this;
+    }
+	
+    public function customHeaders(array $headers): self
+    {
+	$this->customHeaders = $headers;
+	
+	return $this;
     }
 
     /**
@@ -150,6 +159,10 @@ class Media extends Field
                 if($this->responsive) {
                     $media->withResponsiveImages();
                 }
+		
+		if(!empty($this->customHeaders)) {
+		    $media->addCustomHeaders($this->customHeaders);
+		}
 
                 if (is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
