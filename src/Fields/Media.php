@@ -102,13 +102,9 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-    	$attr = request('__media__', []);
-        $data = $attr[$requestAttribute] ?? [];
+        $data = $request->file("__media__.{$requestAttribute}", []);
 
         collect($data)
-            ->filter(function ($value) {
-                return $value instanceof UploadedFile;
-            })
             ->each(function ($media) use ($requestAttribute) {
                 Validator::make([$requestAttribute => $media], [
                     $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleMediaRules),
