@@ -5,6 +5,12 @@
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
                  v-model="value" editable custom-properties :field="field" :multiple="field.multiple"
                  :has-error="hasError" :first-error="firstError"/>
+        <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" v-on:click="existingMediaOpen = true">View existing media</button>
+        <existing-media
+          :open="existingMediaOpen"
+          v-on:close="existingMediaOpen = false"
+          v-on:select="(item) => { addExistingItem(item) }"
+        ></existing-media>
       </div>
     </template>
   </component>
@@ -14,6 +20,7 @@
   import { FormField, HandlesValidationErrors } from 'laravel-nova'
   import Gallery from '../Gallery';
   import FullWidthField from '../FullWidthField';
+  import ExistingMedia from '../ExistingMedia';
   import objectToFormData from 'object-to-formdata';
 
   export default {
@@ -21,11 +28,13 @@
     components: {
       Gallery,
       FullWidthField,
+      ExistingMedia
     },
     props: ['resourceName', 'resourceId', 'field'],
     data() {
       return {
         hasSetInitialValue: false,
+        existingMediaOpen: false
       }
     },
 
@@ -78,6 +87,10 @@
       handleChange(value) {
         this.value = value
       },
+
+      addExistingItem(item) {
+        console.log('TODO add item... ', item);
+      }
     },
   };
 </script>
