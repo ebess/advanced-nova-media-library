@@ -392,6 +392,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -401,12 +409,15 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       requestParams: {
-        search_text: ''
+        search_text: '',
+        page: 1,
+        per_page: 6
       },
+      data: [],
       response: {},
       loading: false,
       search: _.debounce(function () {
-        return this.fireRequest();
+        this.refresh();
       }, 300)
     };
   },
@@ -416,20 +427,48 @@ __webpack_require__.r(__webpack_exports__);
       type: Boolean
     }
   },
+  computed: {
+    showNextPage: function showNextPage() {
+      if (this.data.length == this.requestParams.page * this.requestParams.per_page) {
+        return true;
+      }
+
+      return false;
+    }
+  },
   methods: {
     close: function close() {
       this.$emit('close');
     },
-    fireRequest: function fireRequest() {
+    refresh: function refresh() {
       var _this = this;
+
+      this.page = 1;
+      return this.fireRequest().then(function (response) {
+        _this.data = response.data.data;
+        return response;
+      });
+    },
+    nextPage: function nextPage() {
+      var _this2 = this;
+
+      this.page += 1;
+      return this.fireRequest().then(function (response) {
+        _this2.data = _this2.data.concat(response.data.data);
+        return response;
+      });
+    },
+    fireRequest: function fireRequest() {
+      var _this3 = this;
 
       // Set loading to true
       this.loading = true;
       return this.createRequest().then(function (response) {
-        _this.response = response;
+        _this3.response = response;
+        return response;
       })["finally"](function () {
         // Set loading to false
-        _this.loading = false;
+        _this3.loading = false;
       });
     },
 
@@ -445,7 +484,7 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     open: function open(newValue) {
       if (newValue) {
-        this.fireRequest();
+        this.refresh();
       }
     }
   }
@@ -30171,21 +30210,13 @@ var render = function() {
             "div",
             { staticClass: "flex-grow overflow-x-hidden overflow-y-scroll" },
             [
-              _vm.loading
-                ? [
-                    _c("h4", { staticClass: "text-center mt-8" }, [
-                      _vm._v("Loading...")
-                    ])
-                  ]
-                : _vm.response &&
-                  "data" in _vm.response &&
-                  "data" in _vm.response.data
+              _vm.data.length > 1
                 ? [
                     _c(
                       "div",
                       { staticClass: "flex flex-wrap -mx-4 -mb-8" },
                       [
-                        _vm._l(_vm.response.data.data, function(item, key) {
+                        _vm._l(_vm.data, function(item, key) {
                           return [
                             _c("existing-media-item", {
                               key: key,
@@ -30202,11 +30233,48 @@ var render = function() {
                       2
                     )
                   ]
+                : [
+                    _c("h4", { staticClass: "text-center mt-8" }, [
+                      _vm._v("No results found")
+                    ])
+                  ],
+              _vm._v(" "),
+              _vm.loading
+                ? [
+                    _c("h4", { staticClass: "text-center mt-8" }, [
+                      _vm._v("Loading...")
+                    ])
+                  ]
                 : _vm._e()
             ],
             2
-          )
-        ]
+          ),
+          _vm._v(" "),
+          _vm.showNextPage
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex-shrink border-t border-40 pt-4 mt-4 text-right"
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "form-file-btn btn btn-default btn-primary ml-auto",
+                        attrs: { type: "button" },
+                        on: { click: _vm.nextPage }
+                      },
+                      [_vm._v("Load Next Page")]
+                    )
+                  ]
+                )
+              ]
+            : _vm._e()
+        ],
+        2
       )
     ]
   )

@@ -11,7 +11,9 @@ class MediaController extends Controller
     {
         $media_class = config('medialibrary.media_model');
 
-        $search_text = $request->input('search_text');
+        $search_text = $request->input('search_text') ?: null;
+        $per_page = $request->input('per_page') ?: 18;
+        $page = $request->input('page') ?: 1;
 
         $query = $media_class::query();
 
@@ -24,7 +26,7 @@ class MediaController extends Controller
 
         $query->latest();
 
-        $results = $query->simplePaginate(16);
+        $results = $query->paginate($per_page, ['*'], 'page', $page);
 
         return MediaResource::collection($results);
     }

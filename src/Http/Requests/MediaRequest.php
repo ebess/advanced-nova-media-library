@@ -24,7 +24,8 @@ class MediaRequest extends FormRequest
     {
         return [
             'search_text' => 'sometimes|nullable|string',
-            'page' => 'sometimes|nullable|number'
+            'page' => 'sometimes|nullable|numeric',
+            'per_page' => 'sometimes|nullable|numeric'
         ];
     }
 }
