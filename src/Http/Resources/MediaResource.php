@@ -26,6 +26,6 @@ class MediaResource extends JsonResource
          * - serializeMediaUsing
          *
          */
-        return array_merge($this->resource->toArray(), ['__media_urls__' => $this->getConversionUrls($media)]);
+        return array_merge($this->resource->toArray(), ['__media_urls__' => $this->getConversionUrls($this->resource)]);
     }
 }
