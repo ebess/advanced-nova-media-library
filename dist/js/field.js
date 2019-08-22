@@ -400,6 +400,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -411,7 +429,7 @@ __webpack_require__.r(__webpack_exports__);
       requestParams: {
         search_text: '',
         page: 1,
-        per_page: 6
+        per_page: 18
       },
       data: [],
       response: {},
@@ -443,7 +461,7 @@ __webpack_require__.r(__webpack_exports__);
     refresh: function refresh() {
       var _this = this;
 
-      this.page = 1;
+      this.requestParams.page = 1;
       return this.fireRequest().then(function (response) {
         _this.data = response.data.data;
         return response;
@@ -452,7 +470,7 @@ __webpack_require__.r(__webpack_exports__);
     nextPage: function nextPage() {
       var _this2 = this;
 
-      this.page += 1;
+      this.requestParams.page += 1;
       return this.fireRequest().then(function (response) {
         _this2.data = _this2.data.concat(response.data.data);
         return response;
@@ -485,6 +503,11 @@ __webpack_require__.r(__webpack_exports__);
     open: function open(newValue) {
       if (newValue) {
         this.refresh();
+        document.body.classList.add('overflow-x-hidden');
+        document.body.classList.add('overflow-y-hidden');
+      } else {
+        document.body.classList.remove('overflow-x-hidden');
+        document.body.classList.remove('overflow-y-hidden');
       }
     }
   }
@@ -30233,16 +30256,18 @@ var render = function() {
                       2
                     )
                   ]
-                : [
-                    _c("h4", { staticClass: "text-center mt-8" }, [
-                      _vm._v("No results found")
-                    ])
-                  ],
+                : _vm._e(),
               _vm._v(" "),
               _vm.loading
                 ? [
-                    _c("h4", { staticClass: "text-center mt-8" }, [
+                    _c("h4", { staticClass: "text-center m-8" }, [
                       _vm._v("Loading...")
+                    ])
+                  ]
+                : _vm.data.length == 0
+                ? [
+                    _c("h4", { staticClass: "text-center m-8" }, [
+                      _vm._v("No results found")
                     ])
                   ]
                 : _vm._e()

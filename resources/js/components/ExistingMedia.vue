@@ -149,6 +149,11 @@
       open: function (newValue) {
         if (newValue) {
           this.refresh();
+          document.body.classList.add('overflow-x-hidden');
+          document.body.classList.add('overflow-y-hidden');
+        } else {
+          document.body.classList.remove('overflow-x-hidden');
+          document.body.classList.remove('overflow-y-hidden');
         }
       }
     }
