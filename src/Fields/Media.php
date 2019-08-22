@@ -237,7 +237,7 @@ class Media extends Field
             }
         });
 
-        return $remainingIds;
+        return $remainingIds->intersect($medias->pluck('id'));
     }
 
     /**
