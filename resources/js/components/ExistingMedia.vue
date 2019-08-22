@@ -1,12 +1,21 @@
 <template>
+  <!-- Modal -->
   <div class="fixed pin-l pin-t p-8 h-full w-full z-50" :class="{'hidden': !open, 'flex': open}">
+
+    <!-- Modal Background -->
     <div class="absolute bg-black opacity-75 pin-l pin-t h-full w-full" v-on:click="close"></div>
+
+    <!-- Modal Content -->
     <div class="flex flex-col bg-white p-4 h-full relative w-full">
+      <!-- Header bar -->
       <div class="border-b border-40 pb-4 mb-4">
         <div class="flex -mx-4">
+          <!-- Heading -->
           <div class="px-4 self-center">
             <h3>Existing Media</h3>
           </div>
+
+          <!-- Search -->
           <div class="px-4 self-center">
             <div class="relative">
               <icon type="search" class="absolute search-icon-center ml-3 text-70" />
@@ -18,12 +27,17 @@
                      v-on:keyup.enter="search">
             </div>
           </div>
+
+          <!-- Close -->
           <div class="px-4 ml-auto self-center">
             <button type="button" class="form-file-btn btn btn-default btn-primary" v-on:click="close">Close</button>
           </div>
         </div>
       </div>
+
+
       <div class="flex-grow overflow-x-hidden overflow-y-scroll">
+        <!-- When we have results show them -->
         <template v-if="data.length > 1">
           <div class="flex flex-wrap -mx-4 -mb-8">
             <template v-for="(item, key) in data">
@@ -31,13 +45,17 @@
             </template>
           </div>
         </template>
-        <template v-else>
-          <h4 class="text-center mt-8">No results found</h4>
-        </template>
+
+        <!-- Show "Loading" or "No Results Found" text -->
         <template v-if="loading">
-          <h4 class="text-center mt-8">Loading...</h4>
+          <h4 class="text-center m-8">Loading...</h4>
+        </template>
+        <template v-else-if="data.length == 0">
+          <h4 class="text-center m-8">No results found</h4>
         </template>
       </div>
+
+      <!-- Next page -->
       <template v-if="showNextPage">
         <div class="flex-shrink border-t border-40 pt-4 mt-4 text-right">
           <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" v-on:click="nextPage">Load Next Page</button>
