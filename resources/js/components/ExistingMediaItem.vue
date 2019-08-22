@@ -1,5 +1,5 @@
 <template>
-  <div class="border-40 group px-4 pb-4 mb-4 w-1/4">
+  <div class="border-40 group px-4 pb-4 mb-4 w-1/6">
     <div class="shadow">
       <div class="overflow-hidden relative w-full" style="padding-top:100%;">
         <template v-if="'__media_urls__' in item && 'indexView' in item.__media_urls__">
