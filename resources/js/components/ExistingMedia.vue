@@ -23,8 +23,9 @@
                      placeholder="Search by name or file name"
                      class="pl-search form-control form-input form-input-bordered w-full"
                      v-model="requestParams.search_text"
-                     @input.native="search"
-                     v-on:keyup.enter="search">
+                     @input="search"
+                     @change="search"
+                     @keydown.enter.prevent="search">
             </div>
           </div>
 
@@ -38,7 +39,7 @@
 
       <div class="flex-grow overflow-x-hidden overflow-y-scroll">
         <!-- When we have results show them -->
-        <template v-if="data.length > 1">
+        <template v-if="data.length > 0">
           <div class="flex flex-wrap -mx-4 -mb-8">
             <template v-for="(item, key) in data">
               <existing-media-item :item="item" :key="key" v-on:select="$emit('select', item) && close()"></existing-media-item>
@@ -74,6 +75,7 @@
       ExistingMediaItem
     },
     data () {
+      let aThis = this;
       return {
         requestParams: {
           search_text: '',
@@ -84,8 +86,8 @@
         response: {},
         loading: false,
         search: _.debounce (function () {
-          this.refresh();
-        }, 300),
+           aThis.refresh();
+        }, 750),
       }
     },
     props: {

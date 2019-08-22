@@ -418,6 +418,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -425,6 +426,7 @@ __webpack_require__.r(__webpack_exports__);
     ExistingMediaItem: _ExistingMediaItem__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
+    var aThis = this;
     return {
       requestParams: {
         search_text: '',
@@ -435,8 +437,8 @@ __webpack_require__.r(__webpack_exports__);
       response: {},
       loading: false,
       search: _.debounce(function () {
-        this.refresh();
-      }, 300)
+        aThis.refresh();
+      }, 750)
     };
   },
   props: {
@@ -30181,7 +30183,21 @@ var render = function() {
                       },
                       domProps: { value: _vm.requestParams.search_text },
                       on: {
-                        keyup: function($event) {
+                        input: [
+                          function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.requestParams,
+                              "search_text",
+                              $event.target.value
+                            )
+                          },
+                          _vm.search
+                        ],
+                        change: _vm.search,
+                        keydown: function($event) {
                           if (
                             !$event.type.indexOf("key") &&
                             _vm._k(
@@ -30194,21 +30210,7 @@ var render = function() {
                           ) {
                             return null
                           }
-                          return _vm.search($event)
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.requestParams,
-                            "search_text",
-                            $event.target.value
-                          )
-                        }
-                      },
-                      nativeOn: {
-                        input: function($event) {
+                          $event.preventDefault()
                           return _vm.search($event)
                         }
                       }
@@ -30236,7 +30238,7 @@ var render = function() {
             "div",
             { staticClass: "flex-grow overflow-x-hidden overflow-y-scroll" },
             [
-              _vm.data.length > 1
+              _vm.data.length > 0
                 ? [
                     _c(
                       "div",
@@ -30361,7 +30363,7 @@ var render = function() {
             "button",
             {
               staticClass:
-                "absolute form-file-btn btn btn-default btn-primary pin-t pin-r mr-4 mt-4",
+                "absolute form-file-btn btn btn-default btn-primary pin-t pin-r m-2",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
