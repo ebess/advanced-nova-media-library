@@ -83,7 +83,7 @@
           return this.__(`Add New ${type}`);
         }
 
-        return this.__(`Replace ${type}`);
+        return this.__(`Upload New ${type}`);
       }
     },
     watch: {
