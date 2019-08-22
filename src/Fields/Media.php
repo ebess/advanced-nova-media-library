@@ -6,8 +6,10 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Spatie\MediaLibrary\Filesystem\Filesystem;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\Helpers\TemporaryDirectory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 
@@ -105,6 +107,7 @@ class Media extends Field
     	$attr = request('__media__', []);
         $data = $attr[$requestAttribute] ?? [];
 
+
         collect($data)
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
@@ -130,13 +133,60 @@ class Media extends Field
     {
         $remainingIds = $this->removeDeletedMedia($data, $model->getMedia($attribute));
         $newIds = $this->addNewMedia($request, $data, $model, $attribute);
-        $this->setOrder($remainingIds->union($newIds)->sortKeys()->all());
+        $existingIds = $this->addExistingMedia($request, $data, $model, $attribute, $model->getMedia($attribute));
+        $this->setOrder($remainingIds->union($newIds)->union($existingIds)->sortKeys()->all());
     }
 
     private function setOrder($ids)
     {
         $mediaClass = config('medialibrary.media_model');
         $mediaClass::setNewOrder($ids);
+    }
+
+    private function addExistingMedia(NovaRequest $request, $data, HasMedia $model, string $collection, Collection $medias): Collection
+    {
+        $added_media_ids = $medias->pluck('id')->toArray();
+
+        return collect($data)
+            ->filter(function ($value) use ($added_media_ids) {
+                return (!($value instanceof UploadedFile)) && !(in_array((int) $value, $added_media_ids));
+            })->map(function ($model_id, int $index) use ($request, $model, $collection) {
+                $mediaClass = config('medialibrary.media_model');
+                $existing_media = $mediaClass::find((int) $model_id);
+
+                // Mimic copy behaviour
+                // See Spatie\MediaLibrary\Models\Media->copy()
+                $temporaryDirectory = TemporaryDirectory::create();
+                $temporaryFile = $temporaryDirectory->path($existing_media->file_name);
+                app(Filesystem::class)->copyFromMediaLibrary($existing_media, $temporaryFile);
+                $media = $model->addMedia($temporaryFile)->withCustomProperties($this->customProperties);
+
+                if($this->responsive) {
+                    $media->withResponsiveImages();
+                }
+
+                if (is_callable($this->setFileNameCallback)) {
+                    $media->setFileName(
+                        call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
+                    );
+                }
+
+                if (is_callable($this->setNameCallback)) {
+                    $media->setName(
+                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
+                    );
+                }
+
+                $media = $media->toMediaCollection($collection);
+
+                // fill custom properties for recently created media
+                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+
+                // Delete our temp collection
+                $temporaryDirectory->delete();
+
+                return $media->getKey();
+            });
     }
 
     private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
