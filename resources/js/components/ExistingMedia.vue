@@ -30,7 +30,7 @@
         <template v-else-if="response && 'data' in response && 'data' in response.data">
           <div class="flex flex-wrap -mx-4 -mb-8">
             <template v-for="(item, key) in response.data.data">
-              <existing-media-item :item="item" :key="key" v-on:select="$emit('select', item)"></existing-media-item>
+              <existing-media-item :item="item" :key="key" v-on:select="$emit('select', item) && close()"></existing-media-item>
             </template>
           </div>
         </template>
@@ -46,9 +46,6 @@
   export default{
     components: {
       ExistingMediaItem
-    },
-    created () {
-      console.log('created');
     },
     data () {
       return {
@@ -78,7 +75,6 @@
 
         return this.createRequest().then(response => {
           this.response = response;
-          console.log(response);
         }).finally(() => {
           // Set loading to false
           this.loading = false;

@@ -2,10 +2,13 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Http\Resources;
 
+use Ebess\AdvancedNovaMediaLibrary\Fields\HandlesConversionsTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MediaResource extends JsonResource
 {
+    use HandlesConversionsTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -14,11 +17,15 @@ class MediaResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->getKey(),
-            'name' => $this->name,
-            'file_name' => $this->file_name,
-            'preview_url' => $this->getFullUrl()
-        ];
+        /**
+         * This is incompatible with following settings on the Field.
+         * - conversionOnIndexView
+         * - conversionOnDetailView
+         * - conversionOnForm
+         * - conversionOnPreview
+         * - serializeMediaUsing
+         *
+         */
+        return array_merge($this->resource->toArray(), ['__media_urls__' => $this->getConversionUrls($media)]);
     }
 }

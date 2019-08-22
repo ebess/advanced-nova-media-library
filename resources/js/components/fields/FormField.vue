@@ -89,7 +89,11 @@
       },
 
       addExistingItem(item) {
-        console.log('TODO add item... ', item);
+        if (!this.field.multiple) {
+          this.value.splice(0, 1);
+        }
+
+        this.value.push(item);
       }
     },
   };
