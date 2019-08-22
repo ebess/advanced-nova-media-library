@@ -502,7 +502,10 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     open: function open(newValue) {
       if (newValue) {
-        this.refresh();
+        if (this.data.length == 0) {
+          this.refresh();
+        }
+
         document.body.classList.add('overflow-x-hidden');
         document.body.classList.add('overflow-y-hidden');
       } else {
