@@ -398,9 +398,6 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     ExistingMediaItem: _ExistingMediaItem__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  created: function created() {
-    console.log('created');
-  },
   data: function data() {
     return {
       requestParams: {
@@ -430,7 +427,6 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       return this.createRequest().then(function (response) {
         _this.response = response;
-        console.log(response);
       })["finally"](function () {
         // Set loading to false
         _this.loading = false;
@@ -1036,7 +1032,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.value = value;
     },
     addExistingItem: function addExistingItem(item) {
-      console.log('TODO add item... ', item);
+      if (!this.field.multiple) {
+        this.value.splice(0, 1);
+      }
+
+      this.value.push(item);
     }
   }
 });
@@ -30072,12 +30072,13 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "fixed pin-l pin-t p-4 h-full w-full z-50",
+      staticClass: "fixed pin-l pin-t p-8 h-full w-full z-50",
       class: { hidden: !_vm.open, flex: _vm.open }
     },
     [
       _c("div", {
-        staticClass: "absolute bg-black opacity-75 pin-l pin-t h-full w-full"
+        staticClass: "absolute bg-black opacity-75 pin-l pin-t h-full w-full",
+        on: { click: _vm.close }
       }),
       _vm._v(" "),
       _c(
@@ -30191,7 +30192,7 @@ var render = function() {
                               attrs: { item: item },
                               on: {
                                 select: function($event) {
-                                  return _vm.$emit("select", item)
+                                  _vm.$emit("select", item) && _vm.close()
                                 }
                               }
                             })
@@ -30216,7 +30217,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "px-4 self-center" }, [
-      _c("h2", [_vm._v("Existing Media")])
+      _c("h3", [_vm._v("Existing Media")])
     ])
   }
 ]
@@ -30241,7 +30242,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "border-40 group px-4 pb-4 mb-4 w-1/4" }, [
+  return _c("div", { staticClass: "border-40 group px-4 pb-4 mb-4 w-1/6" }, [
     _c("div", { staticClass: "shadow" }, [
       _c(
         "div",
@@ -30250,21 +30251,22 @@ var render = function() {
           staticStyle: { "padding-top": "100%" }
         },
         [
-          "preview_url" in _vm.item
+          "__media_urls__" in _vm.item && "indexView" in _vm.item.__media_urls__
             ? [
                 _c("img", {
                   staticClass: "absolute block h-full pin-t pin-l w-full",
                   staticStyle: { "object-fit": "cover" },
-                  attrs: { src: _vm.item.preview_url }
+                  attrs: { src: _vm.item.__media_urls__.indexView }
                 })
               ]
             : _vm._e(),
           _vm._v(" "),
           _c(
-            "div",
+            "button",
             {
               staticClass:
-                "absolute btn btn-default btn-primary hidden group-hover:block pin-t pin-r mr-4 mt-4",
+                "absolute form-file-btn btn btn-default btn-primary pin-t pin-r mr-4 mt-4",
+              attrs: { type: "button" },
               on: {
                 click: function($event) {
                   return _vm.$emit("select")
@@ -34206,8 +34208,8 @@ Nova.booting(function (Vue, router) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/watfordfc/vendor/ebess/advanced-nova-media-library/resources/js/field.js */"./resources/js/field.js");
-module.exports = __webpack_require__(/*! /home/vagrant/watfordfc/vendor/ebess/advanced-nova-media-library/resources/sass/field.scss */"./resources/sass/field.scss");
+__webpack_require__(/*! /Users/garethsomers/dev/watfordfc.test/vendor/ebess/advanced-nova-media-library/resources/js/field.js */"./resources/js/field.js");
+module.exports = __webpack_require__(/*! /Users/garethsomers/dev/watfordfc.test/vendor/ebess/advanced-nova-media-library/resources/sass/field.scss */"./resources/sass/field.scss");
 
 
 /***/ })
