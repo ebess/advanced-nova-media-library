@@ -104,7 +104,7 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-    	$attr = request('__media__', []);
+        $attr = $request['__media__'] ?? [];
         $data = $attr[$requestAttribute] ?? [];
 
 
@@ -131,6 +131,10 @@ class Media extends Field
 
     protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
     {
+        if ($attribute === 'ComputedField') {
+            $attribute = call_user_func($this->computedCallback, $model);
+        }
+
         $remainingIds = $this->removeDeletedMedia($data, $model->getMedia($attribute));
         $newIds = $this->addNewMedia($request, $data, $model, $attribute);
         $existingIds = $this->addExistingMedia($request, $data, $model, $attribute, $model->getMedia($attribute));
@@ -247,6 +251,10 @@ class Media extends Field
     public function resolve($resource, $attribute = null)
     {
 		$collectionName = $attribute ?? $this->attribute;
+
+        if ($collectionName === 'ComputedField') {
+            $collectionName = call_user_func($this->computedCallback, $resource);
+        }
 
 		$this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\Models\Media $media) {
