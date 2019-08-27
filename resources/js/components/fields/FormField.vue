@@ -5,7 +5,7 @@
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
                  v-model="value" editable custom-properties :field="field" :multiple="field.multiple"
                  :has-error="hasError" :first-error="firstError"/>
-        <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" v-on:click="existingMediaOpen = true">View existing media</button>
+        <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" v-on:click="existingMediaOpen = true">{{  openExistingMediaLabel }}</button>
         <existing-media
           :open="existingMediaOpen"
           v-on:close="existingMediaOpen = false"
@@ -37,7 +37,17 @@
         existingMediaOpen: false
       }
     },
+    computed: {
+        openExistingMediaLabel () {
+        const type = this.field.type === 'media' ? 'Media' : 'File';
 
+        if (this.field.multiple || this.value.length === 0) {
+          return this.__(`Add Existing ${type}`);
+        }
+
+        return this.__(`Use Existing ${type}`);
+      }
+    },
     methods: {
       /*
        * Set the initial, internal value for the field.

@@ -720,7 +720,7 @@ __webpack_require__.r(__webpack_exports__);
         return this.__("Add New ".concat(type));
       }
 
-      return this.__("Replace ".concat(type));
+      return this.__("Upload New ".concat(type));
     }
   },
   watch: {
@@ -1049,6 +1049,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       hasSetInitialValue: false,
       existingMediaOpen: false
     };
+  },
+  computed: {
+    openExistingMediaLabel: function openExistingMediaLabel() {
+      var type = this.field.type === 'media' ? 'Media' : 'File';
+
+      if (this.field.multiple || this.value.length === 0) {
+        return this.__("Add Existing ".concat(type));
+      }
+
+      return this.__("Use Existing ".concat(type));
+    }
   },
   methods: {
     /*
@@ -31006,7 +31017,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("View existing media")]
+              [_vm._v(_vm._s(_vm.openExistingMediaLabel))]
             ),
             _vm._v(" "),
             _c("existing-media", {
