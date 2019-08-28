@@ -107,6 +107,9 @@ class Media extends Field
         $attr = $request['__media__'] ?? [];
         $data = $attr[$requestAttribute] ?? [];
 
+        if ($attribute === 'ComputedField') {
+            $attribute = call_user_func($this->computedCallback, $model);
+        }
 
         collect($data)
             ->filter(function ($value) {
@@ -131,10 +134,6 @@ class Media extends Field
 
     protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
     {
-        if ($attribute === 'ComputedField') {
-            $attribute = call_user_func($this->computedCallback, $model);
-        }
-
         $remainingIds = $this->removeDeletedMedia($data, $model->getMedia($attribute));
         $newIds = $this->addNewMedia($request, $data, $model, $attribute);
         $existingIds = $this->addExistingMedia($request, $data, $model, $attribute, $model->getMedia($attribute));
