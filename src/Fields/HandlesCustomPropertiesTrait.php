@@ -63,10 +63,10 @@ trait HandlesCustomPropertiesTrait
 
         /** @var Field $field */
         foreach ($this->customPropertiesFields as $field) {
-			$targetAttribute = "custom_properties->{$field->attribute}";
-			$requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
+            $targetAttribute = "custom_properties->{$field->attribute}";
+            $requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
 
-			$field->fillInto($request, $media, $targetAttribute, $requestAttribute);
+            $field->fillInto($request, $media, $targetAttribute, $requestAttribute);
         }
 
         $media->save();

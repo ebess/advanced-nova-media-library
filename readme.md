@@ -13,6 +13,7 @@ images and order them by drag and drop.
 * [Names of uploaded images](#names-of-uploaded-images)  
 * [Image cropping](#image-cropping)
 * [Custom properties](#custom-properties)
+* [Custom headers](#custom-headers)
 * [Media Field (Video)](#media-field-video)  
 
 ## Examples
@@ -183,6 +184,15 @@ Files::make('Multiple files', 'multiple_files')
     ->customProperties([
         'foo' => auth()->user()->foo,
         'bar' => $api->getNeededData(),
+    ]);
+```
+
+## Custom headers
+
+```php
+Images::make('Gallery')
+    ->customHeaders([
+        'header-name' => 'header-value', 
     ]);
 ```
 
