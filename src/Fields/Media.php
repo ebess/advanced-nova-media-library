@@ -155,7 +155,7 @@ class Media extends Field
                 return (!($value instanceof UploadedFile)) && !(in_array((int) $value, $addedMediaIds));
             })->map(function ($model_id, int $index) use ($request, $model, $collection) {
                 $mediaClass = config('medialibrary.media_model');
-                $existingMedia = $mediaClass::find((int) $model_id);
+                $existingMedia = $mediaClass::find($model_id);
 
                 // Mimic copy behaviour
                 // See Spatie\MediaLibrary\Models\Media->copy()
