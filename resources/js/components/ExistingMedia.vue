@@ -39,29 +39,21 @@
 
       <div class="flex-grow overflow-x-hidden overflow-y-scroll">
         <!-- When we have results show them -->
-        <template v-if="data.length > 0">
-          <div class="flex flex-wrap -mx-4 -mb-8">
-            <template v-for="(item, key) in data">
-              <existing-media-item :item="item" :key="key" @select="$emit('select', item) && close()"></existing-media-item>
-            </template>
-          </div>
-        </template>
+        <div class="flex flex-wrap -mx-4 -mb-8" v-if="data.length > 0">
+          <template v-for="(item, key) in data">
+            <existing-media-item :item="item" :key="key" @select="$emit('select', item) && close()"></existing-media-item>
+          </template>
+        </div>
 
         <!-- Show "Loading" or "No Results Found" text -->
-        <template v-if="loading">
-          <h4 class="text-center m-8">Loading...</h4>
-        </template>
-        <template v-else-if="data.length == 0">
-          <h4 class="text-center m-8">No results found</h4>
-        </template>
+        <h4 class="text-center m-8" v-if="loading">Loading...</h4>
+        <h4 class="text-center m-8" v-else-if="data.length == 0">No results found</h4>
       </div>
 
       <!-- Next page -->
-      <template v-if="showNextPage">
-        <div class="flex-shrink border-t border-40 pt-4 mt-4 text-right">
-          <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" @click="nextPage">Load Next Page</button>
-        </div>
-      </template>
+      <div class="flex-shrink border-t border-40 pt-4 mt-4 text-right" v-if="showNextPage">
+        <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" @click="nextPage">Load Next Page</button>
+      </div>
     </div>
   </div>
 </template>
