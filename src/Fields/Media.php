@@ -148,20 +148,20 @@ class Media extends Field
 
     private function addExistingMedia(NovaRequest $request, $data, HasMedia $model, string $collection, Collection $medias): Collection
     {
-        $added_media_ids = $medias->pluck('id')->toArray();
+        $addedMediaIds = $medias->pluck('id')->toArray();
 
         return collect($data)
-            ->filter(function ($value) use ($added_media_ids) {
-                return (!($value instanceof UploadedFile)) && !(in_array((int) $value, $added_media_ids));
+            ->filter(function ($value) use ($addedMediaIds) {
+                return (!($value instanceof UploadedFile)) && !(in_array((int) $value, $addedMediaIds));
             })->map(function ($model_id, int $index) use ($request, $model, $collection) {
                 $mediaClass = config('medialibrary.media_model');
-                $existing_media = $mediaClass::find((int) $model_id);
+                $existingMedia = $mediaClass::find((int) $model_id);
 
                 // Mimic copy behaviour
                 // See Spatie\MediaLibrary\Models\Media->copy()
                 $temporaryDirectory = TemporaryDirectory::create();
-                $temporaryFile = $temporaryDirectory->path($existing_media->file_name);
-                app(Filesystem::class)->copyFromMediaLibrary($existing_media, $temporaryFile);
+                $temporaryFile = $temporaryDirectory->path($existingMedia->file_name);
+                app(Filesystem::class)->copyFromMediaLibrary($existingMedia, $temporaryFile);
                 $media = $model->addMedia($temporaryFile)->withCustomProperties($this->customProperties);
 
                 if($this->responsive) {

@@ -9,30 +9,30 @@ class MediaController extends Controller
 {
     public function index(MediaRequest $request)
     {
-        $media_class = config('medialibrary.media_model');
-        $media_class_is_searchable = method_exists($media_class, 'search');
+        $mediaClass = config('medialibrary.media_model');
+        $mediaClassIsSearchable = method_exists($mediaClass, 'search');
 
-        $search_text = $request->input('search_text') ?: null;
-        $per_page = $request->input('per_page') ?: 18;
+        $searchText = $request->input('search_text') ?: null;
+        $perPage = $request->input('per_page') ?: 18;
         $page = $request->input('page') ?: 1;
 
         $query = null;
 
-        if ($search_text && $media_class_is_searchable) {
-            $query = $media_class::search($search_text);
-        } else if ($search_text && !$media_class_is_searchable) {
-            $query = $media_class::query();
+        if ($searchText && $mediaClassIsSearchable) {
+            $query = $mediaClass::search($searchText);
+        } else if ($searchText && !$mediaClassIsSearchable) {
+            $query = $mediaClass::query();
             $query->where(function ($query) use ($search_text) {
                 $query->where('name', 'LIKE', '%' . $search_text . '%');
                 $query->orWhere('file_name', 'LIKE', '%' . $search_text . '%');
             });
             $query->latest();
         } else {
-            $query = $media_class::query();
+            $query = $mediaClass::query();
             $query->latest();
         }
 
-        $results = $query->paginate($per_page);
+        $results = $query->paginate($perPage);
 
         return MediaResource::collection($results);
     }
