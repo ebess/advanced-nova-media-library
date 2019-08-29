@@ -39,15 +39,15 @@
 
       <div class="flex-grow overflow-x-hidden overflow-y-scroll">
         <!-- When we have results show them -->
-        <div class="flex flex-wrap -mx-4 -mb-8" v-if="data.length > 0">
-          <template v-for="(item, key) in data">
+        <div class="flex flex-wrap -mx-4 -mb-8" v-if="items.length > 0">
+          <template v-for="(item, key) in items">
             <existing-media-item :item="item" :key="key" @select="$emit('select', item) && close()"></existing-media-item>
           </template>
         </div>
 
         <!-- Show "Loading" or "No Results Found" text -->
         <h4 class="text-center m-8" v-if="loading">Loading...</h4>
-        <h4 class="text-center m-8" v-else-if="data.length == 0">No results found</h4>
+        <h4 class="text-center m-8" v-else-if="items.length == 0">No results found</h4>
       </div>
 
       <!-- Next page -->
@@ -74,7 +74,7 @@
           page: 1,
           per_page: 18
         },
-        data: [],
+        items: [],
         response: {},
         loading: false,
         search: _.debounce (function () {
@@ -90,7 +90,7 @@
     },
     computed: {
       showNextPage () {
-        if (this.data.length == (this.requestParams.page * this.requestParams.per_page)) {
+        if (this.items.length == (this.requestParams.page * this.requestParams.per_page)) {
           return true;
         }
         return false;
@@ -103,14 +103,14 @@
       refresh () {
         this.requestParams.page = 1;
         return this.fireRequest().then((response) => {
-          this.data = response.data.data;
+          this.items = response.data.data;
           return response;
         });
       },
       nextPage () {
         this.requestParams.page += 1;
         return this.fireRequest().then((response) => {
-          this.data = this.data.concat(response.data.data);
+          this.items = this.items.concat(response.data.data);
           return response;
         });
       },
@@ -142,7 +142,7 @@
     watch: {
       open: function (newValue) {
         if (newValue) {
-          if (this.data.length == 0) {
+          if (this.items.length == 0) {
             this.refresh();
           }
           document.body.classList.add('overflow-x-hidden');
