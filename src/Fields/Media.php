@@ -111,7 +111,7 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        $attr = $request->__get('__media__', []);
+        $attr = $request['__media__'] ?? [];
         $data = $attr[$requestAttribute] ?? [];
 
         collect($data)
