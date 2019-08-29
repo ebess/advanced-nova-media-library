@@ -24,9 +24,9 @@ class MediaController extends Controller
             $query = $mediaClass::query();
 
             if ($searchText) {
-                $query->where(function ($query) use ($search_text) {
-                    $query->where('name', 'LIKE', '%' . $search_text . '%');
-                    $query->orWhere('file_name', 'LIKE', '%' . $search_text . '%');
+                $query->where(function ($query) use ($searchText) {
+                    $query->where('name', 'LIKE', '%' . $searchText . '%');
+                    $query->orWhere('file_name', 'LIKE', '%' . $searchText . '%');
                 });
             }
 
