@@ -5,7 +5,7 @@
         <template v-if="'__media_urls__' in item && 'indexView' in item.__media_urls__">
           <img :src="item.__media_urls__.indexView" class="absolute block h-full pin-t pin-l w-full" style="object-fit: cover" />
         </template>
-        <button type="button" class="absolute form-file-btn btn btn-default btn-primary pin-t pin-r m-2" v-on:click="$emit('select')">Select</button>
+        <button type="button" class="absolute form-file-btn btn btn-default btn-primary pin-t pin-r m-2" @click="$emit('select')">Select</button>
       </div>
       <div class="p-3 border-l border-r border-b border-40">
         <template v-if="'name' in item">

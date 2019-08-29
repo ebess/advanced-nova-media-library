@@ -3,7 +3,7 @@
   <div class="fixed pin-l pin-t p-8 h-full w-full z-50" :class="{'hidden': !open, 'flex': open}">
 
     <!-- Modal Background -->
-    <div class="absolute bg-black opacity-75 pin-l pin-t h-full w-full" v-on:click="close"></div>
+    <div class="absolute bg-black opacity-75 pin-l pin-t h-full w-full" @click="close"></div>
 
     <!-- Modal Content -->
     <div class="flex flex-col bg-white p-4 h-full relative w-full">
@@ -31,7 +31,7 @@
 
           <!-- Close -->
           <div class="px-4 ml-auto self-center">
-            <button type="button" class="form-file-btn btn btn-default btn-primary" v-on:click="close">Close</button>
+            <button type="button" class="form-file-btn btn btn-default btn-primary" @click="close">Close</button>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <template v-if="data.length > 0">
           <div class="flex flex-wrap -mx-4 -mb-8">
             <template v-for="(item, key) in data">
-              <existing-media-item :item="item" :key="key" v-on:select="$emit('select', item) && close()"></existing-media-item>
+              <existing-media-item :item="item" :key="key" @select="$emit('select', item) && close()"></existing-media-item>
             </template>
           </div>
         </template>
@@ -59,7 +59,7 @@
       <!-- Next page -->
       <template v-if="showNextPage">
         <div class="flex-shrink border-t border-40 pt-4 mt-4 text-right">
-          <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" v-on:click="nextPage">Load Next Page</button>
+          <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" @click="nextPage">Load Next Page</button>
         </div>
       </template>
     </div>
