@@ -20,15 +20,16 @@ class MediaController extends Controller
 
         if ($searchText && $mediaClassIsSearchable) {
             $query = $mediaClass::search($searchText);
-        } else if ($searchText && !$mediaClassIsSearchable) {
-            $query = $mediaClass::query();
-            $query->where(function ($query) use ($search_text) {
-                $query->where('name', 'LIKE', '%' . $search_text . '%');
-                $query->orWhere('file_name', 'LIKE', '%' . $search_text . '%');
-            });
-            $query->latest();
         } else {
             $query = $mediaClass::query();
+
+            if ($searchText) {
+                $query->where(function ($query) use ($search_text) {
+                    $query->where('name', 'LIKE', '%' . $search_text . '%');
+                    $query->orWhere('file_name', 'LIKE', '%' . $search_text . '%');
+                });
+            }
+
             $query->latest();
         }
 
