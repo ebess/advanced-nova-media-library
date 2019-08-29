@@ -44,7 +44,7 @@ trait HandlesCustomPropertiesTrait
             ->reject(function ($value) {
                 return $value instanceof UploadedFile || $value instanceof FileBag;
             })
-            ->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
+            ->each(function ($id, int $index) use ($request, $mediaItems, $collection) {
                 if (!$media = $mediaItems->where('id', $id)->first()) {
                     return;
                 }
