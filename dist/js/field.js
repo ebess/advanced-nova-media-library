@@ -411,14 +411,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -433,7 +425,7 @@ __webpack_require__.r(__webpack_exports__);
         page: 1,
         per_page: 18
       },
-      data: [],
+      items: [],
       response: {},
       loading: false,
       search: _.debounce(function () {
@@ -449,7 +441,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     showNextPage: function showNextPage() {
-      if (this.data.length == this.requestParams.page * this.requestParams.per_page) {
+      if (this.items.length == this.requestParams.page * this.requestParams.per_page) {
         return true;
       }
 
@@ -465,7 +457,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.requestParams.page = 1;
       return this.fireRequest().then(function (response) {
-        _this.data = response.data.data;
+        _this.items = response.data.data;
         return response;
       });
     },
@@ -474,7 +466,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.requestParams.page += 1;
       return this.fireRequest().then(function (response) {
-        _this2.data = _this2.data.concat(response.data.data);
+        _this2.items = _this2.items.concat(response.data.data);
         return response;
       });
     },
@@ -504,7 +496,7 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     open: function open(newValue) {
       if (newValue) {
-        if (this.data.length == 0) {
+        if (this.items.length == 0) {
           this.refresh();
         }
 
@@ -529,12 +521,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -30249,73 +30235,63 @@ var render = function() {
             "div",
             { staticClass: "flex-grow overflow-x-hidden overflow-y-scroll" },
             [
-              _vm.data.length > 0
-                ? [
-                    _c(
-                      "div",
-                      { staticClass: "flex flex-wrap -mx-4 -mb-8" },
-                      [
-                        _vm._l(_vm.data, function(item, key) {
-                          return [
-                            _c("existing-media-item", {
-                              key: key,
-                              attrs: { item: item },
-                              on: {
-                                select: function($event) {
-                                  _vm.$emit("select", item) && _vm.close()
-                                }
+              _vm.items.length > 0
+                ? _c(
+                    "div",
+                    { staticClass: "flex flex-wrap -mx-4 -mb-8" },
+                    [
+                      _vm._l(_vm.items, function(item, key) {
+                        return [
+                          _c("existing-media-item", {
+                            key: key,
+                            attrs: { item: item },
+                            on: {
+                              select: function($event) {
+                                _vm.$emit("select", item) && _vm.close()
                               }
-                            })
-                          ]
-                        })
-                      ],
-                      2
-                    )
-                  ]
+                            }
+                          })
+                        ]
+                      })
+                    ],
+                    2
+                  )
                 : _vm._e(),
               _vm._v(" "),
               _vm.loading
-                ? [
-                    _c("h4", { staticClass: "text-center m-8" }, [
-                      _vm._v("Loading...")
-                    ])
-                  ]
-                : _vm.data.length == 0
-                ? [
-                    _c("h4", { staticClass: "text-center m-8" }, [
-                      _vm._v("No results found")
-                    ])
-                  ]
+                ? _c("h4", { staticClass: "text-center m-8" }, [
+                    _vm._v("Loading...")
+                  ])
+                : _vm.items.length == 0
+                ? _c("h4", { staticClass: "text-center m-8" }, [
+                    _vm._v("No results found")
+                  ])
                 : _vm._e()
-            ],
-            2
+            ]
           ),
           _vm._v(" "),
           _vm.showNextPage
-            ? [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "flex-shrink border-t border-40 pt-4 mt-4 text-right"
-                  },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "form-file-btn btn btn-default btn-primary ml-auto",
-                        attrs: { type: "button" },
-                        on: { click: _vm.nextPage }
-                      },
-                      [_vm._v("Load Next Page")]
-                    )
-                  ]
-                )
-              ]
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "flex-shrink border-t border-40 pt-4 mt-4 text-right"
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "form-file-btn btn btn-default btn-primary ml-auto",
+                      attrs: { type: "button" },
+                      on: { click: _vm.nextPage }
+                    },
+                    [_vm._v("Load Next Page")]
+                  )
+                ]
+              )
             : _vm._e()
-        ],
-        2
+        ]
       )
     ]
   )
@@ -30361,13 +30337,11 @@ var render = function() {
         },
         [
           "__media_urls__" in _vm.item && "indexView" in _vm.item.__media_urls__
-            ? [
-                _c("img", {
-                  staticClass: "absolute block h-full pin-t pin-l w-full",
-                  staticStyle: { "object-fit": "cover" },
-                  attrs: { src: _vm.item.__media_urls__.indexView }
-                })
-              ]
+            ? _c("img", {
+                staticClass: "absolute block h-full pin-t pin-l w-full",
+                staticStyle: { "object-fit": "cover" },
+                attrs: { src: _vm.item.__media_urls__.indexView }
+              })
             : _vm._e(),
           _vm._v(" "),
           _c(
@@ -30384,32 +30358,22 @@ var render = function() {
             },
             [_vm._v("Select")]
           )
-        ],
-        2
+        ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "p-3 border-l border-r border-b border-40" },
-        [
-          "name" in _vm.item
-            ? [
-                _c("h4", { staticClass: "truncate h-4 mb-1" }, [
-                  _vm._v(_vm._s(_vm.item.name))
-                ])
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "file_name" in _vm.item
-            ? [
-                _c("h5", { staticClass: "truncate text-80" }, [
-                  _vm._v(_vm._s(_vm.item.file_name))
-                ])
-              ]
-            : _vm._e()
-        ],
-        2
-      )
+      _c("div", { staticClass: "p-3 border-l border-r border-b border-40" }, [
+        "name" in _vm.item
+          ? _c("h4", { staticClass: "truncate h-4 mb-1" }, [
+              _vm._v(_vm._s(_vm.item.name))
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        "file_name" in _vm.item
+          ? _c("h5", { staticClass: "truncate text-80" }, [
+              _vm._v(_vm._s(_vm.item.file_name))
+            ])
+          : _vm._e()
+      ])
     ])
   ])
 }
