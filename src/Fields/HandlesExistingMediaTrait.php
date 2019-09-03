@@ -16,7 +16,7 @@ trait HandlesExistingMediaTrait
 {
     public function enableExistingMedia(): self
     {
-        return $this->withMeta(['existingMedia' => true]);
+        return $this->withMeta(['existingMedia' => (bool) config('nova-media-library.enable-existing-media')]);
     }
 
     private function addExistingMedia(NovaRequest $request, $data, HasMedia $model, string $collection, Collection $medias): Collection

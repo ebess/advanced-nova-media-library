@@ -10,6 +10,7 @@ images and order them by drag and drop.
 * [Generic file management](#generic-file-management)  
 * [Single image upload](#single-image-upload)  
 * [Multiple image upload](#multiple-image-upload)  
+* [Selecting existing media](#selecting-existing-media)  
 * [Names of uploaded images](#names-of-uploaded-images)  
 * [Image cropping](#image-cropping)
 * [Custom properties](#custom-properties)
@@ -26,6 +27,10 @@ images and order them by drag and drop.
 ## Install
 ```bash
 composer require ebess/advanced-nova-media-library
+```
+
+```bash
+artisan vendor:publish --tag=nova-media-library
 ```
 
 ## Model media configuration
@@ -101,6 +106,32 @@ public function fields(Request $request)
             ->singleImageRules('dimensions:min_width=100'),
     ];
 }
+```
+
+## Selecting existing media
+
+![Selecting existing media](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/existing-media.png)
+![Selecting existing media 2](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/existing-media-2.png)
+
+If you upload the same media files to multiple models and you do not want to select it from the file system
+all over again, use this feature. Selecting an already existing media will **copy it**.
+
+**Attention**: This feature will expose an endpoint to every user of your application to search existing media. 
+If your media upload / custom properties on the media models are confidential, **do not enable this feature!** 
+
+* Publish the config files if you did not yet
+```bash
+artisan vendor:publish --tag=nova-media-library
+```
+* Enable this feature in config file *config/nova-media-library*
+```php
+return [
+    'enable-existing-media' => true,
+];
+```
+* Enable the selection of existing media field
+```php
+Images::make('Image')->enableExistingMedia(),
 ```
 
 ## Names of uploaded images

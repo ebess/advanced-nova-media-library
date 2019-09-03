@@ -4,11 +4,16 @@ namespace Ebess\AdvancedNovaMediaLibrary\Http\Controllers;
 
 use Ebess\AdvancedNovaMediaLibrary\Http\Requests\MediaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Http\Resources\MediaResource;
+use Exception;
 
 class MediaController extends Controller
 {
     public function index(MediaRequest $request)
     {
+        if (!config('nova-media-library.enable-existing-media')) {
+            throw new Exception('You need to enable the `existing media` feature via config.');
+        }
+
         $mediaClass = config('medialibrary.media_model');
         $mediaClassIsSearchable = method_exists($mediaClass, 'search');
 
