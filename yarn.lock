@@ -3230,9 +3230,9 @@ laravel-mix@^4.0.7:
     webpack-notifier "^1.5.1"
     yargs "^12.0.5"
 
-laravel-nova@*:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/laravel-nova/-/laravel-nova-1.0.8.tgz#6a4a687541ce89017604c3458865f3c7eb3001a2"
+laravel-nova@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/laravel-nova/-/laravel-nova-1.0.9.tgz#66ec4cbc1eb896ce058d0a6451e5e24a68888038"
   dependencies:
     babel-plugin-syntax-jsx "^6.18.0"
     form-backend-validation "^2.3.3"

@@ -14,7 +14,6 @@ class MediaController extends Controller
 
         $searchText = $request->input('search_text') ?: null;
         $perPage = $request->input('per_page') ?: 18;
-        $page = $request->input('page') ?: 1;
 
         $query = null;
 

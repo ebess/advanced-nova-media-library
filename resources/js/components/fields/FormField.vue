@@ -5,12 +5,13 @@
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
                  v-model="value" editable custom-properties :field="field" :multiple="field.multiple"
                  :has-error="hasError" :first-error="firstError"/>
-        <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" @click="existingMediaOpen = true">{{  openExistingMediaLabel }}</button>
-        <existing-media
-          :open="existingMediaOpen"
-          @close="existingMediaOpen = false"
-          @select="(item) => { addExistingItem(item) }"
-        ></existing-media>
+
+        <div v-if="field.existingMedia">
+          <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" @click="existingMediaOpen = true">
+            {{  openExistingMediaLabel }}
+          </button>
+          <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
+        </div>
       </div>
     </template>
   </component>

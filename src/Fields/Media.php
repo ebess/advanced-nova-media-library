@@ -6,16 +6,14 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\Filesystem\Filesystem;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\Helpers\TemporaryDirectory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 
 class Media extends Field
 {
-    use HandlesCustomPropertiesTrait, HandlesConversionsTrait;
+    use HandlesCustomPropertiesTrait, HandlesConversionsTrait, HandlesExistingMediaTrait;
 
     public $component = 'advanced-media-library-field';
 
@@ -153,52 +151,6 @@ class Media extends Field
     {
         $mediaClass = config('medialibrary.media_model');
         $mediaClass::setNewOrder($ids);
-    }
-
-    private function addExistingMedia(NovaRequest $request, $data, HasMedia $model, string $collection, Collection $medias): Collection
-    {
-        $addedMediaIds = $medias->pluck('id')->toArray();
-
-        return collect($data)
-            ->filter(function ($value) use ($addedMediaIds) {
-                return (!($value instanceof UploadedFile)) && !(in_array((int) $value, $addedMediaIds));
-            })->map(function ($model_id, int $index) use ($request, $model, $collection) {
-                $mediaClass = config('medialibrary.media_model');
-                $existingMedia = $mediaClass::find($model_id);
-
-                // Mimic copy behaviour
-                // See Spatie\MediaLibrary\Models\Media->copy()
-                $temporaryDirectory = TemporaryDirectory::create();
-                $temporaryFile = $temporaryDirectory->path($existingMedia->file_name);
-                app(Filesystem::class)->copyFromMediaLibrary($existingMedia, $temporaryFile);
-                $media = $model->addMedia($temporaryFile)->withCustomProperties($this->customProperties);
-
-                if($this->responsive) {
-                    $media->withResponsiveImages();
-                }
-
-                if (is_callable($this->setFileNameCallback)) {
-                    $media->setFileName(
-                        call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
-                    );
-                }
-
-                if (is_callable($this->setNameCallback)) {
-                    $media->setName(
-                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
-                    );
-                }
-
-                $media = $media->toMediaCollection($collection);
-
-                // fill custom properties for recently created media
-                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
-
-                // Delete our temp collection
-                $temporaryDirectory->delete();
-
-                return $media->getKey();
-            });
     }
 
     private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
