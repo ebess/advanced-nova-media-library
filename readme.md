@@ -30,7 +30,7 @@ composer require ebess/advanced-nova-media-library
 ```
 
 ```bash
-artisan vendor:publish --tag=nova-media-library
+php artisan vendor:publish --tag=nova-media-library
 ```
 
 ## Model media configuration
