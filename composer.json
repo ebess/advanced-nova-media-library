@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "~7.1.0|^7.2",
+        "php": ">=7.1.0",
         "laravel/framework": "^5.6|^6.0",
         "laravel/nova": "^2.0|^2.1|^2.2",
         "spatie/laravel-medialibrary": "^7.5"
