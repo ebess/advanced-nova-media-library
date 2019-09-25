@@ -28,6 +28,13 @@ class Media extends Field
     protected $customHeaders = [];
 
     protected $defaultValidatorRules = [];
+    
+    /**
+     * Indicates whether the image should be fully rounded or not.
+     *
+     * @var bool
+     */
+    public $rounded = false;
 
     public $meta = ['type' => 'media'];
 
@@ -244,6 +251,19 @@ class Media extends Field
         $this->withMeta(['multiple' => !$isSingle]);
     }
 
+    
+    /**
+     * Display the image thumbnail with full-rounded edges.
+     *
+     * @return void
+     */
+    public function rounded()
+    {
+        $this->rounded = true;
+
+        return $this;
+    }
+    
     public function serializeMedia(\Spatie\MediaLibrary\Models\Media $media): array
     {
         if ($this->serializeMediaCallback) {
