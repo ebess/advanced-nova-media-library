@@ -1,13 +1,13 @@
 <template>
   <transition name="fade">
-    <modal v-if="image" @modal-close="$emit('close')" class="modal-cropper">
+    <modal v-if="image" @modal-close="(!mustCrop) ? $emit('close') : null" class="modal-cropper">
       <card class="text-center clipping-container m-2 bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-4">
           <clipper-basic class="clipper" ref="clipper" bg-color="rgba(0, 0, 0, 0)" :rotate.number="rotate" :src="imageUrl" v-bind="configs"/>
         </div>
 
         <div class="bg-30 px-6 py-3 footer rounded-lg">
-          <button type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="$emit('close')">{{__('Cancel')}}</button>
+          <button type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="$emit('close')" v-if="!mustCrop">{{__('Cancel')}}</button>
 
           <input class="input-range ml-4 mr-4" type="range" min="0" max="360" step="30" v-model="rotate">
 
@@ -28,6 +28,10 @@
         type: Object,
         default: () => ({}),
       },
+      mustCrop: {
+        type: Object,
+        default: false
+      }
     },
     data: () => ({
       rotate: 0,

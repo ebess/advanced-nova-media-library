@@ -1,6 +1,6 @@
 <template>
   <div class="gallery" :class="{editable}">
-    <cropper v-if="field.type === 'media' && editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
+    <cropper v-if="field.type === 'media' && editable" :image="cropImage" :must-crop="field.mustCrop" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
@@ -84,13 +84,20 @@
         }
 
         return this.__(`Upload New ${type}`);
+      },
+      mustCrop() {
+        return ('mustCrop' in this.field && this.field.mustCrop);
       }
     },
     watch: {
       images() {
         this.$emit('input', this.images);
       },
-      value(value) {
+      value(value, old) {
+        if (this.mustCrop) {
+          this.cropImage = value[value.length - 1];
+        }
+
         this.images = value;
       },
     },
@@ -131,7 +138,7 @@
 
         // reset file input so if you upload the same image sequentially
         this.$refs.file.value = null;
-      },
+      }
     },
   };
 </script>
