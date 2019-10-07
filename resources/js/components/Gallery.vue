@@ -94,7 +94,7 @@
         this.$emit('input', this.images);
       },
       value(value, old) {
-        if (this.mustCrop) {
+        if (this.mustCrop && !this.multiple) {
           this.cropImage = value[value.length - 1];
         }
 
