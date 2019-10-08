@@ -1,6 +1,6 @@
 <template>
   <div class="gallery" :class="{editable}">
-    <cropper v-if="field.type === 'media' && editable" :image="cropImage" :must-crop="field.mustCrop" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
+    <cropper v-if="field.type === 'media' && editable" :image="cropImage" :must-crop="field.mustCrop" @close="onCloseCroppedImage" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
@@ -9,7 +9,7 @@
                     :key="index" :image="image" :field="field" :editable="editable" :removable="editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @edit-custom-properties="customPropertiesImageIndex = index"
-                    @crop-start="cropImage = $event"
+                    @crop-start="cropImageQueue.push($event)"
                     />
 
       <CustomProperties
@@ -63,13 +63,16 @@
     },
     data() {
       return {
-        cropImage: null,
+        cropImageQueue: [],
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
       };
     },
     computed: {
+      cropImage() {
+        return this.cropImageQueue.length ? this.cropImageQueue[this.cropImageQueue.length - 1] : null
+      },
       draggable() {
         return this.editable && this.multiple;
       },
@@ -90,14 +93,12 @@
       }
     },
     watch: {
-      images() {
+      images(value, old) {
+        this.queueNewImages(value, old)
         this.$emit('input', this.images);
       },
       value(value, old) {
-        if (this.mustCrop && !this.multiple) {
-          this.cropImage = value[value.length - 1];
-        }
-
+        this.queueNewImages(value, old)
         this.images = value;
       },
     },
@@ -128,16 +129,51 @@
               file_name: file.name,
             };
 
+            // Copy to trigger watcher to recognize differnece between new and old values
+            // https://github.com/vuejs/vue/issues/2164
+            let copiedArray = this.images.slice(0)
             if (this.multiple) {
-              this.images.push(fileData);
+              copiedArray.push(fileData);
             } else {
-              this.images = [fileData];
+              copiedArray = [fileData];
             }
+            this.images = copiedArray
           };
         });
 
         // reset file input so if you upload the same image sequentially
         this.$refs.file.value = null;
+      },
+
+      onCloseCroppedImage() {
+        this.cropImageQueue.pop()
+      },
+
+      /**
+       * Compares new and old images and will queue anything that needs cropping (if mustCrop)
+       *
+       * @param value
+       * @param old
+       */
+      queueNewImages(value, old) {
+        let aThis = this
+        if (this.mustCrop) {
+          // For each of the new values (one)
+          // If it's not in the old value (two)
+          // And it's not already queued (three)
+          let toCrop = value.filter(function (one) {
+            return !(old.filter(function (two) {
+              return one === two
+            }).length) && !(aThis.cropImageQueue.filter(function (three) {
+              return one === three
+            }).length)
+          })
+
+          // Added them to the queue
+          for (let i in toCrop) {
+            this.cropImageQueue.push(toCrop[i])
+          }
+        }
       }
     },
   };
