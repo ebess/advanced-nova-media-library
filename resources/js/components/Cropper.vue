@@ -29,7 +29,7 @@
         default: () => ({}),
       },
       mustCrop: {
-        type: Object,
+        type: Boolean,
         default: false
       }
     },
