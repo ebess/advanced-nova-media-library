@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <modal v-if="image" @modal-close="(!mustCrop) ? $emit('close') : null" class="modal-cropper">
-      <card class="text-center clipping-container m-2 bg-white rounded-lg shadow-lg overflow-hidden">
+      <card class="text-center clipping-container overflow-scroll max-w-view max-h-view bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-4">
           <clipper-basic class="clipper" ref="clipper" bg-color="rgba(0, 0, 0, 0)" :rotate.number="rotate" :src="imageUrl" v-bind="configs"/>
         </div>
@@ -89,6 +89,14 @@
 
   .modal-cropper {
     z-index: 400;
+  }
+
+  .max-w-view {
+    max-width: 75vw;
+  }
+
+  .max-h-view {
+    max-height: calc(100vh - 6.5rem);
   }
 
   .fade-enter-active, .fade-leave-active {
