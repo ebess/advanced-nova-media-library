@@ -23,6 +23,6 @@
         "slug": "^0.9.1",
         "vue": "^2.5.17",
         "vuedraggable": "^2.16.0",
-        "vuejs-clipper": "^0.2.11"
+        "vuejs-clipper": "^1.1.4"
     }
 }
