@@ -92,7 +92,13 @@
   }
 
   .max-w-view {
-    max-width: 75vw;
+    max-width: calc(100vw - 6.5rem);
+  }
+
+  @media (min-aspect-ratio: 4/3) {
+    .max-w-view {
+      max-width: 60vw;
+    }
   }
 
   .max-h-view {
