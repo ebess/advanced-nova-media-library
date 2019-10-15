@@ -122,13 +122,21 @@ class Media extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })
-            ->each(function ($media) use ($requestAttribute) {
-                Validator::make([$requestAttribute => $media], [
+            ->each(function ($media) use ($request, $requestAttribute) {
+                $requestToValidateSingleMedia = array_merge($request->toArray(), [
+                    $requestAttribute => $media,
+                ]);
+
+                Validator::make($requestToValidateSingleMedia, [
                     $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleMediaRules),
                 ])->validate();
             });
 
-        Validator::make([$requestAttribute => $data], [$requestAttribute => $this->collectionMediaRules])
+        $requestToValidateCollectionMedia = array_merge($request->toArray(), [
+            $requestAttribute => $data,
+        ]);
+
+        Validator::make($requestToValidateCollectionMedia, [$requestAttribute => $this->collectionMediaRules])
             ->validate();
 
         return function () use ($request, $data, $attribute, $model) {
