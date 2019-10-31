@@ -34,4 +34,9 @@ class Images extends Media
     {
         return $this->withMeta(['croppingConfigs' => $configs]);
     }
+
+    public function showDimensions(bool $showDimensions = true): self
+    {
+        return $this->withMeta(compact('showDimensions'));
+    }
 }
