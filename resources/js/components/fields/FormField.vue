@@ -87,6 +87,11 @@
       getImageCustomProperties(image) {
         return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
           properties[property] = _.get(image, `custom_properties.${property}`);
+          
+          // Fixes checkbox problem
+          if(properties[property] === true) {
+              properties[property] = 1;
+          }
 
           return properties;
         }, {})
