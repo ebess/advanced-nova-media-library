@@ -22,6 +22,9 @@
       <strong>{{ width }}×{{ height }}</strong> px<br>
       <strong>{{ acpectRatio }}</strong> (<i>{{ ratio }}</i>)
     </div>
+    <div v-if="field.showDimensions" class="type">
+      {{ mimeType }}
+    </div>
   </gallery-item>
 </template>
 
@@ -50,7 +53,10 @@
       croppable() {
         return this.editable &&
           this.field.croppable &&
-          this.acceptedMimeTypes.includes(this.image.mime_type || this.image.file.type);
+          this.acceptedMimeTypes.includes(this.mimeType);
+      },
+      mimeType() {
+        return this.image.mime_type || this.image.file.type;
       },
     },
     watch: {
@@ -77,7 +83,7 @@
           this.src = this.image.__media_urls__.__original__;
         }
 
-        if (field.showDimensions) {
+        if (this.field.showDimensions) {
           setTimeout(this.calculateDimensions);
         }
       },
@@ -106,12 +112,16 @@
         });
       },
       calculateDimensions() {
-        this.width = this.$refs.image.naturalWidth;
-        this.height = this.$refs.image.naturalHeight;
-        this.ratio = Math.round((this.width / this.height) * 100) / 100;
+        if (this.$refs.image.complete) {
+          this.width = this.$refs.image.naturalWidth;
+          this.height = this.$refs.image.naturalHeight;
+          this.ratio = Math.round((this.width / this.height) * 100) / 100;
 
-        const gcd = this.gcd(this.width, this.height);
-        this.acpectRatio = (this.width / gcd) + ':' + (this.height / gcd);
+          const gcd = this.gcd(this.width, this.height);
+          this.acpectRatio = (this.width / gcd) + ':' + (this.height / gcd);
+        } else {
+          this.$refs.image.onload = this.calculateDimensions;
+        }
       },
       gcd(a, b) {
         if (b === 0) {
@@ -179,14 +189,22 @@
         border-radius: $border-radius;
       }
 
-      .dimensions {
+      .dimensions,
+      .type {
         position: absolute;
-        bottom: 1px;
         left: 0;
         width: 100%;
         font-size: .75rem;
         line-height: 0.95;
         text-align: center;
+      }
+
+      .dimensions {
+        bottom: 1px;
+      }
+
+      .type {
+        top: 3px
       }
     }
 
