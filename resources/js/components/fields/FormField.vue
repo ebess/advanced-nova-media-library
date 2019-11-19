@@ -43,10 +43,10 @@
         const type = this.field.type === 'media' ? 'Media' : 'File';
 
         if (this.field.multiple || this.value.length === 0) {
-          return this.__(`Add Existing ${type}`);
+          return this.__(`Aggiungi ${type} esistente`);
         }
 
-        return this.__(`Use Existing ${type}`);
+        return this.__(`Utilizza ${type} esistente`);
       }
     },
     methods: {

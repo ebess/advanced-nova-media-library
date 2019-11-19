@@ -12,7 +12,7 @@
         <div class="flex -mx-4">
           <!-- Heading -->
           <div class="px-4 self-center">
-            <h3>Existing Media</h3>
+            <h3>Media esistenti</h3>
           </div>
 
           <!-- Search -->
@@ -31,7 +31,7 @@
 
           <!-- Close -->
           <div class="px-4 ml-auto self-center">
-            <button type="button" class="form-file-btn btn btn-default btn-primary" @click="close">Close</button>
+            <button type="button" class="form-file-btn btn btn-default btn-primary" @click="close">Chiudi</button>
           </div>
         </div>
       </div>
@@ -46,13 +46,13 @@
         </div>
 
         <!-- Show "Loading" or "No Results Found" text -->
-        <h4 class="text-center m-8" v-if="loading">Loading...</h4>
-        <h4 class="text-center m-8" v-else-if="items.length == 0">No results found</h4>
+        <h4 class="text-center m-8" v-if="loading">Caricamento...</h4>
+        <h4 class="text-center m-8" v-else-if="items.length == 0">Nessun risultato trovato</h4>
       </div>
 
       <!-- Next page -->
       <div class="flex-shrink border-t border-40 pt-4 mt-4 text-right" v-if="showNextPage">
-        <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" @click="nextPage">Load Next Page</button>
+        <button type="button" class="form-file-btn btn btn-default btn-primary ml-auto" @click="nextPage">Carica prossima pagina</button>
       </div>
     </div>
   </div>

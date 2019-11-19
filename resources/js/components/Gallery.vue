@@ -80,10 +80,10 @@
         const type = this.field.type === 'media' ? 'Media' : 'File';
 
         if (this.multiple || this.images.length === 0) {
-          return this.__(`Add New ${type}`);
+          return this.__(`Aggiungi un nuovo ${type}`);
         }
 
-        return this.__(`Upload New ${type}`);
+        return this.__(`Carica un nuovo ${type}`);
       }
     },
     watch: {
