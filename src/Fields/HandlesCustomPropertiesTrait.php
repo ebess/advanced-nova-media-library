@@ -3,10 +3,10 @@
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
 use Laravel\Nova\Fields\Field;
+use Spatie\MediaLibrary\HasMedia;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @mixin Media
@@ -45,7 +45,7 @@ trait HandlesCustomPropertiesTrait
                 return $value instanceof UploadedFile || $value instanceof FileBag;
             })
             ->each(function ($id, int $index) use ($request, $mediaItems, $collection) {
-                if (!$media = $mediaItems->where('id', $id)->first()) {
+                if (! $media = $mediaItems->where('id', $id)->first()) {
                     return;
                 }
 
