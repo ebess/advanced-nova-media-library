@@ -27,7 +27,7 @@ trait HandlesConversionsTrait
         return $this->withMeta(compact('conversionOnPreview'));
     }
 
-    public function getConversionUrls(\Spatie\MediaLibrary\Models\Media $media): array
+    public function getConversionUrls(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
     {
         return [
             // original needed several purposes like cropping
