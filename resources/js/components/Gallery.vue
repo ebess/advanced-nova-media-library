@@ -107,32 +107,66 @@
       add() {
         Array.from(this.$refs.file.files).forEach(file => {
           file = new File([file], file.name, {type: file.type});
-
-          let reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            const fileData = {
-              file: file,
-              __media_urls__: {
-                __original__: reader.result,
-                default: reader.result,
-              },
-              name: file.name,
-              file_name: file.name,
-            };
-
-            if (this.multiple) {
-              this.images.push(fileData);
-            } else {
-              this.images = [fileData];
-            }
-          };
+          this.readFile(file)
         });
 
         // reset file input so if you upload the same image sequentially
         this.$refs.file.value = null;
       },
+      readFile(file) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const fileData = {
+            file: file,
+            __media_urls__: {
+              __original__: reader.result,
+              default: reader.result,
+            },
+            name: file.name,
+            file_name: file.name,
+          };
+
+          if (this.multiple) {
+            this.images.push(fileData);
+          } else {
+            this.images = [fileData];
+          }
+        };
+      },
+      retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+          if (typeof (callback) == "function") {
+            callback(undefined);
+          }
+        }
+        var items = pasteEvent.clipboardData.items
+        if (items == undefined) {
+          if (typeof (callback) == "function") {
+            callback(undefined)
+          }
+        }
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") == -1) continue;
+          var blob = items[i].getAsFile()
+
+          if (typeof (callback) == "function") {
+            callback(blob)
+          }
+        }
+      }
     },
+    mounted: function () {
+      this.$nextTick(() => {
+        window.addEventListener("paste", (e) => {
+          this.retrieveImageFromClipboardAsBlob(e, (imageBlob) => {
+            if (imageBlob) {
+              this.readFile(imageBlob)
+            }
+          })
+        }, false)
+      })
+    }
   };
 </script>
 
