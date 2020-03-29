@@ -6,7 +6,7 @@
                class="gallery-list clearfix">
 
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
-                    :key="index" :image="image" :field="field" :editable="editable" :removable="editable" @remove="remove(index)"
+                    :key="index" :image="image" :field="field" :editable="editable" :removable="removable || editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @edit-custom-properties="customPropertiesImageIndex = index"
                     @crop-start="cropImage = $event"
@@ -55,6 +55,7 @@
       field: Object,
       value: Array,
       editable: Boolean,
+      removable: Boolean,
       multiple: Boolean,
       customProperties: {
         type: Boolean,
