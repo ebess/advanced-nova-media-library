@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery" :class="{editable}">
+  <div class="gallery" :class="{editable}" @mouseover="mouseOver = true" @mouseout="mouseOver = false">
     <cropper v-if="field.type === 'media' && editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
@@ -64,6 +64,7 @@
     },
     data() {
       return {
+        mouseOver: false,
         cropImage: null,
         images: this.value,
         customPropertiesImageIndex: null,
@@ -155,11 +156,14 @@
             callback(blob)
           }
         }
-      }
+      },
     },
     mounted: function () {
       this.$nextTick(() => {
         window.addEventListener("paste", (e) => {
+          if (!this.mouseOver) {
+            return;
+          }
           this.retrieveImageFromClipboardAsBlob(e, (imageBlob) => {
             if (imageBlob) {
               this.readFile(imageBlob)
@@ -167,7 +171,7 @@
           })
         }, false)
       })
-    }
+    },
   };
 </script>
 
