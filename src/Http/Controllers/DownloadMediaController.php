@@ -2,7 +2,7 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Http\Controllers;
 
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DownloadMediaController extends Controller
 {
