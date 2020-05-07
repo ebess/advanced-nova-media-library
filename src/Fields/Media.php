@@ -169,6 +169,12 @@ class Media extends Field
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file, int $index) use ($request, $model, $collection) {
+
+                if (is_callable($this->setCustomPropertiesCallback)) {
+                    $this->customProperties = call_user_func($this->setCustomPropertiesCallback,
+                        $request, $file, $model, $collection, $index);
+                }
+
                 $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
                 if ($this->responsive) {

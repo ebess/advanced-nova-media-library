@@ -15,6 +15,7 @@ trait HandlesCustomPropertiesTrait
 {
     protected $customPropertiesFields = [];
     protected $customProperties = [];
+    protected $setCustomPropertiesCallback;
 
     public function customPropertiesFields(array $customPropertiesFields): self
     {
@@ -70,5 +71,19 @@ trait HandlesCustomPropertiesTrait
         }
 
         $media->save();
+    }
+
+    /**
+     * Set a custom properties callable callback
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function setCustomProperties($callback)
+    {
+        $this->setCustomPropertiesCallback = $callback;
+
+        return $this;
     }
 }
