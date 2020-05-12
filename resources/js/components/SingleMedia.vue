@@ -20,7 +20,7 @@
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
     <div v-if="field.showDimensions" class="dimensions">
       <strong>{{ width }}×{{ height }}</strong> px<br>
-      <strong>{{ acpectRatio }}</strong> (<i>{{ ratio }}</i>)
+      <strong>{{ aspectRatio }}</strong> (<i>{{ ratio }}</i>)
     </div>
     <div v-if="field.showDimensions" class="type">
       {{ mimeType }}
@@ -43,7 +43,7 @@
       src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
       width: undefined,
       height: undefined,
-      acpectRatio: undefined,
+      aspectRatio: undefined,
       ratio: undefined,
     }),
     computed: {
@@ -118,7 +118,7 @@
           this.ratio = Math.round((this.width / this.height) * 100) / 100;
 
           const gcd = this.gcd(this.width, this.height);
-          this.acpectRatio = (this.width / gcd) + ':' + (this.height / gcd);
+          this.aspectRatio = (this.width / gcd) + ':' + (this.height / gcd);
         } else {
           this.$refs.image.onload = this.calculateDimensions;
         }
