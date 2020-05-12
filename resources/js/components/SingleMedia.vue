@@ -19,7 +19,7 @@
     </div>
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
     <div v-if="field.showStatistics" class="statistics">
-      <div class="size"><strong>{{ size }}</strong></div>
+      <div v-if="size" class="size"><strong>{{ size }}</strong></div>
       <div class="dimensions"><strong>{{ width }}×{{ height }}</strong> px</div>
       <div class="ratio"> <strong>{{ aspectRatio }}</strong> (<i>{{ ratio }}</i>)</div>
     </div>
@@ -46,6 +46,7 @@
       height: undefined,
       aspectRatio: undefined,
       ratio: undefined,
+      size: undefined,
     }),
     computed: {
       downloadUrl() {
@@ -131,7 +132,14 @@
             } else if (window.performance !== undefined) {
               const imgResourceTimings = window.performance.getEntriesByName(this.$refs.image.currentSrc);
               if (imgResourceTimings.length) {
-                this.size = this.formatBytes(imgResourceTimings[0].decodedBodySize);
+                const decodedBodySize = imgResourceTimings[0].decodedBodySize;
+                if (decodedBodySize) {
+                  this.size = this.formatBytes(imgResourceTimings[0].decodedBodySize);
+                } else {
+                  this.size = undefined;
+                }
+              } else {
+                this.size = undefined;
               }
             }
           }
