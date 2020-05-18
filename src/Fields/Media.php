@@ -230,6 +230,13 @@ class Media extends Field
             $collectionName = call_user_func($this->computedCallback, $resource);
         }
 
+        $collectionNameArray = explode('.', $collectionName);
+        $collectionName = last($collectionNameArray);
+
+        for($i = 0; $i < count($collectionNameArray) - 1; $i++) {
+            $resource = $resource->{$collectionNameArray[$i]};
+        }
+
         $this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
                 return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
