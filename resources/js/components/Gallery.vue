@@ -108,8 +108,10 @@
 
       add() {
         Array.from(this.$refs.file.files).forEach(file => {
-          file = new File([file], file.name, {type: file.type});
-          this.readFile(file)
+          const blobFile = new Blob([file], { type: file.type });
+          blobFile.lastModifiedDate = new Date();
+          blobFile.name = file.name;
+          this.readFile(blobFile);
         });
 
         // reset file input so if you upload the same image sequentially
