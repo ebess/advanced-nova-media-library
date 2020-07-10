@@ -11,6 +11,10 @@ class AdvancedNovaMediaLibraryServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->publishes([
+            __DIR__ . '/config/nova-media-library.php' => config_path('nova-media-library.php'),
+        ], 'nova-media-library');
+
         $this->app->booted(function () {
             $this->routes();
         });

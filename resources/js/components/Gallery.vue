@@ -1,12 +1,12 @@
 <template>
-  <div class="gallery" :class="{editable}">
+  <div class="gallery" :class="{editable}" @mouseover="mouseOver = true" @mouseout="mouseOver = false">
     <cropper v-if="field.type === 'media' && editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
 
       <component :is="singleComponent" v-for="(image, index) in images" class="mb-3 p-3 mr-3"
-                    :key="index" :image="image" :field="field" :editable="editable" :removable="editable" @remove="remove(index)"
+                    :key="index" :image="image" :field="field" :editable="editable" :removable="removable || editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @edit-custom-properties="customPropertiesImageIndex = index"
                     @crop-start="cropImage = $event"
@@ -55,6 +55,7 @@
       field: Object,
       value: Array,
       editable: Boolean,
+      removable: Boolean,
       multiple: Boolean,
       customProperties: {
         type: Boolean,
@@ -63,6 +64,7 @@
     },
     data() {
       return {
+        mouseOver: false,
         cropImage: null,
         images: this.value,
         customPropertiesImageIndex: null,
@@ -83,7 +85,7 @@
           return this.__(`Add New ${type}`);
         }
 
-        return this.__(`Replace ${type}`);
+        return this.__(`Upload New ${type}`);
       }
     },
     watch: {
@@ -106,32 +108,71 @@
 
       add() {
         Array.from(this.$refs.file.files).forEach(file => {
-          file = new File([file], file.name, {type: file.type});
-
-          let reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            const fileData = {
-              file: file,
-              __media_urls__: {
-                __original__: reader.result,
-                default: reader.result,
-              },
-              name: file.name,
-              file_name: file.name,
-            };
-
-            if (this.multiple) {
-              this.images.push(fileData);
-            } else {
-              this.images = [fileData];
-            }
-          };
+          const blobFile = new Blob([file], { type: file.type });
+          blobFile.lastModifiedDate = new Date();
+          blobFile.name = file.name;
+          this.readFile(blobFile);
         });
 
         // reset file input so if you upload the same image sequentially
         this.$refs.file.value = null;
       },
+      readFile(file) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const fileData = {
+            file: file,
+            __media_urls__: {
+              __original__: reader.result,
+              default: reader.result,
+            },
+            name: file.name,
+            file_name: file.name,
+          };
+
+          if (this.multiple) {
+            this.images.push(fileData);
+          } else {
+            this.images = [fileData];
+          }
+        };
+      },
+      retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+          if (typeof (callback) == "function") {
+            callback(undefined);
+          }
+        }
+        var items = pasteEvent.clipboardData.items
+        if (items == undefined) {
+          if (typeof (callback) == "function") {
+            callback(undefined)
+          }
+        }
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") == -1) continue;
+          var blob = items[i].getAsFile()
+
+          if (typeof (callback) == "function") {
+            callback(blob)
+          }
+        }
+      },
+    },
+    mounted: function () {
+      this.$nextTick(() => {
+        window.addEventListener("paste", (e) => {
+          if (!this.mouseOver) {
+            return;
+          }
+          this.retrieveImageFromClipboardAsBlob(e, (imageBlob) => {
+            if (imageBlob) {
+              this.readFile(imageBlob)
+            }
+          })
+        }, false)
+      })
     },
   };
 </script>
