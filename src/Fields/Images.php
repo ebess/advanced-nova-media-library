@@ -39,4 +39,9 @@ class Images extends Media
     {
         return $this->withMeta(compact('showDimensions'));
     }
+
+    public function mustCrop(bool $mustCrop = true): self
+    {
+        return $this->withMeta(['mustCrop' => $mustCrop]);
+    }
 }
