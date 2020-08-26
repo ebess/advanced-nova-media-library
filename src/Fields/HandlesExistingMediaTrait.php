@@ -14,8 +14,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 trait HandlesExistingMediaTrait
 {
-    public function enableExistingMedia(): self
+    public function enableExistingMedia(string $onlyCollection = null): self
     {
+        if($onlyCollection){
+            $this->withMeta(['collection' => $onlyCollection]);
+        }
         return $this->withMeta(['existingMedia' => (bool) config('nova-media-library.enable-existing-media')]);
     }
 

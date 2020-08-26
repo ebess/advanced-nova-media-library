@@ -72,7 +72,8 @@
         requestParams: {
           search_text: '',
           page: 1,
-          per_page: 18
+          per_page: 18,
+          collection: null
         },
         items: [],
         response: {},
@@ -86,7 +87,14 @@
       open: {
         default: false,
         type: Boolean
+      },
+      collection: {
+        default: null,
+        type: String
       }
+    },
+    mounted() {
+      this.requestParams.collection = this.collection
     },
     computed: {
       showNextPage () {

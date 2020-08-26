@@ -10,7 +10,7 @@
           <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" @click="existingMediaOpen = true">
             {{  openExistingMediaLabel }}
           </button>
-          <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
+          <existing-media :open="existingMediaOpen" :collection="field.collection" @close="existingMediaOpen = false" @select="addExistingItem"/>
         </div>
       </div>
     </template>
