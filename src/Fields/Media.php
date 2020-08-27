@@ -233,7 +233,7 @@ class Media extends Field
         $this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
                 return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
-            });
+            })->values();
 
         if ($collectionName) {
             $this->checkCollectionIsMultiple($resource, $collectionName);
