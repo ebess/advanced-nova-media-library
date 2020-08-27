@@ -53,6 +53,29 @@ public function registerMediaCollections()
 }
 ```
 
+### Configure default conversion to use by collection and view
+If you have published the config files in the [install step](#install), you should have the following option:
+```php
+    /**
+     * Set a default conversion to use by collection.
+     * Can be set for all view with a string or by view with an array.
+     * Possible array keys are: index, detail, form, preview and fallback.
+     * 
+     * i.e.
+     * ['image' => 'thumb']
+     * or
+     * ['image' => [
+     *  'detail' => 'full',
+     *  'fallback' => 'thumb',
+     * ]
+     */
+    'collections-default-conversions' => [],
+```
+**If you come from an older version, just add this option to your existing config file.**
+
+With this option, you can configure a generic default for all view of a collection or specific to each view.
+The 'fallback' is used when the specific view is not defined. 
+
 ## Generic file management
 
 ![Generic file management](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/file-management.png)
