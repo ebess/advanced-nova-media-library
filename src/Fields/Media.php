@@ -43,6 +43,16 @@ class Media extends Field
         return $this->withMeta(['fullSize' => true]);
     }
 
+    /**
+     * Apply filters for the gallery of existing medias
+     * @param array $filters
+     * @return mixed
+     */
+    public function existingFilters(array $filters)
+    {
+        return $this->withMeta(['filters' => $filters]);
+    }
+
     public function rules($rules): self
     {
         $this->collectionMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
@@ -164,7 +174,7 @@ class Media extends Field
         ]);
 
         Validator::make($requestToValidateCollectionMedia, [$requestAttribute => $this->collectionMediaRules])
-            ->validate();
+                 ->validate();
 
         return function () use ($request, $data, $attribute, $model) {
             $this->handleMedia($request, $model, $attribute, $data);
@@ -200,7 +210,7 @@ class Media extends Field
                     $media->withResponsiveImages();
                 }
 
-                if (! empty($this->customHeaders)) {
+                if (!empty($this->customHeaders)) {
                     $media->addCustomHeaders($this->customHeaders);
                 }
 
@@ -228,7 +238,7 @@ class Media extends Field
     private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
-            return ! $value instanceof UploadedFile;
+            return !$value instanceof UploadedFile;
         })->map(function ($value) {
             return $value;
         });
@@ -256,9 +266,9 @@ class Media extends Field
         }
 
         $this->value = $resource->getMedia($collectionName)
-            ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
-                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
-            })->values();
+                                ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
+                                    return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
+                                })->values();
 
         if ($collectionName) {
             $this->checkCollectionIsMultiple($resource, $collectionName);
@@ -276,7 +286,7 @@ class Media extends Field
                 ->first()
                 ->singleFile ?? false;
 
-        $this->withMeta(['multiple' => ! $isSingle]);
+        $this->withMeta(['multiple' => !$isSingle]);
     }
 
     public function serializeMedia(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array

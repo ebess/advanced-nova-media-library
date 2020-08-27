@@ -72,7 +72,8 @@
         requestParams: {
           search_text: '',
           page: 1,
-          per_page: 18
+          per_page: 18,
+          filters: this.filters
         },
         items: [],
         response: {},
@@ -86,6 +87,10 @@
       open: {
         default: false,
         type: Boolean
+      },
+      filters: {
+        default: null,
+        type: Object
       }
     },
     computed: {

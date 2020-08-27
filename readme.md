@@ -134,6 +134,46 @@ return [
 Images::make('Image')->enableExistingMedia(),
 ```
 
+### Filtering of existing media gallery
+
+If you want to filter what existing medias you want to show in your gallery for a specific field:
+```php
+Images::make('Image')
+    ->existingFilters([
+        ...
+    ]),
+```
+
+The filters function accept an array of 'wheres' in the same format as the query builder parse them.
+
+examples:
+```php
+    // Where
+    [
+        "type" => "Basic",
+        "column" => "collection_name",
+        "operator" => "=",
+        "value" => "my_media_collection",
+        "boolean" => "and",
+    ],
+    // Where In
+    [
+        "type" => "In",
+        "column" => "collection_name",
+        "values" => [
+            "collection_one",
+            "collection_two",
+        ],
+        "boolean" => "and",
+    ],
+```
+
+To get those params for a specific query you can do:
+```php
+$query = MyMediaModel::where(...)->...; // The query you would like to use as a filter
+
+$wheres = $query->getQuery()->wheres;
+```
 ## Names of uploaded images
 
 The default filename of the new uploaded file is the original filename. You can change this with the help of the function `setFileName`, which takes a callback function as the only param. This callback function has three params: `$originalFilename` (the original filename like `Fotolia 4711.jpg`), `$extension` (file extension like `jpg`), `$model` (the current model). Here are just 2 examples of what you can do:

@@ -19,6 +19,11 @@ class MediaController extends Controller
 
         $searchText = $request->input('search_text') ?: null;
         $perPage = $request->input('per_page') ?: 18;
+        $filters = $request->input('filters') ?
+            array_map(function ($filter) {
+                return json_decode($filter, true);
+            }, $request->input('filters'))
+            : [];
 
         $query = null;
 
@@ -36,9 +41,26 @@ class MediaController extends Controller
 
             $query->latest();
         }
+        if ($filters) {
+            $query->mergeWheres($filters, $this->parseBindingsFromFilters($filters));
+        }
 
         $results = $query->paginate($perPage);
 
         return MediaResource::collection($results);
+    }
+
+    private function parseBindingsFromFilters($filters)
+    {
+        $bindings = [];
+        foreach ($filters as $filter){
+            if(isset($filter['value'])){
+                $bindings[] = $filter['value'];
+            }
+            if(isset($filter['values'])){
+                $bindings[] = $filter['values'];
+            }
+        }
+        return $bindings;
     }
 }
