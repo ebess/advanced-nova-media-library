@@ -133,6 +133,10 @@ return [
 ```php
 Images::make('Image')->enableExistingMedia(),
 ```
+* To enable the selection of existing media field for a specific collection only
+```php
+Images::make('Image')->enableExistingMedia('collection'),
+```
 
 ## Names of uploaded images
 
