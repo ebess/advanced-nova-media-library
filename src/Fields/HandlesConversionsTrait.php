@@ -38,24 +38,31 @@ trait HandlesConversionsTrait
         return '';
     }
 
+    private function setDefaultConversion(string $collection)
+    {
+        $defaults = [
+            'conversionOnIndexView'  => $this->getDefaultConversionForCollection($collection, 'index') ?? '',
+            'conversionOnDetailView' => $this->getDefaultConversionForCollection($collection, 'detail') ?? '',
+            'conversionOnForm'       => $this->getDefaultConversionForCollection($collection, 'form') ?? '',
+            'conversionOnPreview'    => $this->getDefaultConversionForCollection($collection, 'preview') ?? '',
+        ];
+        if(method_exists($this, 'withMeta')) {
+            $this->withMeta($defaults);
+        } else {
+            $this->meta = array_merge($this->meta ?? [], $defaults);
+        }
+    }
+
     public function getConversionUrls(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
     {
-        $collection = $media->collection_name;
+        $this->setDefaultConversion($media->collection_name);
         return [
             // original needed several purposes like cropping
             '__original__' => $media->getFullUrl(),
-            'indexView' => $media->getFullUrl($this->meta['conversionOnIndexView'] ??
-                $this->getDefaultConversionForCollection($collection, 'index')
-            ),
-            'detailView' => $media->getFullUrl($this->meta['conversionOnDetailView'] ??
-                $this->getDefaultConversionForCollection($collection, 'detail')
-            ),
-            'form' => $media->getFullUrl($this->meta['conversionOnForm'] ??
-                $this->getDefaultConversionForCollection($collection, 'form')
-            ),
-            'preview' => $media->getFullUrl($this->meta['conversionOnPreview'] ??
-                $this->getDefaultConversionForCollection($collection, 'preview')
-            ),
+            'indexView' => $media->getFullUrl($this->meta['conversionOnIndexView'] ?? ''),
+            'detailView' => $media->getFullUrl($this->meta['conversionOnDetailView'] ?? ''),
+            'form' => $media->getFullUrl($this->meta['conversionOnForm']  ?? ''),
+            'preview' => $media->getFullUrl($this->meta['conversionOnPreview'] ?? ''),
         ];
     }
 }
