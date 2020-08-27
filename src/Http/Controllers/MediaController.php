@@ -21,7 +21,7 @@ class MediaController extends Controller
         $perPage = $request->input('per_page') ?: 18;
         $filters = $request->input('filters') ?
             array_map(function ($filter) {
-                return json_decode($filter, true);
+                return json_decode($filter);
             }, $request->input('filters'))
             : [];
 
@@ -42,25 +42,11 @@ class MediaController extends Controller
             $query->latest();
         }
         if ($filters) {
-            $query->mergeWheres($filters, $this->parseBindingsFromFilters($filters));
+            $query->where($filters);
         }
 
         $results = $query->paginate($perPage);
 
         return MediaResource::collection($results);
-    }
-
-    private function parseBindingsFromFilters($filters)
-    {
-        $bindings = [];
-        foreach ($filters as $filter){
-            if(isset($filter['value'])){
-                $bindings[] = $filter['value'];
-            }
-            if(isset($filter['values'])){
-                $bindings[] = $filter['values'];
-            }
-        }
-        return $bindings;
     }
 }

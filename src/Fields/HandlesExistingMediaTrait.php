@@ -14,9 +14,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 trait HandlesExistingMediaTrait
 {
-    public function enableExistingMedia(): self
+    public function enableExistingMedia(string $collection = null): self
     {
-        return $this->withMeta(['existingMedia' => (bool) config('nova-media-library.enable-existing-media')]);
+        if ($collection) {
+            $this->existingFilters([['collection_name', $collection]]);
+        }
+        return $this->withMeta(['existingMedia' => (bool)config('nova-media-library.enable-existing-media')]);
     }
 
     private function addExistingMedia(NovaRequest $request, $data, HasMedia $model, string $collection, Collection $medias): Collection
@@ -25,7 +28,7 @@ trait HandlesExistingMediaTrait
 
         return collect($data)
             ->filter(function ($value) use ($addedMediaIds) {
-                return (! ($value instanceof UploadedFile)) && ! (in_array((int) $value, $addedMediaIds));
+                return (!($value instanceof UploadedFile)) && !(in_array((int)$value, $addedMediaIds));
             })->map(function ($model_id, int $index) use ($request, $model, $collection) {
                 $mediaClass = config('media-library.media_model');
                 $existingMedia = $mediaClass::find($model_id);

@@ -135,45 +135,32 @@ Images::make('Image')->enableExistingMedia(),
 ```
 
 ### Filtering of existing media gallery
+**Attention**: Only basic *where* are implemented for now. Feel free to make a PR to add more options.
 
 If you want to filter what existing medias you want to show in your gallery for a specific field:
 ```php
 Images::make('Image')
+    ->enableExistingMedia('my-collection-name')
+    // Or
     ->existingFilters([
         ...
-    ]),
+    ])
 ```
 
-The filters function accept an array of 'wheres' in the same format as the query builder parse them.
+The function enableExistingMedia takes one optional parameter to specify a collection scope.
+
+For more specific where, you have existingFilters that let you customize the query with the same format 
+you would on a query builder 'where' function. **It needs to be an array of arrays**:
 
 examples:
 ```php
-    // Where
-    [
-        "type" => "Basic",
-        "column" => "collection_name",
-        "operator" => "=",
-        "value" => "my_media_collection",
-        "boolean" => "and",
-    ],
-    // Where In
-    [
-        "type" => "In",
-        "column" => "collection_name",
-        "values" => [
-            "collection_one",
-            "collection_two",
-        ],
-        "boolean" => "and",
-    ],
+    ->existingFilters([
+        ['disk', 'public'],
+        ['disk', '=', 'public'], // Same as previous
+        ['model_type', 'App\User']
+    ])
 ```
 
-To get those params for a specific query you can do:
-```php
-$query = MyMediaModel::where(...)->...; // The query you would like to use as a filter
-
-$wheres = $query->getQuery()->wheres;
-```
 ## Names of uploaded images
 
 The default filename of the new uploaded file is the original filename. You can change this with the help of the function `setFileName`, which takes a callback function as the only param. This callback function has three params: `$originalFilename` (the original filename like `Fotolia 4711.jpg`), `$extension` (file extension like `jpg`), `$model` (the current model). Here are just 2 examples of what you can do:

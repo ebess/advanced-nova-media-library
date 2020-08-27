@@ -50,7 +50,11 @@ class Media extends Field
      */
     public function existingFilters(array $filters)
     {
-        return $this->withMeta(['filters' => $filters]);
+        $metaFilters = isset($this->meta()['filters']) ? $this->meta()['filters'] : [];
+        foreach ($filters as $filter){
+            array_push($metaFilters, $filter);
+        }
+        return $this->withMeta(['filters' => $metaFilters]);
     }
 
     public function rules($rules): self
