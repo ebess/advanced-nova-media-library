@@ -1,5 +1,5 @@
 <template>
-  <gallery-item class="gallery-item-image" :class="{ 'show-dimensions': field.showDimensions }">
+  <gallery-item class="gallery-item-image" :class="{ 'show-statistics': field.showStatistics }">
     <div class="gallery-item-info p-3">
       <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
         <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
@@ -18,11 +18,12 @@
       </a>
     </div>
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
-    <div v-if="field.showDimensions" class="dimensions">
-      <strong>{{ width }}×{{ height }}</strong> px<br>
-      <strong>{{ acpectRatio }}</strong> (<i>{{ ratio }}</i>)
+    <div v-if="field.showStatistics" class="statistics">
+      <div v-if="size" class="size"><strong>{{ size }}</strong></div>
+      <div class="dimensions"><strong>{{ width }}×{{ height }}</strong> px</div>
+      <div class="ratio"> <strong>{{ aspectRatio }}</strong> (<i>{{ ratio }}</i>)</div>
     </div>
-    <div v-if="field.showDimensions" class="type">
+    <div v-if="field.showStatistics" class="type">
       {{ mimeType }}
     </div>
   </gallery-item>
@@ -43,8 +44,9 @@
       src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
       width: undefined,
       height: undefined,
-      acpectRatio: undefined,
+      aspectRatio: undefined,
       ratio: undefined,
+      size: undefined,
     }),
     computed: {
       downloadUrl() {
@@ -83,8 +85,8 @@
           this.src = this.image.__media_urls__.__original__;
         }
 
-        if (this.field.showDimensions) {
-          setTimeout(this.calculateDimensions);
+        if (this.field.showStatistics) {
+          setTimeout(this.calculateStatistics);
         }
       },
       getVideoThumbnail(path, secs = 0) {
@@ -111,16 +113,38 @@
           return mediaPath.endsWith(suffix)
         });
       },
-      calculateDimensions() {
+      calculateStatistics() {
         if (this.$refs.image.complete) {
           this.width = this.$refs.image.naturalWidth;
           this.height = this.$refs.image.naturalHeight;
           this.ratio = Math.round((this.width / this.height) * 100) / 100;
 
           const gcd = this.gcd(this.width, this.height);
-          this.acpectRatio = (this.width / gcd) + ':' + (this.height / gcd);
+          this.aspectRatio = (this.width / gcd) + ':' + (this.height / gcd);
+
+          if (this.field.showStatistics) {
+            const src = this.$refs.image.currentSrc;
+
+            if (src.startsWith('data:')) {
+              const base64Length = src.length - (src.indexOf(',') + 1);
+              const padding = (src.charAt(src.length - 2) === '=') ? 2 : ((src.charAt(src.length - 1) === '=') ? 1 : 0);
+              this.size = this.formatBytes(base64Length * 0.75 - padding);
+            } else if (window.performance !== undefined) {
+              const imgResourceTimings = window.performance.getEntriesByName(this.$refs.image.currentSrc);
+              if (imgResourceTimings.length) {
+                const decodedBodySize = imgResourceTimings[0].decodedBodySize;
+                if (decodedBodySize) {
+                  this.size = this.formatBytes(imgResourceTimings[0].decodedBodySize);
+                } else {
+                  this.size = undefined;
+                }
+              } else {
+                this.size = undefined;
+              }
+            }
+          }
         } else {
-          this.$refs.image.onload = this.calculateDimensions;
+          this.$refs.image.onload = this.calculateStatistics;
         }
       },
       gcd(a, b) {
@@ -129,6 +153,17 @@
         }
 
         return this.gcd(b, a % b);
+      },
+      formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
       }
     },
   };
@@ -148,8 +183,10 @@
         display: flex;
       }
 
-      &.show-dimensions {
-        padding-bottom: 24px;
+      &.show-statistics {
+        padding-top: 15px;
+        padding-bottom: 32px;
+        height: #{$item-max-size + 23px};
       }
 
       .gallery-item-info {
@@ -189,7 +226,7 @@
         border-radius: $border-radius;
       }
 
-      .dimensions,
+      .statistics,
       .type {
         position: absolute;
         left: 0;
@@ -199,8 +236,16 @@
         text-align: center;
       }
 
-      .dimensions {
+      .statistics {
         bottom: 1px;
+
+        .dimensions {
+          font-size: .675rem;
+        }
+
+        .ratio {
+          font-size: .6rem;
+        }
       }
 
       .type {

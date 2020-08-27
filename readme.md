@@ -218,13 +218,13 @@ Files::make('Multiple files', 'multiple_files')
     ]);
 ```
 
-## Show image dimensions
+## Show image statistics *(size, dimensions, type)*
 
-![Image dimensions](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/show-dimensions.png)
+![Image statistics](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/show-statistics.png)
 
 ```php
 Images::make('Gallery')
-    ->showDimensions();
+    ->showStatistics();
 ```
 
 ## Custom headers
