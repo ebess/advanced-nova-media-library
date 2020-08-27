@@ -107,6 +107,31 @@ class Media extends Field
     }
 
     /**
+     * Set the maximum accepted file size for the frontend in kBs
+     *
+     * @param int $maxSize
+     *
+     * @return $this
+     */
+    public function setMaxFileSize(int $maxSize)
+    {
+        return $this->withMeta(['maxFileSize' => $maxSize]);
+    }
+
+    /**
+     * Validate the file's type on the frontend side
+     * Example values for the array: 'image', 'video', 'image/jpeg'
+     *
+     * @param array $types
+     *
+     * @return $this
+     */
+    public function setAllowedFileTypes(array $types)
+    {
+        return $this->withMeta(['allowedFileTypes' => $types]);
+    }
+
+    /**
      * @param HasMedia $model
      * @param mixed $requestAttribute
      * @param mixed $attribute

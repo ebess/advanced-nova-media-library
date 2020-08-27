@@ -131,6 +131,10 @@
             file_name: file.name,
           };
 
+          if (!this.validateFile(fileData.file)) {
+            return;
+          }
+
           if (this.multiple) {
             this.images.push(fileData);
           } else {
@@ -158,6 +162,36 @@
             callback(blob)
           }
         }
+      },
+      validateFile(file) {
+        return this.validateFileSize(file) && this.validateFileType(file);
+      },
+      validateFileSize(file) {
+        if (this.field.maxFileSize && ((file.size / 1024) > this.field.maxFileSize)) {
+          this.$toasted.error(this.__(
+            'Maximum file size is :amount MB',
+            {amount: String(this.field.maxFileSize / 1024)}
+          ));
+          return false;
+        }
+        return true;
+      },
+      validateFileType(file) {
+        if (!Array.isArray(this.field.allowedFileTypes)) {
+          return true;
+        }
+
+        for (const type of this.field.allowedFileTypes) {
+          if (file.type.startsWith(type)) {
+            return true;
+          }
+        }
+
+        this.$toasted.error(this.__(
+          'File type must be: :types',
+          {types: this.field.allowedFileTypes.join(' / ')}
+        ));
+        return false;
       },
     },
     mounted: function () {
