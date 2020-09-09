@@ -55,7 +55,7 @@
        */
       setInitialValue() {
         let value = this.field.value || [];
-          
+
         if (!this.field.multiple) {
           value = value.slice(0, 1);
         }
