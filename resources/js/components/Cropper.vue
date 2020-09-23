@@ -11,7 +11,7 @@
 
           <input class="input-range ml-4 mr-4" type="range" min="0" max="360" step="30" v-model="rotate">
 
-          <button type="button" class="btn btn-default btn-primary" @click="onSave">{{__('Update')}}</button>
+          <button type="button" class="btn btn-default btn-primary" @click="onSave" ref="updateButton">{{__('Update')}}</button>
         </div>
       </card>
     </modal>
@@ -47,7 +47,12 @@
       },
     },
     watch: {
-      image() {
+      image: function (newValue) {
+        if (newValue) {
+          this.$nextTick(() => {
+            this.$refs.updateButton.focus();
+          })
+        }
         this.reset();
       },
     },
