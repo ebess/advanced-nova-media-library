@@ -137,6 +137,7 @@
             },
             name: file.name,
             file_name: file.name,
+            ...(this.mustCrop && {mustCrop: true}),
           };
 
           if (!this.validateFile(fileData.file)) {
