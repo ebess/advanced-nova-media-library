@@ -2,6 +2,7 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
+use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\Field;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
@@ -26,6 +27,8 @@ class Media extends Field
     protected $singleMediaRules = [];
 
     protected $customHeaders = [];
+
+    protected $secureUntil;
 
     protected $defaultValidatorRules = [];
 
@@ -132,6 +135,20 @@ class Media extends Field
     }
 
     /**
+     * Set the expiry time for temporary urls.
+     *
+     * @param Carbon $until
+     *
+     * @return $this
+     */
+    public function temporary(Carbon $until)
+    {
+        $this->secureUntil = $until;
+
+        return $this;
+    }
+
+    /**
      * @param HasMedia $model
      * @param mixed $requestAttribute
      * @param mixed $attribute
@@ -200,7 +217,7 @@ class Media extends Field
                     $media->withResponsiveImages();
                 }
 
-                if (! empty($this->customHeaders)) {
+                if (!empty($this->customHeaders)) {
                     $media->addCustomHeaders($this->customHeaders);
                 }
 
@@ -228,7 +245,7 @@ class Media extends Field
     private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
-            return ! $value instanceof UploadedFile;
+            return !$value instanceof UploadedFile;
         })->map(function ($value) {
             return $value;
         });
@@ -257,12 +274,26 @@ class Media extends Field
 
         $this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
-                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
+                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getMediaUrls($media)]);
             })->values();
 
         if ($collectionName) {
             $this->checkCollectionIsMultiple($resource, $collectionName);
         }
+    }
+
+    /**
+     * Get the urls for the given media.
+     *
+     * @return array
+     */
+    public function getMediaUrls($media)
+    {
+        if (isset($this->secureUntil) && $this->secureUntil instanceof Carbon) {
+            return $this->getTemporaryConversionUrls($media);
+        }
+
+        return $this->getConversionUrls($media);
     }
 
     /**
@@ -276,7 +307,7 @@ class Media extends Field
                 ->first()
                 ->singleFile ?? false;
 
-        $this->withMeta(['multiple' => ! $isSingle]);
+        $this->withMeta(['multiple' => !$isSingle]);
     }
 
     public function serializeMedia(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
