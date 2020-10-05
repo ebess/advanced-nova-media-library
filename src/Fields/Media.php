@@ -217,7 +217,7 @@ class Media extends Field
                     $media->withResponsiveImages();
                 }
 
-                if (!empty($this->customHeaders)) {
+                if (! empty($this->customHeaders)) {
                     $media->addCustomHeaders($this->customHeaders);
                 }
 
@@ -245,7 +245,7 @@ class Media extends Field
     private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
-            return !$value instanceof UploadedFile;
+            return ! $value instanceof UploadedFile;
         })->map(function ($value) {
             return $value;
         });
@@ -307,7 +307,7 @@ class Media extends Field
                 ->first()
                 ->singleFile ?? false;
 
-        $this->withMeta(['multiple' => !$isSingle]);
+        $this->withMeta(['multiple' => ! $isSingle]);
     }
 
     public function serializeMedia(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
