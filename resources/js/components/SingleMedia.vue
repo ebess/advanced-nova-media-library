@@ -114,6 +114,8 @@
         });
       },
       calculateStatistics() {
+        this.size = this.formatBytes(this.image.size);
+
         if (this.$refs.image.complete) {
           this.width = this.$refs.image.naturalWidth;
           this.height = this.$refs.image.naturalHeight;
@@ -122,26 +124,13 @@
           const gcd = this.gcd(this.width, this.height);
           this.aspectRatio = (this.width / gcd) + ':' + (this.height / gcd);
 
-          if (this.field.showStatistics) {
-            const src = this.$refs.image.currentSrc;
+          const src = this.$refs.image.currentSrc;
 
-            if (src.startsWith('data:')) {
-              const base64Length = src.length - (src.indexOf(',') + 1);
-              const padding = (src.charAt(src.length - 2) === '=') ? 2 : ((src.charAt(src.length - 1) === '=') ? 1 : 0);
-              this.size = this.formatBytes(base64Length * 0.75 - padding);
-            } else if (window.performance !== undefined) {
-              const imgResourceTimings = window.performance.getEntriesByName(this.$refs.image.currentSrc);
-              if (imgResourceTimings.length) {
-                const decodedBodySize = imgResourceTimings[0].decodedBodySize;
-                if (decodedBodySize) {
-                  this.size = this.formatBytes(imgResourceTimings[0].decodedBodySize);
-                } else {
-                  this.size = undefined;
-                }
-              } else {
-                this.size = undefined;
-              }
-            }
+          if (src.startsWith('data:')) {
+            const base64Length = src.length - (src.indexOf(',') + 1);
+            const padding = (src.charAt(src.length - 2) === '=') ? 2 : ((src.charAt(src.length - 1) === '=') ? 1 : 0);
+
+            this.size = this.formatBytes(base64Length * 0.75 - padding);
           }
         } else {
           this.$refs.image.onload = this.calculateStatistics;
@@ -155,7 +144,13 @@
         return this.gcd(b, a % b);
       },
       formatBytes(bytes, decimals = 2) {
-        if (bytes === 0) return '0 Bytes';
+        if (bytes === undefined) {
+          return undefined;
+        }
+
+        if (bytes === 0) {
+          return '0 Bytes';
+        }
 
         const k = 1024;
         const dm = decimals < 0 ? 0 : decimals;
