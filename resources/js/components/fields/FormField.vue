@@ -12,6 +12,16 @@
           </button>
           <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
         </div>
+        <help-text
+          class="error-text mt-2 text-danger"
+          v-if="showErrors && hasError"
+        >
+          {{ firstError }}
+        </help-text>
+
+        <help-text class="help-text mt-2" v-if="showHelpText">
+          {{ field.helpText }}
+        </help-text>
       </div>
     </template>
   </component>
@@ -55,7 +65,7 @@
        */
       setInitialValue() {
         let value = this.field.value || [];
-          
+
         if (!this.field.multiple) {
           value = value.slice(0, 1);
         }
@@ -87,7 +97,7 @@
       getImageCustomProperties(image) {
         return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
           properties[property] = _.get(image, `custom_properties.${property}`);
-          
+
           // Fixes checkbox problem
           if(properties[property] === true) {
               properties[property] = 1;
