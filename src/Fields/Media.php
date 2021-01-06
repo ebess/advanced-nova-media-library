@@ -107,6 +107,31 @@ class Media extends Field
     }
 
     /**
+     * Set the maximum accepted file size for the frontend in kBs
+     *
+     * @param int $maxSize
+     *
+     * @return $this
+     */
+    public function setMaxFileSize(int $maxSize)
+    {
+        return $this->withMeta(['maxFileSize' => $maxSize]);
+    }
+
+    /**
+     * Validate the file's type on the frontend side
+     * Example values for the array: 'image', 'video', 'image/jpeg'
+     *
+     * @param array $types
+     *
+     * @return $this
+     */
+    public function setAllowedFileTypes(array $types)
+    {
+        return $this->withMeta(['allowedFileTypes' => $types]);
+    }
+
+    /**
      * @param HasMedia $model
      * @param mixed $requestAttribute
      * @param mixed $attribute
@@ -233,7 +258,7 @@ class Media extends Field
         $this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
                 return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
-            });
+            })->values();
 
         if ($collectionName) {
             $this->checkCollectionIsMultiple($resource, $collectionName);
