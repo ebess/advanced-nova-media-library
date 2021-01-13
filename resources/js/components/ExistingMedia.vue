@@ -13,7 +13,6 @@
           <!-- Heading -->
           <div class="px-4 self-center">
             <h3>{{__('Existing Media')}}</h3>
-            {{__('Search by name or file name')}}
           </div>
 
           <!-- Search -->
