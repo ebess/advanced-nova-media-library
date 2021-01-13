@@ -13,6 +13,7 @@
           <!-- Heading -->
           <div class="px-4 self-center">
             <h3>{{__('Existing Media')}}</h3>
+            {{__('Search by name or file name')}}
           </div>
 
           <!-- Search -->
@@ -20,7 +21,7 @@
             <div class="relative">
               <icon type="search" class="absolute search-icon-center ml-3 text-70" />
               <input type="search"
-                     placeholder="{{__('Search by name or file name')}}"
+                     v-bind:placeholder="__('Search by name or file name')"
                      class="pl-search form-control form-input form-input-bordered w-full"
                      v-model="requestParams.search_text"
                      @input="search"
