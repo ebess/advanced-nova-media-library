@@ -37,7 +37,7 @@ php artisan vendor:publish --tag=nova-media-library
 
 Let's assume you configured your model to use the media library like following:
 ```php
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 public function registerMediaConversions(Media $media = null)
 {
