@@ -6639,10 +6639,10 @@ vuedraggable@^2.16.0:
   dependencies:
     sortablejs "^1.10.1"
 
-vuejs-clipper@^1.1.4:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-1.1.8.tgz#54bc55c96d95c06c4411a6e0a7059d75cf0d69ed"
-  integrity sha512-+UxwmO7xWfDH9s1tjh1u5dpvWHs3OSUgijH8nhrid4LpdcEt173NveTsPxEkkrK7bMVbKmL28sK8uX0OVGLcQg==
+vuejs-clipper@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-2.1.2.tgz#f3c3722b8eef5556c331a5589582fba19d0d1457"
+  integrity sha512-Do7I21zjF1i9PhM4XRK4W9UjB4oCrFast7tAw4JCEN7GsQiWGLUHjB5Z02ouBgzb+Qtn6F2gKa/MQFaWuTPyag==
   dependencies:
     core-js "^3.6.4"
     exif-js "^2.3.0"
