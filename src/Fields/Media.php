@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Media extends Field
