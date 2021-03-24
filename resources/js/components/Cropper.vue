@@ -1,17 +1,17 @@
 <template>
   <transition name="fade">
-    <modal v-if="image" @modal-close="$emit('close')" class="modal-cropper">
-      <card class="text-center clipping-container m-2 bg-white rounded-lg shadow-lg overflow-hidden">
+    <modal v-if="image" @modal-close="onCancel" class="modal-cropper">
+      <card class="text-center clipping-container max-w-view bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-4">
           <clipper-basic class="clipper" ref="clipper" bg-color="rgba(0, 0, 0, 0)" :rotate.number="rotate" :src="imageUrl" v-bind="configs"/>
         </div>
 
         <div class="bg-30 px-6 py-3 footer rounded-lg">
-          <button type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="$emit('close')">{{__('Cancel')}}</button>
+          <button v-if="!cropAnyway" type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="onCancel">{{__('Cancel')}}</button>
 
           <input class="input-range ml-4 mr-4" type="range" min="0" max="360" step="30" v-model="rotate">
 
-          <button type="button" class="btn btn-default btn-primary" @click="onSave">{{__('Update')}}</button>
+          <button type="button" class="btn btn-default btn-primary" @click="onSave" ref="updateButton">{{__('Update')}}</button>
         </div>
       </card>
     </modal>
@@ -28,6 +28,10 @@
         type: Object,
         default: () => ({}),
       },
+      mustCrop: {
+        type: Boolean,
+        default: false
+      }
     },
     data: () => ({
       rotate: 0,
@@ -41,9 +45,17 @@
       imageUrl() {
         return this.image ? this.image.__media_urls__.__original__ : null;
       },
+      cropAnyway() {
+        return (this.image.mustCrop === true) && this.mustCrop;
+      },
     },
     watch: {
-      image() {
+      image: function (newValue) {
+        if (newValue) {
+          this.$nextTick(() => {
+            this.$refs.updateButton.focus();
+          })
+        }
         this.reset();
       },
     },
@@ -68,6 +80,13 @@
         this.$emit('crop-completed', fileData);
         this.$emit('close');
       },
+      onCancel() {
+        if (this.cropAnyway) {
+          this.onSave();
+        } else {
+          this.$emit('close');
+        }
+      },
     },
   };
 </script>
@@ -85,6 +104,16 @@
 
   .modal-cropper {
     z-index: 400;
+  }
+
+  .max-w-view {
+    max-width: calc(100vw - 6.5rem);
+  }
+
+  @media (min-aspect-ratio: 4/3) {
+    .max-w-view {
+      max-width: 60vw;
+    }
   }
 
   .fade-enter-active, .fade-leave-active {

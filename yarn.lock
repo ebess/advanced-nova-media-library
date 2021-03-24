@@ -2002,6 +2002,11 @@ core-js-compat@^3.6.2:
     browserslist "^4.8.5"
     semver "7.0.0"
 
+core-js@^3.6.4:
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
+  integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
+
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -5678,7 +5683,7 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxjs@^6.3.2:
+rxjs@^6.5.2:
   version "6.6.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
   integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
@@ -6634,13 +6639,14 @@ vuedraggable@^2.16.0:
   dependencies:
     sortablejs "^1.10.1"
 
-vuejs-clipper@^0.2.11:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-0.2.13.tgz#52bf507bdf2ab04766f69fd8a09501dc28261c69"
-  integrity sha512-6Rp1+dP9XQTnFHmg8NhrGSNteSHKZ8YDnQiBFhJPoVNDSQIPjnjWNt37bqP2EuAElMoPHB+kLE+DQ7h+jjG/uQ==
+vuejs-clipper@^1.1.4:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-1.1.8.tgz#54bc55c96d95c06c4411a6e0a7059d75cf0d69ed"
+  integrity sha512-+UxwmO7xWfDH9s1tjh1u5dpvWHs3OSUgijH8nhrid4LpdcEt173NveTsPxEkkrK7bMVbKmL28sK8uX0OVGLcQg==
   dependencies:
+    core-js "^3.6.4"
     exif-js "^2.3.0"
-    rxjs "^6.3.2"
+    rxjs "^6.5.2"
     vue-rx "^6.0.1"
 
 watchpack-chokidar2@^2.0.0:

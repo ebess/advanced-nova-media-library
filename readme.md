@@ -193,6 +193,11 @@ Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
 
+It is possible to enforce cropping on upload, for example to ensure the image has the set aspect ratio:
+```php
+Images::make('Gallery')->mustCrop();
+```
+
 ## Custom properties
 
 ![Custom properties](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/custom-properties.gif)
