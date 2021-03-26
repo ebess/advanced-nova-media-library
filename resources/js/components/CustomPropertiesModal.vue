@@ -1,5 +1,14 @@
 <template>
-    <modal @modal-close="handleClose">
+    <modal @modal-close="handleClose"
+          :classWhitelist="[
+            'flatpickr-current-month',
+            'flatpickr-next-month',
+            'flatpickr-prev-month',
+            'flatpickr-weekday',
+            'flatpickr-weekdays',
+            'flatpickr-calendar',
+            ]"
+     >
         <card class="overflow-hidden">
             <form class="bg-white rounded-lg shadow-lg overflow-hidden w-action-fields"
                 @submit.prevent="handleUpdate"
