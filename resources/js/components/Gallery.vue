@@ -1,6 +1,6 @@
 <template>
   <div class="gallery" :class="{editable}" @mouseover="mouseOver = true" @mouseout="mouseOver = false">
-    <cropper v-if="field.type === 'media' && editable" :image="cropImage" @close="cropImage = null" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
+    <cropper v-if="field.type === 'media' && editable" :image="cropImage" :must-crop="field.mustCrop" @close="onCloseCroppedImage" @crop-completed="onCroppedImage" :configs="field.croppingConfigs"/>
 
     <component :is="draggable ? 'draggable' : 'div'" v-if="images.length > 0" v-model="images"
                class="gallery-list clearfix">
@@ -9,7 +9,7 @@
                     :key="index" :image="image" :field="field" :editable="editable" :removable="removable || editable" @remove="remove(index)"
                     :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                     @edit-custom-properties="customPropertiesImageIndex = index"
-                    @crop-start="cropImage = $event"
+                    @crop-start="cropImageQueue.push($event)"
                     />
 
       <CustomProperties
@@ -27,6 +27,10 @@
       <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
       <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
     </span>
+
+    <help-text v-if="field.type !== 'media'" :show-span="showHelpText" class="mt-2">
+      {{ field.helpText }}
+    </help-text>
 
     <p v-if="hasError" class="my-2 text-danger">
       {{ firstError }}
@@ -65,13 +69,16 @@
     data() {
       return {
         mouseOver: false,
-        cropImage: null,
+        cropImageQueue: [],
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
       };
     },
     computed: {
+      cropImage() {
+        return this.cropImageQueue.length ? this.cropImageQueue[this.cropImageQueue.length - 1] : null
+      },
       draggable() {
         return this.editable && this.multiple;
       },
@@ -86,13 +93,18 @@
         }
 
         return this.__(`Upload New ${type}`);
+      },
+      mustCrop() {
+        return ('mustCrop' in this.field && this.field.mustCrop);
       }
     },
     watch: {
-      images() {
+      images(value, old) {
+        this.queueNewImages(value, old)
         this.$emit('input', this.images);
       },
-      value(value) {
+      value(value, old) {
+        this.queueNewImages(value, old)
         this.images = value;
       },
     },
@@ -129,17 +141,22 @@
             },
             name: file.name,
             file_name: file.name,
+            ...(this.mustCrop && {mustCrop: true}),
           };
 
           if (!this.validateFile(fileData.file)) {
             return;
           }
 
+          // Copy to trigger watcher to recognize differnece between new and old values
+          // https://github.com/vuejs/vue/issues/2164
+          let copiedArray = this.images.slice(0)
           if (this.multiple) {
-            this.images.push(fileData);
+            copiedArray.push(fileData);
           } else {
-            this.images = [fileData];
+            copiedArray = [fileData];
           }
+          this.images = copiedArray
         };
       },
       retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
@@ -193,6 +210,37 @@
         ));
         return false;
       },
+
+      onCloseCroppedImage() {
+        this.cropImageQueue.pop()
+      },
+
+      /**
+       * Compares new and old images and will queue anything that needs cropping (if mustCrop)
+       *
+       * @param value
+       * @param old
+       */
+      queueNewImages(value, old) {
+        let aThis = this
+        if (this.mustCrop) {
+          // For each of the new values (one)
+          // If it's not in the old value (two)
+          // And it's not already queued (three)
+          let toCrop = value.filter(function (one) {
+            return !(old.filter(function (two) {
+              return one === two
+            }).length) && !(aThis.cropImageQueue.filter(function (three) {
+              return one === three
+            }).length)
+          })
+
+          // Added them to the queue
+          for (let i in toCrop) {
+            this.cropImageQueue.push(toCrop[i])
+          }
+        }
+      }
     },
     mounted: function () {
       this.$nextTick(() => {
