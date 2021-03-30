@@ -3,9 +3,8 @@
     <modal v-if="image" @modal-close="onCancel" class="modal-cropper">
       <card class="text-center clipping-container max-w-view bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-4">
-          <clipper-basic class="clipper" ref="clipper" bg-color="rgba(0, 0, 0, 0)" :rotate.number="rotate" :src="imageUrl" v-bind="configs"/>
+          <clipper-basic :cross-origin="configs['cross-origin']" class="clipper" ref="clipper" bg-color="rgba(0, 0, 0, 0)" :rotate.number="rotate" :src="imageUrl" v-bind="configs"/>
         </div>
-
         <div class="bg-30 px-6 py-3 footer rounded-lg">
           <button v-if="!cropAnyway" type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click="onCancel">{{__('Cancel')}}</button>
 
@@ -64,6 +63,7 @@
         this.rotate = 0;
       },
       onSave() {
+
         const base64 = this.$refs.clipper.clip().toDataURL(this.mime);
         const file = Converter(base64, this.mime, this.image.file_name);
 

@@ -1,10 +1,9 @@
 export default (base64, mime, fileName) => {
   mime = mime || '';
 
-  base64 = base64.replace(`data:${mime};base64,`, '');
   const sliceSize = 1024;
 
-  const byteChars = window.atob(base64);
+  const byteChars = window.atob(base64.split(',')[1]);
   const byteArrays = [];
 
   for (let offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
