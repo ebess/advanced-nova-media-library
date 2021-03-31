@@ -37,7 +37,7 @@ php artisan vendor:publish --tag=nova-media-library
 
 Let's assume you configured your model to use the media library like following:
 ```php
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 public function registerMediaConversions(Media $media = null)
 {
@@ -192,6 +192,11 @@ You can set all configurations like ratio e.g. as following:
 Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
+
+It is possible to enforce cropping on upload, for example to ensure the image has the set aspect ratio:
+```php
+Images::make('Gallery')->mustCrop();
+```
 
 ## Custom properties
 
