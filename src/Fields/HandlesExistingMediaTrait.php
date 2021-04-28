@@ -41,6 +41,10 @@ trait HandlesExistingMediaTrait
                     $media->withResponsiveImages();
                 }
 
+                if (! empty($this->customHeaders)) {
+                    $media->addCustomHeaders($this->customHeaders);
+                }
+
                 $media = $media->toMediaCollection($collection);
 
                 // fill custom properties for recently created media
