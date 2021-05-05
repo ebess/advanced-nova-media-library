@@ -6,8 +6,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DownloadMediaController extends Controller
 {
-    public function show(Media $media)
+    public function show(int $mediaId)
     {
-        return $media;
+        $model = config('media-library.media_model') ?: Media;
+        return $model::find($mediaId);
     }
 }
