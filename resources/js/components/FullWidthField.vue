@@ -5,7 +5,11 @@
         <form-label :for="field.attribute" :class="{
                       'mb-2': field.helpText && showHelpText
                   }">
-          {{ fieldLabel }}
+          {{ fieldLabel }}&nbsp;<span
+            v-if="field.required"
+            class="text-danger text-sm"
+            >{{ __('*') }}</span
+          >
         </form-label>
 
         <help-text :show-help-text="showHelpText">

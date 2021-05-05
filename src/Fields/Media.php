@@ -2,13 +2,14 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
+use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\Field;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Media extends Field
@@ -26,6 +27,8 @@ class Media extends Field
     protected $singleMediaRules = [];
 
     protected $customHeaders = [];
+
+    protected $secureUntil;
 
     protected $defaultValidatorRules = [];
 
@@ -129,6 +132,20 @@ class Media extends Field
     public function setAllowedFileTypes(array $types)
     {
         return $this->withMeta(['allowedFileTypes' => $types]);
+    }
+
+    /**
+     * Set the expiry time for temporary urls.
+     *
+     * @param Carbon $until
+     *
+     * @return $this
+     */
+    public function temporary(Carbon $until)
+    {
+        $this->secureUntil = $until;
+
+        return $this;
     }
 
     /**
@@ -257,12 +274,26 @@ class Media extends Field
 
         $this->value = $resource->getMedia($collectionName)
             ->map(function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
-                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getConversionUrls($media)]);
+                return array_merge($this->serializeMedia($media), ['__media_urls__' => $this->getMediaUrls($media)]);
             })->values();
 
         if ($collectionName) {
             $this->checkCollectionIsMultiple($resource, $collectionName);
         }
+    }
+
+    /**
+     * Get the urls for the given media.
+     *
+     * @return array
+     */
+    public function getMediaUrls($media)
+    {
+        if (isset($this->secureUntil) && $this->secureUntil instanceof Carbon) {
+            return $this->getTemporaryConversionUrls($media);
+        }
+
+        return $this->getConversionUrls($media);
     }
 
     /**

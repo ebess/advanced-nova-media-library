@@ -44,4 +44,9 @@ class Images extends Media
     {
         return $this->showStatistics();
     }
+
+    public function mustCrop(bool $mustCrop = true): self
+    {
+        return $this->withMeta(['mustCrop' => $mustCrop]);
+    }
 }
