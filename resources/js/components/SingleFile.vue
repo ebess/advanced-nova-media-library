@@ -1,10 +1,10 @@
 <template>
   <gallery-item class="gallery-item-file">
     <div class="gallery-item-info">
-      <a class="download mr-2" :href="image.__media_urls__.__original__" target="_blank">
+      <a v-if="field.disableDownload === undefined || field.disableDownload === false" class="download mr-2" :href="image.__media_urls__.__original__" target="_blank">
         <icon type="search" view-box="0 0 20 20" width="16" height="16" />
       </a>
-      <a v-if="downloadUrl" class="download mr-2" :href="downloadUrl">
+      <a v-if="downloadUrl && (field.disableDownload === undefined || field.disableDownload === false)" class="download mr-2" :href="downloadUrl">
         <icon type="download" view-box="0 0 20 22" width="16" height="16" />
       </a>
       <span class="label">
@@ -24,7 +24,7 @@
   import GalleryItem from './GalleryItem';
 
   export default {
-    props: ['image', 'removable', 'isCustomPropertiesEditable'],
+    props: ['field', 'image', 'removable', 'isCustomPropertiesEditable'],
     components: {
       GalleryItem,
     },
