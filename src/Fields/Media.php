@@ -353,4 +353,15 @@ class Media extends Field
     {
         return $this->withMeta(compact('conversionOnDetailView'));
     }
+
+    /**
+     * Set whether the frontend will show the download button
+     *
+     * @param false $disableDownload
+     * @return $this
+     */
+    public function setDisableDownload($disableDownload = false): self
+    {
+        return $this->withMeta(['disableDownload' => $disableDownload]);
+    }
 }

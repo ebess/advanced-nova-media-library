@@ -1,7 +1,7 @@
 <template>
   <gallery-item class="gallery-item-image" :class="{ 'show-statistics': field.showStatistics }">
     <div class="gallery-item-info p-3">
-      <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
+      <a v-if="downloadUrl && (field.disableDownload === undefined || field.disableDownload === false)" class="icon download" :href="downloadUrl" title="Download">
         <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
       </a>
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
