@@ -39,14 +39,14 @@ Let's assume you configured your model to use the media library like following:
 ```php
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-public function registerMediaConversions(Media $media = null)
+public function registerMediaConversions(Media $media = null): void
 {
     $this->addMediaConversion('thumb')
         ->width(130)
         ->height(130);
 }
 
-public function registerMediaCollections()
+public function registerMediaCollections(): void
 {
     $this->addMediaCollection('main')->singleFile();
     $this->addMediaCollection('my_multi_collection');
@@ -264,7 +264,7 @@ class Category extends Resource
 
 class YourModel extends Model implements HasMedia
 {
-    public function registerMediaConversions(Media $media = null)
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(368)
