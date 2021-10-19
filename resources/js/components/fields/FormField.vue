@@ -3,7 +3,7 @@
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
-                 v-model="value" editable custom-properties :field="field" :multiple="field.multiple"
+                 v-model="value" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple"
                  :has-error="hasError" :first-error="firstError"/>
 
         <div v-if="field.existingMedia">
@@ -12,6 +12,16 @@
           </button>
           <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
         </div>
+        <help-text
+          class="error-text mt-2 text-danger"
+          v-if="showErrors && hasError"
+        >
+          {{ firstError }}
+        </help-text>
+
+        <help-text class="help-text mt-2" v-if="showHelpText">
+          {{ field.helpText }}
+        </help-text>
       </div>
     </template>
   </component>
@@ -55,7 +65,7 @@
        */
       setInitialValue() {
         let value = this.field.value || [];
-          
+
         if (!this.field.multiple) {
           value = value.slice(0, 1);
         }
@@ -87,7 +97,7 @@
       getImageCustomProperties(image) {
         return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
           properties[property] = _.get(image, `custom_properties.${property}`);
-          
+
           // Fixes checkbox problem
           if(properties[property] === true) {
               properties[property] = 1;
@@ -105,11 +115,16 @@
       },
 
       addExistingItem(item) {
+        // Copy to trigger watcher to recognize differnece between new and old values
+        // https://github.com/vuejs/vue/issues/2164
+        let copiedArray = this.value.slice(0)
+
         if (!this.field.multiple) {
-          this.value.splice(0, 1);
+          copiedArray.splice(0, 1);
         }
 
-        this.value.push(item);
+        copiedArray.push(item);
+        this.value = copiedArray
       }
     },
   };
