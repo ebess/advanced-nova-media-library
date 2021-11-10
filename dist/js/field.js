@@ -2833,13 +2833,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       cropImageQueue: [],
       images: this.value,
       customPropertiesImageIndex: null,
-      singleComponent: this.field.type === 'media' ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"],
-      vaporFile: {
-        key: "",
-        uuid: "",
-        filename: "",
-        extension: ""
-      }
+      singleComponent: this.field.type === 'media' ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"]
     };
   },
   computed: {
@@ -3466,7 +3460,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var isNewImage = !file.id;
 
         if (isNewImage) {
-          formData.append("__media__[".concat(field, "][").concat(index, "]"), file.file, file.name);
+          if (file.isVaporUpload) {
+            // In case of Vapor upload, do not send the file's binary data over the wire.
+            // The file can already be found in the bucket.
+            formData.append("__media__[".concat(field, "][").concat(index, "][key]"), file.vaporFile.key);
+            formData.append("__media__[".concat(field, "][").concat(index, "][uuid]"), file.vaporFile.uuid);
+            formData.append("__media__[".concat(field, "][").concat(index, "][filename]"), file.vaporFile.filename);
+            formData.append("__media__[".concat(field, "][").concat(index, "][extension]"), file.vaporFile.extension);
+          } else {
+            formData.append("__media__[".concat(field, "][").concat(index, "]"), file.file, file.name);
+          }
         } else {
           formData.append("__media__[".concat(field, "][").concat(index, "]"), file.id);
         }

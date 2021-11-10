@@ -84,7 +84,16 @@
           const isNewImage = !file.id;
 
           if (isNewImage) {
-            formData.append(`__media__[${field}][${index}]`, file.file, file.name);
+            if (file.isVaporUpload) {
+              // In case of Vapor upload, do not send the file's binary data over the wire.
+              // The file can already be found in the bucket.
+              formData.append(`__media__[${field}][${index}][key]`, file.vaporFile.key);
+              formData.append(`__media__[${field}][${index}][uuid]`, file.vaporFile.uuid);
+              formData.append(`__media__[${field}][${index}][filename]`, file.vaporFile.filename);
+              formData.append(`__media__[${field}][${index}][extension]`, file.vaporFile.extension);
+            } else {
+              formData.append(`__media__[${field}][${index}]`, file.file, file.name);
+            }
           } else {
             formData.append(`__media__[${field}][${index}]`, file.id);
           }

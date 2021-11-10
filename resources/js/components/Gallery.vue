@@ -75,12 +75,6 @@
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
-        vaporFile: {
-          key: "",
-          uuid: "",
-          filename: "",
-          extension: ""
-        }
       };
     },
     computed: {
