@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import Vapor from "laravel-vapor";
   import SingleMedia from './SingleMedia';
   import SingleFile from './SingleFile';
   import Cropper from './Cropper';
@@ -61,6 +62,7 @@
       editable: Boolean,
       removable: Boolean,
       multiple: Boolean,
+      uploadToVapor: Boolean,
       customProperties: {
         type: Boolean,
         default: false,
@@ -119,6 +121,31 @@
       },
 
       add() {
+        console.log("added a file");
+        if (this.uploadToVapor) {
+          console.log("upload to vapor");
+
+          this.uploading = true;
+          this.$emit("file-upload-started");
+
+          Vapor.store(this.$refs.file.files[0], {
+            progress: progress => {
+              console.log("progress", Math.round(progress * 100));
+              this.uploadProgress = Math.round(progress * 100);
+            }
+          }).then(response => {
+            console.log("response from vapor", response);
+            this.vaporFile.key = response.key;
+            this.vaporFile.uuid = response.uuid;
+            this.vaporFile.filename = fileName;
+            this.vaporFile.extension = extension;
+            this.uploading = false;
+            this.uploadProgress = 0;
+            this.$emit("file-upload-finished");
+          });
+        } else {
+          console.log("just regular shit");
+        }
         Array.from(this.$refs.file.files).forEach(file => {
           const blobFile = new Blob([file], { type: file.type });
           blobFile.lastModifiedDate = new Date();

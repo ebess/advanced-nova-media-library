@@ -148,6 +148,11 @@ class Media extends Field
         return $this;
     }
 
+    public function uploadToVapor(bool $uploadToVapor = true): self
+    {
+        return $this->withMeta(['uploadToVapor' => $uploadToVapor]);
+    }
+
     /**
      * @param HasMedia $model
      * @param mixed $requestAttribute
