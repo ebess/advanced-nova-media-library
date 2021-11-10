@@ -90,8 +90,9 @@
               formData.append(`__media__[${field}][${index}][is_vapor_upload]`, true);
               formData.append(`__media__[${field}][${index}][key]`, file.vaporFile.key);
               formData.append(`__media__[${field}][${index}][uuid]`, file.vaporFile.uuid);
-              formData.append(`__media__[${field}][${index}][filename]`, file.vaporFile.filename);
-              formData.append(`__media__[${field}][${index}][extension]`, file.vaporFile.extension);
+              formData.append(`__media__[${field}][${index}][file_name]`, file.vaporFile.filename);
+              formData.append(`__media__[${field}][${index}][file_size]`, file.vaporFile.file_size);
+              formData.append(`__media__[${field}][${index}][mime_type]`, file.vaporFile.mime_type);
             } else {
               formData.append(`__media__[${field}][${index}]`, file.file, file.name);
             }

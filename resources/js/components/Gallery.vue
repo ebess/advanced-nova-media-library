@@ -151,25 +151,20 @@
           }
 
           if (this.uploadToVapor) {
-            console.log("upload to vapor");
-
-            this.uploading = true;
-            this.$emit("file-upload-started");
-
-            Vapor.store(/* this.$refs.file.files[0] */ file, {
+            // This flag signals to FormField that this is an uploaded file.
+            fileData.isVaporUpload = true;
+            Vapor.store(file, {
               progress: progress => {
-                // TODO can be used later to update UI
-                console.log("progress", Math.round(progress * 100));
-                this.uploadProgress = Math.round(progress * 100);
+                // TODO can be used later to update the UI.
+                // this.uploadProgress = Math.round(progress * 100);
               }
             }).then(response => {
-              console.log("response from vapor", response);
-              fileData.isVaporUpload = true;
               fileData.vaporFile = {
                 key: response.key,
                 uuid: response.uuid,
                 filename: file.name,
-                extension: response.extension
+                mime_type: response.headers['Content-Type'],
+                file_size: file.size,
               };
             });
           }

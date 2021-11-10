@@ -7,9 +7,11 @@ use Laravel\Nova\Fields\Field;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Media extends Field
@@ -166,25 +168,6 @@ class Media extends Field
         if ($attribute === 'ComputedField') {
             $attribute = call_user_func($this->computedCallback, $model);
         }
-
-        // Filter Vapor uploads here
-        
-        /**
-         * FLOW:
-         * 
-         * collect hieronder is dus louter validatie:
-         * 1. reject alles dat geen UploadedFile instance is 
-         * 2. valideer met Validator::make() (not sure of ik hier iets mee moet)
-         *
-         * Dan spreekt ie per media `handleMedia()` aan.
-         * 
-         * In handleMedia:
-         * 1. verwijder media die niet meer voorkomt in de array
-         *  - hier gaat nu al iets mis met array_diff (omdat ik arrays stuur ipv strings)
-         * 2. voeg nieuwe media toe
-         * 3. voeg bestaande media toe (? waarschijnlijk alleen voor attributen oid?)
-         * 4. update volgorde van media
-         */
         
         collect($data)
             ->filter(function ($value) {
@@ -231,15 +214,17 @@ class Media extends Field
 
     private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
     {
-        // TODO hier eerst vapor files eruit plukken
         return collect($data)
             ->filter(function ($value) {
-                return $value instanceof UploadedFile;
-            })->map(function (UploadedFile $file, int $index) use ($request, $model, $collection) {
-                // TODO misschien kan dit wel heel makkelijk die Media Library Pro method zijn
-                // addFromMediaLibraryRequest($object)
-                // dan kan de rest hetzelfde blijven...
-                $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
+                // New files will come in as UploadedFile objects, 
+                // whereas Vapor-uploaded files will come in as arrays.
+                return $value instanceof UploadedFile || is_array($value);
+            })->map(function ($file, int $index) use ($request, $model, $collection) {
+                if ($file instanceof UploadedFile) {
+                    $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
+                } else {
+                    $media = $this->makeMediaFromVaporUpload($file, $model);
+                }
 
                 if ($this->responsive) {
                     $media->withResponsiveImages();
@@ -381,5 +366,19 @@ class Media extends Field
     public function conversionOnView(string $conversionOnDetailView): self
     {
         return $this->withMeta(compact('conversionOnDetailView'));
+    }
+
+    /**
+     * This creates a Media object from a previously, client-side, uploaded file.
+     * The file is uploaded using a pre-signed S3 URL, via Vapor.store.
+     * This method will use addMediaFromUrl(), passing it the 
+     * temporary location of the file.
+     */
+    private function makeMediaFromVaporUpload(array $file, HasMedia $model): FileAdder
+    {
+        $diskName = config('media-library.disk_name');
+        $url = Storage::disk($diskName)->url($file['key']);
+        return $model->addMediaFromUrl($url)
+            ->usingFilename($file['file_name']);
     }
 }

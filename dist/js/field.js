@@ -2920,27 +2920,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         if (_this2.uploadToVapor) {
-          console.log("upload to vapor");
-          _this2.uploading = true;
-
-          _this2.$emit("file-upload-started");
-
-          laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(
-          /* this.$refs.file.files[0] */
-          file, {
-            progress: function progress(_progress) {
-              // TODO can be used later to update UI
-              console.log("progress", Math.round(_progress * 100));
-              _this2.uploadProgress = Math.round(_progress * 100);
+          // This flag signals to FormField that this is an uploaded file.
+          fileData.isVaporUpload = true;
+          laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(file, {
+            progress: function progress(_progress) {// TODO can be used later to update the UI.
+              // this.uploadProgress = Math.round(progress * 100);
             }
           }).then(function (response) {
-            console.log("response from vapor", response);
-            fileData.isVaporUpload = true;
             fileData.vaporFile = {
               key: response.key,
               uuid: response.uuid,
               filename: file.name,
-              extension: response.extension
+              mime_type: response.headers['Content-Type'],
+              file_size: file.size
             };
           });
         } // Copy to trigger watcher to recognize differnece between new and old values
@@ -3466,8 +3458,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             formData.append("__media__[".concat(field, "][").concat(index, "][is_vapor_upload]"), true);
             formData.append("__media__[".concat(field, "][").concat(index, "][key]"), file.vaporFile.key);
             formData.append("__media__[".concat(field, "][").concat(index, "][uuid]"), file.vaporFile.uuid);
-            formData.append("__media__[".concat(field, "][").concat(index, "][filename]"), file.vaporFile.filename);
-            formData.append("__media__[".concat(field, "][").concat(index, "][extension]"), file.vaporFile.extension);
+            formData.append("__media__[".concat(field, "][").concat(index, "][file_name]"), file.vaporFile.filename);
+            formData.append("__media__[".concat(field, "][").concat(index, "][file_size]"), file.vaporFile.file_size);
+            formData.append("__media__[".concat(field, "][").concat(index, "][mime_type]"), file.vaporFile.mime_type);
           } else {
             formData.append("__media__[".concat(field, "][").concat(index, "]"), file.file, file.name);
           }
@@ -57277,15 +57270,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/components/Gallery.vue ***!
   \*********************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Gallery_vue_vue_type_template_id_5761a7b7___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Gallery.vue?vue&type=template&id=5761a7b7& */ "./resources/js/components/Gallery.vue?vue&type=template&id=5761a7b7&");
 /* harmony import */ var _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Gallery.vue?vue&type=script&lang=js& */ "./resources/js/components/Gallery.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Gallery_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Gallery.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/Gallery.vue?vue&type=style&index=0&lang=scss&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Gallery_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Gallery.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/Gallery.vue?vue&type=style&index=0&lang=scss&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -57317,7 +57309,7 @@ component.options.__file = "resources/js/components/Gallery.vue"
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Gallery.vue?vue&type=script&lang=js& ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
