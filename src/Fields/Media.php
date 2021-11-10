@@ -167,6 +167,25 @@ class Media extends Field
             $attribute = call_user_func($this->computedCallback, $model);
         }
 
+        // Filter Vapor uploads here
+        
+        /**
+         * FLOW:
+         * 
+         * collect hieronder is dus louter validatie:
+         * 1. reject alles dat geen UploadedFile instance is 
+         * 2. valideer met Validator::make() (not sure of ik hier iets mee moet)
+         *
+         * Dan spreekt ie per media `handleMedia()` aan.
+         * 
+         * In handleMedia:
+         * 1. verwijder media die niet meer voorkomt in de array
+         *  - hier gaat nu al iets mis met array_diff (omdat ik arrays stuur ipv strings)
+         * 2. voeg nieuwe media toe
+         * 3. voeg bestaande media toe (? waarschijnlijk alleen voor attributen oid?)
+         * 4. update volgorde van media
+         */
+        
         collect($data)
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
@@ -212,10 +231,14 @@ class Media extends Field
 
     private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
     {
+        // TODO hier eerst vapor files eruit plukken
         return collect($data)
             ->filter(function ($value) {
                 return $value instanceof UploadedFile;
             })->map(function (UploadedFile $file, int $index) use ($request, $model, $collection) {
+                // TODO misschien kan dit wel heel makkelijk die Media Library Pro method zijn
+                // addFromMediaLibraryRequest($object)
+                // dan kan de rest hetzelfde blijven...
                 $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
                 if ($this->responsive) {
@@ -250,9 +273,10 @@ class Media extends Field
     private function removeDeletedMedia($data, Collection $medias): Collection
     {
         $remainingIds = collect($data)->filter(function ($value) {
-            return ! $value instanceof UploadedFile;
-        })->map(function ($value) {
-            return $value;
+            // New files will come in as UploadedFile objects, 
+            // whereas Vapor-uploaded files will come in as arrays.
+            return ! $value instanceof UploadedFile
+            && ! is_array($value);
         });
 
         $medias->pluck('id')->diff($remainingIds)->each(function ($id) use ($medias) {

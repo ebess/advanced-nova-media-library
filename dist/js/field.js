@@ -3463,6 +3463,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           if (file.isVaporUpload) {
             // In case of Vapor upload, do not send the file's binary data over the wire.
             // The file can already be found in the bucket.
+            formData.append("__media__[".concat(field, "][").concat(index, "][is_vapor_upload]"), true);
             formData.append("__media__[".concat(field, "][").concat(index, "][key]"), file.vaporFile.key);
             formData.append("__media__[".concat(field, "][").concat(index, "][uuid]"), file.vaporFile.uuid);
             formData.append("__media__[".concat(field, "][").concat(index, "][filename]"), file.vaporFile.filename);

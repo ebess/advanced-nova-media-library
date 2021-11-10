@@ -87,6 +87,7 @@
             if (file.isVaporUpload) {
               // In case of Vapor upload, do not send the file's binary data over the wire.
               // The file can already be found in the bucket.
+              formData.append(`__media__[${field}][${index}][is_vapor_upload]`, true);
               formData.append(`__media__[${field}][${index}][key]`, file.vaporFile.key);
               formData.append(`__media__[${field}][${index}][uuid]`, file.vaporFile.uuid);
               formData.append(`__media__[${field}][${index}][filename]`, file.vaporFile.filename);
