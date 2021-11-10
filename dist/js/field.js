@@ -2799,45 +2799,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2872,7 +2833,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       cropImageQueue: [],
       images: this.value,
       customPropertiesImageIndex: null,
-      singleComponent: this.field.type === "media" ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"]
+      singleComponent: this.field.type === 'media' ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"],
+      vaporFile: {
+        key: "",
+        uuid: "",
+        filename: "",
+        extension: ""
+      }
     };
   },
   computed: {
@@ -2886,7 +2853,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.field.customPropertiesFields || [];
     },
     label: function label() {
-      var type = this.field.type === "media" ? "Media" : "File";
+      var type = this.field.type === 'media' ? 'Media' : 'File';
 
       if (this.multiple || this.images.length === 0) {
         return this.__("Add New ".concat(type));
@@ -2895,13 +2862,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.__("Upload New ".concat(type));
     },
     mustCrop: function mustCrop() {
-      return "mustCrop" in this.field && this.field.mustCrop;
+      return 'mustCrop' in this.field && this.field.mustCrop;
     }
   },
   watch: {
     images: function images(value, old) {
       this.queueNewImages(value, old);
-      this.$emit("input", this.images);
+      this.$emit('input', this.images);
     },
     value: function value(_value, old) {
       this.queueNewImages(_value, old);
@@ -2922,32 +2889,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     add: function add() {
       var _this = this;
-
-      console.log("added a file");
-
-      if (this.uploadToVapor) {
-        console.log("upload to vapor");
-        this.uploading = true;
-        this.$emit("file-upload-started");
-        laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(this.$refs.file.files[0], {
-          progress: function progress(_progress) {
-            console.log("progress", Math.round(_progress * 100));
-            _this.uploadProgress = Math.round(_progress * 100);
-          }
-        }).then(function (response) {
-          console.log("response from vapor", response);
-          _this.vaporFile.key = response.key;
-          _this.vaporFile.uuid = response.uuid;
-          _this.vaporFile.filename = fileName;
-          _this.vaporFile.extension = extension;
-          _this.uploading = false;
-          _this.uploadProgress = 0;
-
-          _this.$emit("file-upload-finished");
-        });
-      } else {
-        console.log("just regular shit");
-      }
 
       Array.from(this.$refs.file.files).forEach(function (file) {
         var blobFile = new Blob([file], {
@@ -2982,6 +2923,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (!_this2.validateFile(fileData.file)) {
           return;
+        }
+
+        if (_this2.uploadToVapor) {
+          console.log("upload to vapor");
+          _this2.uploading = true;
+
+          _this2.$emit("file-upload-started");
+
+          laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(
+          /* this.$refs.file.files[0] */
+          file, {
+            progress: function progress(_progress) {
+              // TODO can be used later to update UI
+              console.log("progress", Math.round(_progress * 100));
+              _this2.uploadProgress = Math.round(_progress * 100);
+            }
+          }).then(function (response) {
+            console.log("response from vapor", response);
+            fileData.isVaporUpload = true;
+            fileData.vaporFile = {
+              key: response.key,
+              uuid: response.uuid,
+              filename: file.name,
+              extension: response.extension
+            };
+          });
         } // Copy to trigger watcher to recognize differnece between new and old values
         // https://github.com/vuejs/vue/issues/2164
 
@@ -3026,7 +2993,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     validateFileSize: function validateFileSize(file) {
       if (this.field.maxFileSize && file.size / 1024 > this.field.maxFileSize) {
-        this.$toasted.error(this.__("Maximum file size is :amount MB", {
+        this.$toasted.error(this.__('Maximum file size is :amount MB', {
           amount: String(this.field.maxFileSize / 1024)
         }));
         return false;
@@ -3056,8 +3023,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _iterator.f();
       }
 
-      this.$toasted.error(this.__("File type must be: :types", {
-        types: this.field.allowedFileTypes.join(" / ")
+      this.$toasted.error(this.__('File type must be: :types', {
+        types: this.field.allowedFileTypes.join(' / ')
       }));
       return false;
     },
@@ -3442,29 +3409,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3478,22 +3422,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     FullWidthField: _FullWidthField__WEBPACK_IMPORTED_MODULE_3__["default"],
     ExistingMedia: _ExistingMedia__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
-  props: ["resourceName", "resourceId", "field"],
+  props: ['resourceName', 'resourceId', 'field'],
   data: function data() {
     return {
       hasSetInitialValue: false,
-      existingMediaOpen: false,
-      vaporFile: {
-        key: "",
-        uuid: "",
-        filename: "",
-        extension: ""
-      }
+      existingMediaOpen: false
     };
   },
   computed: {
     openExistingMediaLabel: function openExistingMediaLabel() {
-      var type = this.field.type === "media" ? "Media" : "File";
+      var type = this.field.type === 'media' ? 'Media' : 'File';
 
       if (this.field.multiple || this.value.length === 0) {
         return this.__("Add Existing ".concat(type));
@@ -3507,7 +3445,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * Set the initial, internal value for the field.
      */
     setInitialValue: function setInitialValue() {
-      console.log("setting initial value");
       var value = this.field.value || [];
 
       if (!this.field.multiple) {
@@ -3555,12 +3492,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      */
     handleChange: function handleChange(value) {
       this.value = value;
-
-      if (this.uploadToVapor) {
-        console.log("upload to vapor");
-      } else {
-        console.log("no vapor, just regular shit");
-      }
     },
     addExistingItem: function addExistingItem(item) {
       // Copy to trigger watcher to recognize differnece between new and old values
@@ -52470,9 +52401,9 @@ var render = function() {
                     "custom-properties": "",
                     field: _vm.field,
                     multiple: _vm.field.multiple,
+                    "upload-to-vapor": _vm.field.uploadToVapor,
                     "has-error": _vm.hasError,
-                    "first-error": _vm.firstError,
-                    "upload-to-vapor": _vm.field.uploadToVapor
+                    "first-error": _vm.firstError
                   },
                   slot: "value",
                   model: {
@@ -57342,14 +57273,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/components/Gallery.vue ***!
   \*********************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Gallery_vue_vue_type_template_id_5761a7b7___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Gallery.vue?vue&type=template&id=5761a7b7& */ "./resources/js/components/Gallery.vue?vue&type=template&id=5761a7b7&");
 /* harmony import */ var _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Gallery.vue?vue&type=script&lang=js& */ "./resources/js/components/Gallery.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _Gallery_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Gallery.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/Gallery.vue?vue&type=style&index=0&lang=scss&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Gallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Gallery_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Gallery.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/Gallery.vue?vue&type=style&index=0&lang=scss&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -57381,7 +57313,7 @@ component.options.__file = "resources/js/components/Gallery.vue"
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Gallery.vue?vue&type=script&lang=js& ***!
   \**********************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

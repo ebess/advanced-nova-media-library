@@ -75,6 +75,12 @@
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
+        vaporFile: {
+          key: "",
+          uuid: "",
+          filename: "",
+          extension: ""
+        }
       };
     },
     computed: {
@@ -121,31 +127,6 @@
       },
 
       add() {
-        console.log("added a file");
-        if (this.uploadToVapor) {
-          console.log("upload to vapor");
-
-          this.uploading = true;
-          this.$emit("file-upload-started");
-
-          Vapor.store(this.$refs.file.files[0], {
-            progress: progress => {
-              console.log("progress", Math.round(progress * 100));
-              this.uploadProgress = Math.round(progress * 100);
-            }
-          }).then(response => {
-            console.log("response from vapor", response);
-            this.vaporFile.key = response.key;
-            this.vaporFile.uuid = response.uuid;
-            this.vaporFile.filename = fileName;
-            this.vaporFile.extension = extension;
-            this.uploading = false;
-            this.uploadProgress = 0;
-            this.$emit("file-upload-finished");
-          });
-        } else {
-          console.log("just regular shit");
-        }
         Array.from(this.$refs.file.files).forEach(file => {
           const blobFile = new Blob([file], { type: file.type });
           blobFile.lastModifiedDate = new Date();
@@ -173,6 +154,30 @@
 
           if (!this.validateFile(fileData.file)) {
             return;
+          }
+
+          if (this.uploadToVapor) {
+            console.log("upload to vapor");
+
+            this.uploading = true;
+            this.$emit("file-upload-started");
+
+            Vapor.store(/* this.$refs.file.files[0] */ file, {
+              progress: progress => {
+                // TODO can be used later to update UI
+                console.log("progress", Math.round(progress * 100));
+                this.uploadProgress = Math.round(progress * 100);
+              }
+            }).then(response => {
+              console.log("response from vapor", response);
+              fileData.isVaporUpload = true;
+              fileData.vaporFile = {
+                key: response.key,
+                uuid: response.uuid,
+                filename: file.name,
+                extension: response.extension
+              };
+            });
           }
 
           // Copy to trigger watcher to recognize differnece between new and old values

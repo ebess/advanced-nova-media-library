@@ -47,12 +47,6 @@
       return {
         hasSetInitialValue: false,
         existingMediaOpen: false,
-        vaporFile: {
-          key: "",
-          uuid: "",
-          filename: "",
-          extension: ""
-        }
       }
     },
     computed: {
