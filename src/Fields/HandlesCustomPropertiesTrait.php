@@ -1,6 +1,6 @@
 <?php
 
-namespace Ebess\AdvancedNovaMediaLibrary\Fields;
+namespace Workup\AdvancedNovaMediaLibrary\Fields;
 
 use Laravel\Nova\Fields\Field;
 use Spatie\MediaLibrary\HasMedia;

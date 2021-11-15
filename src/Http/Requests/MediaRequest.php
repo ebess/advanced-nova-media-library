@@ -1,6 +1,6 @@
 <?php
 
-namespace Ebess\AdvancedNovaMediaLibrary\Http\Requests;
+namespace Workup\AdvancedNovaMediaLibrary\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
