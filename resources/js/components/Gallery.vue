@@ -65,7 +65,7 @@
       editable: Boolean,
       removable: Boolean,
       multiple: Boolean,
-      uploadToVapor: Boolean,
+      uploadsToVapor: Boolean,
       customProperties: {
         type: Boolean,
         default: false,
@@ -121,6 +121,12 @@
       },
 
       onCroppedImage(image) {
+        if (this.uploadsToVapor) {
+          image.isVaporUpload = true;
+          this.uploadToVapor(image.file).then((imageProperties) => {
+            image.vaporFile = imageProperties;
+          });
+        }
         let index = this.images.indexOf(this.cropImage);
         this.images[index] = Object.assign(image, { custom_properties: this.cropImage.custom_properties });
       },
@@ -155,26 +161,11 @@
             return;
           }
 
-          if (this.uploadToVapor) {
-            this.uploading = true;
-            this.$emit('file-upload-started');
+          if (this.uploadsToVapor) {
             // This flag signals to FormField that this is an uploaded file.
             fileData.isVaporUpload = true;
-            Vapor.store(file, {
-              progress: progress => {
-                this.uploadProgress = Math.round(progress * 100);
-              }
-            }).then(response => {
-              fileData.vaporFile = {
-                key: response.key,
-                uuid: response.uuid,
-                filename: file.name,
-                mime_type: response.headers['Content-Type'],
-                file_size: file.size,
-              };
-              this.uploading = false;
-              this.uploadProgress = 0;
-              this.$emit('file-upload-finished');
+            this.uploadToVapor(file).then((imageProperties) => {
+              fileData.vaporFile = imageProperties;
             });
           }
 
@@ -270,6 +261,30 @@
             this.cropImageQueue.push(toCrop[i])
           }
         }
+      },
+
+      /**
+       * Start the upload process to Vapor.
+       */
+      uploadToVapor(file) {
+        this.uploading = true;
+        this.$emit('file-upload-started');
+        return Vapor.store(file, {
+          progress: progress => {
+            this.uploadProgress = Math.round(progress * 100);
+          }
+        }).then(response => {
+          this.uploading = false;
+          this.uploadProgress = 0;
+          this.$emit('file-upload-finished');
+          return {
+            key: response.key,
+            uuid: response.uuid,
+            filename: file.name,
+            mime_type: response.headers['Content-Type'],
+            file_size: file.size,
+          };
+        });
       }
     },
     mounted: function () {

@@ -150,9 +150,9 @@ class Media extends Field
         return $this;
     }
 
-    public function uploadToVapor(bool $uploadToVapor = true): self
+    public function uploadsToVapor(bool $uploadsToVapor = true): self
     {
-        return $this->withMeta(['uploadToVapor' => $uploadToVapor]);
+        return $this->withMeta(['uploadsToVapor' => $uploadsToVapor]);
     }
 
     /**

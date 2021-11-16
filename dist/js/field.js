@@ -2824,7 +2824,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     editable: Boolean,
     removable: Boolean,
     multiple: Boolean,
-    uploadToVapor: Boolean,
+    uploadsToVapor: Boolean,
     customProperties: {
       type: Boolean,
       "default": false
@@ -2881,6 +2881,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     onCroppedImage: function onCroppedImage(image) {
+      if (this.uploadsToVapor) {
+        image.isVaporUpload = true;
+        this.uploadToVapor(image.file).then(function (imageProperties) {
+          image.vaporFile = imageProperties;
+        });
+      }
+
       var index = this.images.indexOf(this.cropImage);
       this.images[index] = Object.assign(image, {
         custom_properties: this.cropImage.custom_properties
@@ -2924,29 +2931,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return;
         }
 
-        if (_this2.uploadToVapor) {
-          _this2.uploading = true;
-
-          _this2.$emit('file-upload-started'); // This flag signals to FormField that this is an uploaded file.
-
-
+        if (_this2.uploadsToVapor) {
+          // This flag signals to FormField that this is an uploaded file.
           fileData.isVaporUpload = true;
-          laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(file, {
-            progress: function progress(_progress) {
-              _this2.uploadProgress = Math.round(_progress * 100);
-            }
-          }).then(function (response) {
-            fileData.vaporFile = {
-              key: response.key,
-              uuid: response.uuid,
-              filename: file.name,
-              mime_type: response.headers['Content-Type'],
-              file_size: file.size
-            };
-            _this2.uploading = false;
-            _this2.uploadProgress = 0;
 
-            _this2.$emit('file-upload-finished');
+          _this2.uploadToVapor(file).then(function (imageProperties) {
+            fileData.vaporFile = imageProperties;
           });
         } // Copy to trigger watcher to recognize differnece between new and old values
         // https://github.com/vuejs/vue/issues/2164
@@ -3056,20 +3046,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.cropImageQueue.push(toCrop[i]);
         }
       }
+    },
+
+    /**
+     * Start the upload process to Vapor.
+     */
+    uploadToVapor: function uploadToVapor(file) {
+      var _this3 = this;
+
+      this.uploading = true;
+      this.$emit('file-upload-started');
+      return laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(file, {
+        progress: function progress(_progress) {
+          _this3.uploadProgress = Math.round(_progress * 100);
+        }
+      }).then(function (response) {
+        _this3.uploading = false;
+        _this3.uploadProgress = 0;
+
+        _this3.$emit('file-upload-finished');
+
+        return {
+          key: response.key,
+          uuid: response.uuid,
+          filename: file.name,
+          mime_type: response.headers['Content-Type'],
+          file_size: file.size
+        };
+      });
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.$nextTick(function () {
       window.addEventListener("paste", function (e) {
-        if (!_this3.mouseOver) {
+        if (!_this4.mouseOver) {
           return;
         }
 
-        _this3.retrieveImageFromClipboardAsBlob(e, function (imageBlob) {
+        _this4.retrieveImageFromClipboardAsBlob(e, function (imageBlob) {
           if (imageBlob) {
-            _this3.readFile(imageBlob);
+            _this4.readFile(imageBlob);
           }
         });
       }, false);
@@ -52426,7 +52444,7 @@ var render = function() {
                     "custom-properties": "",
                     field: _vm.field,
                     multiple: _vm.field.multiple,
-                    "upload-to-vapor": _vm.field.uploadToVapor,
+                    "uploads-to-vapor": _vm.field.uploadsToVapor,
                     "has-error": _vm.hasError,
                     "first-error": _vm.firstError
                   },
