@@ -24,8 +24,11 @@
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
-      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
-      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
+      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
+      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary">
+        <span v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</span>
+        <span v-else>{{ label }}</span>
+      </label>
     </span>
 
     <help-text v-if="field.type !== 'media'" :show-span="showHelpText" class="mt-2">
@@ -75,6 +78,8 @@
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
+        uploading: false,
+        uploadProgress: 0
       };
     },
     computed: {
@@ -151,12 +156,13 @@
           }
 
           if (this.uploadToVapor) {
+            this.uploading = true;
+            this.$emit('file-upload-started');
             // This flag signals to FormField that this is an uploaded file.
             fileData.isVaporUpload = true;
             Vapor.store(file, {
               progress: progress => {
-                // TODO can be used later to update the UI.
-                // this.uploadProgress = Math.round(progress * 100);
+                this.uploadProgress = Math.round(progress * 100);
               }
             }).then(response => {
               fileData.vaporFile = {
@@ -166,6 +172,9 @@
                 mime_type: response.headers['Content-Type'],
                 file_size: file.size,
               };
+              this.uploading = false;
+              this.uploadProgress = 0;
+              this.$emit('file-upload-finished');
             });
           }
 

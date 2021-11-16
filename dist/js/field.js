@@ -2799,6 +2799,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2833,7 +2836,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       cropImageQueue: [],
       images: this.value,
       customPropertiesImageIndex: null,
-      singleComponent: this.field.type === 'media' ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"]
+      singleComponent: this.field.type === 'media' ? _SingleMedia__WEBPACK_IMPORTED_MODULE_1__["default"] : _SingleFile__WEBPACK_IMPORTED_MODULE_2__["default"],
+      uploading: false,
+      uploadProgress: 0
     };
   },
   computed: {
@@ -2920,11 +2925,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         if (_this2.uploadToVapor) {
-          // This flag signals to FormField that this is an uploaded file.
+          _this2.uploading = true;
+
+          _this2.$emit('file-upload-started'); // This flag signals to FormField that this is an uploaded file.
+
+
           fileData.isVaporUpload = true;
           laravel_vapor__WEBPACK_IMPORTED_MODULE_0___default.a.store(file, {
-            progress: function progress(_progress) {// TODO can be used later to update the UI.
-              // this.uploadProgress = Math.round(progress * 100);
+            progress: function progress(_progress) {
+              _this2.uploadProgress = Math.round(_progress * 100);
             }
           }).then(function (response) {
             fileData.vaporFile = {
@@ -2934,6 +2943,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               mime_type: response.headers['Content-Type'],
               file_size: file.size
             };
+            _this2.uploading = false;
+            _this2.uploadProgress = 0;
+
+            _this2.$emit('file-upload-finished');
           });
         } // Copy to trigger watcher to recognize differnece between new and old values
         // https://github.com/vuejs/vue/issues/2164
@@ -51944,16 +51957,31 @@ var render = function() {
               attrs: {
                 id: "__media__" + _vm.field.attribute,
                 multiple: _vm.multiple,
-                type: "file"
+                type: "file",
+                disabled: _vm.uploading
               },
               on: { change: _vm.add }
             }),
             _vm._v(" "),
-            _c("label", {
-              staticClass: "form-file-btn btn btn-default btn-primary",
-              attrs: { for: "__media__" + _vm.field.attribute },
-              domProps: { textContent: _vm._s(_vm.label) }
-            })
+            _c(
+              "label",
+              {
+                staticClass: "form-file-btn btn btn-default btn-primary",
+                attrs: { for: "__media__" + _vm.field.attribute }
+              },
+              [
+                _vm.uploading
+                  ? _c("span", [
+                      _vm._v(
+                        _vm._s(_vm.__("Uploading")) +
+                          " (" +
+                          _vm._s(_vm.uploadProgress) +
+                          "%)"
+                      )
+                    ])
+                  : _c("span", [_vm._v(_vm._s(_vm.label))])
+              ]
+            )
           ])
         : _vm._e(),
       _vm._v(" "),
