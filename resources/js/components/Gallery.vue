@@ -24,8 +24,11 @@
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
-      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" @change="add"/>
-      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary" v-text="label"/>
+      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
+      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary">
+        <span v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</span>
+        <span v-else>{{ label }}</span>
+      </label>
     </span>
 
     <help-text v-if="field.type !== 'media'" :show-span="showHelpText" class="mt-2">
@@ -39,6 +42,7 @@
 </template>
 
 <script>
+  import Vapor from "laravel-vapor";
   import SingleMedia from './SingleMedia';
   import SingleFile from './SingleFile';
   import Cropper from './Cropper';
@@ -61,6 +65,7 @@
       editable: Boolean,
       removable: Boolean,
       multiple: Boolean,
+      uploadsToVapor: Boolean,
       customProperties: {
         type: Boolean,
         default: false,
@@ -73,6 +78,8 @@
         images: this.value,
         customPropertiesImageIndex: null,
         singleComponent: this.field.type === 'media' ? SingleMedia : SingleFile,
+        uploading: false,
+        uploadProgress: 0
       };
     },
     computed: {
@@ -114,6 +121,12 @@
       },
 
       onCroppedImage(image) {
+        if (this.uploadsToVapor) {
+          image.isVaporUpload = true;
+          this.uploadToVapor(image.file).then((imageProperties) => {
+            image.vaporFile = imageProperties;
+          });
+        }
         let index = this.images.indexOf(this.cropImage);
         this.images[index] = Object.assign(image, { custom_properties: this.cropImage.custom_properties });
       },
@@ -146,6 +159,14 @@
 
           if (!this.validateFile(fileData.file)) {
             return;
+          }
+
+          if (this.uploadsToVapor) {
+            // This flag signals to FormField that this is an uploaded file.
+            fileData.isVaporUpload = true;
+            this.uploadToVapor(file).then((imageProperties) => {
+              fileData.vaporFile = imageProperties;
+            });
           }
 
           // Copy to trigger watcher to recognize differnece between new and old values
@@ -240,6 +261,30 @@
             this.cropImageQueue.push(toCrop[i])
           }
         }
+      },
+
+      /**
+       * Start the upload process to Vapor.
+       */
+      uploadToVapor(file) {
+        this.uploading = true;
+        this.$emit('file-upload-started');
+        return Vapor.store(file, {
+          progress: progress => {
+            this.uploadProgress = Math.round(progress * 100);
+          }
+        }).then(response => {
+          this.uploading = false;
+          this.uploadProgress = 0;
+          this.$emit('file-upload-finished');
+          return {
+            key: response.key,
+            uuid: response.uuid,
+            filename: file.name,
+            mime_type: response.headers['Content-Type'],
+            file_size: file.size,
+          };
+        });
       }
     },
     mounted: function () {
