@@ -25,13 +25,28 @@ class Images extends Media
         return $this;
     }
 
-	public function croppable(bool $croppable = true): self
-	{
-		return $this->withMeta(compact('croppable'));
-	}
+    public function croppable(bool $croppable = true): self
+    {
+        return $this->withMeta(compact('croppable'));
+    }
 
-	public function croppingConfigs(array $configs): self
-	{
-		return $this->withMeta(['croppingConfigs' => $configs]);
-	}
+    public function croppingConfigs(array $configs): self
+    {
+        return $this->withMeta(['croppingConfigs' => $configs]);
+    }
+
+    public function showStatistics(bool $showStatistics = true): self
+    {
+        return $this->withMeta(compact('showStatistics'));
+    }
+
+    public function showDimensions(bool $showDimensions = true): self
+    {
+        return $this->showStatistics();
+    }
+
+    public function mustCrop(bool $mustCrop = true): self
+    {
+        return $this->withMeta(['mustCrop' => $mustCrop]);
+    }
 }

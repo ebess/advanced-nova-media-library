@@ -3,10 +3,10 @@
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
 use Laravel\Nova\Fields\Field;
+use Spatie\MediaLibrary\HasMedia;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @mixin Media
@@ -44,8 +44,8 @@ trait HandlesCustomPropertiesTrait
             ->reject(function ($value) {
                 return $value instanceof UploadedFile || $value instanceof FileBag;
             })
-            ->each(function (int $id, int $index) use ($request, $mediaItems, $collection) {
-                if (!$media = $mediaItems->where('id', $id)->first()) {
+            ->each(function ($id, int $index) use ($request, $mediaItems, $collection) {
+                if (! $media = $mediaItems->where('id', $id)->first()) {
                     return;
                 }
 
@@ -63,10 +63,10 @@ trait HandlesCustomPropertiesTrait
 
         /** @var Field $field */
         foreach ($this->customPropertiesFields as $field) {
-			$targetAttribute = "custom_properties->{$field->attribute}";
-			$requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
+            $targetAttribute = "custom_properties->{$field->attribute}";
+            $requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
 
-			$field->fillInto($request, $media, $targetAttribute, $requestAttribute);
+            $field->fillInto($request, $media, $targetAttribute, $requestAttribute);
         }
 
         $media->save();

@@ -10,9 +10,11 @@ images and order them by drag and drop.
 * [Generic file management](#generic-file-management)  
 * [Single image upload](#single-image-upload)  
 * [Multiple image upload](#multiple-image-upload)  
+* [Selecting existing media](#selecting-existing-media)  
 * [Names of uploaded images](#names-of-uploaded-images)  
 * [Image cropping](#image-cropping)
 * [Custom properties](#custom-properties)
+* [Custom headers](#custom-headers)
 * [Media Field (Video)](#media-field-video)  
 
 ## Examples
@@ -27,11 +29,15 @@ images and order them by drag and drop.
 composer require ebess/advanced-nova-media-library
 ```
 
+```bash
+php artisan vendor:publish --tag=nova-media-library
+```
+
 ## Model media configuration
 
 Let's assume you configured your model to use the media library like following:
 ```php
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 public function registerMediaConversions(Media $media = null)
 {
@@ -102,6 +108,34 @@ public function fields(Request $request)
 }
 ```
 
+## Selecting existing media
+
+![Selecting existing media](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/existing-media.png)
+![Selecting existing media 2](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/existing-media-2.png)
+
+If you upload the same media files to multiple models and you do not want to select it from the file system
+all over again, use this feature. Selecting an already existing media will **copy it**.
+
+**Attention**: This feature will expose an endpoint to every user of your application to search existing media. 
+If your media upload / custom properties on the media models are confidential, **do not enable this feature!** 
+
+* Publish the config files if you did not yet
+```bash
+artisan vendor:publish --tag=nova-media-library
+```
+* Enable this feature in config file *config/nova-media-library*
+```php
+return [
+    'enable-existing-media' => true,
+];
+```
+* Enable the selection of existing media field
+```php
+Images::make('Image')->enableExistingMedia(),
+```
+
+**Note**: This feature does not support temporary URLs.
+
 ## Names of uploaded images
 
 The default filename of the new uploaded file is the original filename. You can change this with the help of the function `setFileName`, which takes a callback function as the only param. This callback function has three params: `$originalFilename` (the original filename like `Fotolia 4711.jpg`), `$extension` (file extension like `jpg`), `$model` (the current model). Here are just 2 examples of what you can do:
@@ -161,6 +195,11 @@ Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
 
+It is possible to enforce cropping on upload, for example to ensure the image has the set aspect ratio:
+```php
+Images::make('Gallery')->mustCrop();
+```
+
 ## Custom properties
 
 ![Custom properties](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/custom-properties.gif)
@@ -183,6 +222,24 @@ Files::make('Multiple files', 'multiple_files')
     ->customProperties([
         'foo' => auth()->user()->foo,
         'bar' => $api->getNeededData(),
+    ]);
+```
+
+## Show image statistics *(size, dimensions, type)*
+
+![Image statistics](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/show-statistics.png)
+
+```php
+Images::make('Gallery')
+    ->showStatistics();
+```
+
+## Custom headers
+
+```php
+Images::make('Gallery')
+    ->customHeaders([
+        'header-name' => 'header-value', 
     ]);
 ```
 
@@ -216,6 +273,21 @@ class YourModel extends Model implements HasMedia
     }
 }
 ```
+
+## Temporary Urls
+
+If you are using Amazon S3 to store your media, you will need to use the `temporary` function on your field to generate
+a temporary signed URL. This function expects a valid Carbon instance that will specify when the URL should expire.
+
+```
+Images::make('Image 1', 'img1')
+    ->temporary(now()->addMinutes(5))
+
+Files::make('Multiple files', 'multiple_files')
+    ->temporary(now()->addMinutes(10),
+```
+
+**Note**: This feature does not work with the existing media feature. 
 
 # Credits
 

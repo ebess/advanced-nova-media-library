@@ -12,7 +12,7 @@
     "devDependencies": {
         "cross-env": "^5.0.0",
         "laravel-mix": "^4.0.7",
-        "laravel-nova": "*",
+        "laravel-nova": "^1.0.9",
         "object-to-formdata": "^1.5.2",
         "resolve-url-loader": "2.3.1",
         "sass": "^1.19.0",
@@ -20,9 +20,12 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "laravel-vapor": "^0.4.0",
+        "rxjs": "^6.6.6",
         "slug": "^0.9.1",
         "vue": "^2.5.17",
+        "vue-rx": "^6.2.0",
         "vuedraggable": "^2.16.0",
-        "vuejs-clipper": "^0.2.11"
+        "vuejs-clipper": "^3.1.2"
     }
 }
