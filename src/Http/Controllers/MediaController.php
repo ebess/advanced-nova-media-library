@@ -14,6 +14,7 @@ class MediaController extends Controller
             throw new Exception('You need to enable the `existing media` feature via config.');
         }
 
+        $hideCollections = config('nova-media-library.hide-media-collections', []);
         $mediaClass = config('media-library.media_model');
         $mediaClassIsSearchable = method_exists($mediaClass, 'search');
 
@@ -35,6 +36,14 @@ class MediaController extends Controller
             }
 
             $query->latest();
+        }
+        
+        if (!empty($hideCollections)) {
+            if (!is_array($hideCollections)) {
+                $hideCollections = [ $hideCollections ];
+            }
+            
+            $query->whereNotIn('collection_name', $hideCollections);
         }
 
         $results = $query->paginate($perPage);

@@ -27,7 +27,7 @@ trait HandlesExistingMediaTrait
             ->filter(function ($value) use ($addedMediaIds) {
                 // New files will come in as UploadedFile objects, 
                 // whereas Vapor-uploaded files will come in as arrays.
-                return (! ($value instanceof UploadedFile)) && (! (is_array($value))) && ! (in_array((int) $value, $addedMediaIds));
+                return (! ($value instanceof UploadedFile)) && (! (is_array($value))) && ! (in_array($value, $addedMediaIds));
             })->map(function ($model_id, int $index) use ($request, $model, $collection) {
                 $mediaClass = config('media-library.media_model');
                 $existingMedia = $mediaClass::find($model_id);
