@@ -264,14 +264,17 @@ class Media extends Field
             && ! is_array($value);
         });
 
-        $medias->pluck('id')->diff($remainingIds)->each(function ($id) use ($medias) {
+        $mediaClass = config('media-library.media_model');
+        $key = app($mediaClass)->getKeyName();
+
+        $medias->pluck($key)->diff($remainingIds)->each(function ($id, $key) use ($medias) {
             /** @var Media $media */
-            if ($media = $medias->where('id', $id)->first()) {
+            if ($media = $medias->where($key, $id)->first()) {
                 $media->delete();
             }
         });
 
-        return $remainingIds->intersect($medias->pluck('id'));
+        return $remainingIds->intersect($medias->pluck($key));
     }
 
     /**
