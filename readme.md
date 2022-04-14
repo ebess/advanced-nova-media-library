@@ -16,6 +16,7 @@ images and order them by drag and drop.
 * [Custom properties](#custom-properties)
 * [Custom headers](#custom-headers)
 * [Media Field (Video)](#media-field-video)  
+* [Change log](#change-log)  
 
 ## Examples
 ![Cropping](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/cropping.gif)
@@ -296,3 +297,12 @@ Files::make('Multiple files', 'multiple_files')
 # Alternatives
 
 * [dmitrybubyakin/nova-medialibrary-field](https://github.com/dmitrybubyakin/nova-medialibrary-field)
+
+# Change log
+
+## v4.0 - 2022-04-18
+- Upgrade to support Laravel Nova 4
+- Breaks compatibility with Laravel Nova 1,2 and 3. For those nova versions  use `v3.*`
+- Replaced [vuejs-clipper](https://www.npmjs.com/package/vuejs-clipper) with [vue-advanced-cropper](https://www.npmjs.com/package/vue-advanced-cropper) for vue3 support
+
+Full change log in [PR #317](https://github.com/ebess/advanced-nova-media-library/pull/317)

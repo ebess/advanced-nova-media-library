@@ -1,6 +1,6 @@
 <template>
-  <component :is="field.fullSize ? 'full-width-field' : 'default-field'" :field="field" full-width-content>
-    <template slot="field">
+  <component :is="field.fullSize ? 'FullWidthField' : 'DefaultField'" :field="field" :errors="errors" :show-help-text="showHelpText">
+    <template #field>
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
                  v-model="value" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
@@ -8,7 +8,7 @@
 
         <div v-if="field.existingMedia">
           <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" @click="existingMediaOpen = true">
-            {{  openExistingMediaLabel }}
+            {{ openExistingMediaLabel }}
           </button>
           <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
         </div>
@@ -34,6 +34,7 @@
   import FullWidthField from '../FullWidthField';
   import ExistingMedia from '../ExistingMedia';
   import objectToFormData from 'object-to-formdata';
+  import get from 'lodash/get';
 
   export default {
     mixins: [FormField, HandlesValidationErrors],
@@ -108,7 +109,7 @@
 
       getImageCustomProperties(image) {
         return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
-          properties[property] = _.get(image, `custom_properties.${property}`);
+          properties[property] = get(image, `custom_properties.${property}`);
 
           // Fixes checkbox problem
           if(properties[property] === true) {
@@ -136,7 +137,7 @@
         }
 
         copiedArray.push(item);
-        this.value = copiedArray
+        this.value = copiedArray;
       }
     },
   };

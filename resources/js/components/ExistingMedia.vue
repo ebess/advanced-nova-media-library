@@ -1,15 +1,14 @@
 <template>
   <!-- Modal -->
-  <div class="fixed pin-l pin-t p-8 h-full w-full z-50" :class="{'hidden': !open, 'flex': open}">
+  <div class="fixed p-8 inset-0 z-50" :class="{'hidden': !open, 'flex': open}">
 
     <!-- Modal Background -->
-    <div class="absolute bg-black opacity-75 pin-l pin-t h-full w-full" @click="close"></div>
+    <div class="absolute bg-black opacity-75 inset-0" @click="close"></div>
 
     <!-- Modal Content -->
-    <div class="flex flex-col bg-white p-4 h-full relative w-full">
+    <div class="flex flex-col text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 p-4 h-full relative w-full">
       <!-- Header bar -->
-      <div class="border-b border-40 pb-4 mb-4">
-        <div class="flex -mx-4">
+      <div class="border-b border-40 pb-3 mb-4 flex items-center">
           <!-- Heading -->
           <div class="px-4 self-center">
             <h3>{{__('Existing Media')}}</h3>
@@ -18,10 +17,10 @@
           <!-- Search -->
           <div class="px-4 self-center">
             <div class="relative">
-              <icon type="search" class="absolute search-icon-center ml-3 text-70" />
+              <icon type="search" class="inline-block absolute ml-2 text-gray-400" width="20" style="top:4px;" />
               <input type="search"
                      v-bind:placeholder="__('Search by name or file name')"
-                     class="pl-search form-control form-input form-input-bordered w-full"
+                     class="appearance-none rounded-full h-8 pl-10 w-full bg-gray-100 dark:bg-gray-800 focus:bg-white focus:outline-none focus:ring"
                      v-model="requestParams.search_text"
                      @input="search"
                      @change="search"
@@ -33,16 +32,13 @@
           <div class="px-4 ml-auto self-center">
             <button type="button" class="form-file-btn btn btn-default btn-primary" @click="close">{{__('Close')}}</button>
           </div>
-        </div>
       </div>
 
 
       <div class="flex-grow overflow-x-hidden overflow-y-scroll">
         <!-- When we have results show them -->
         <div class="flex flex-wrap -mx-4 -mb-8" v-if="items.length > 0">
-          <template v-for="(item, key) in items">
-            <existing-media-item :item="item" :key="key" @select="$emit('select', item) && close()"></existing-media-item>
-          </template>
+            <existing-media-item v-for="(item, key) in items" :key="key" :item="item" @select="$emit('select', item); close()"></existing-media-item>
         </div>
 
         <!-- Show "Loading" or "No Results Found" text -->
@@ -77,7 +73,7 @@
         items: [],
         response: {},
         loading: false,
-        search: _.debounce (function () {
+        search: debounce (function () {
            aThis.refresh();
         }, 750),
       }
