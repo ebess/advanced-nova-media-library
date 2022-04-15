@@ -5,16 +5,13 @@
         <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
       </a>
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
-        <icon type="delete" view-box="0 0 20 20" width="16" height="16"/>
+        <icon type="trash" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('edit-custom-properties')" title="Edit custom properties">
         <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a class="preview" href="#" @click.prevent="showPreview">
         <icon type="search" view-box="0 0 20 20" width="30" height="30"/>
-      </a>
-      <a v-if="croppable" class="icon crop" href="#" @click.prevent="$emit('crop-start', image)">
-        <scissors-icon brand="var(--info)" view-box="0 0 20 20" width="16" height="16"/>
       </a>
     </div>
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
@@ -51,11 +48,6 @@
     computed: {
       downloadUrl() {
         return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
-      },
-      croppable() {
-        return this.editable &&
-          this.field.croppable &&
-          this.acceptedMimeTypes.includes(this.mimeType);
       },
       mimeType() {
         return this.image.mime_type || this.image.file.type;
@@ -210,12 +202,6 @@
         .delete {
           right: 10px;
           color: var(--danger);
-        }
-
-        .crop {
-          left: 10px;
-          top: auto;
-          bottom: 10px;
         }
       }
 

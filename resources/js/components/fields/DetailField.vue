@@ -1,6 +1,8 @@
 <template>
   <panel-item :field="field">
-    <gallery slot="value" :value="field.value" :field="field" :multiple="field.multiple"/>
+    <template #value>
+      <gallery :value="field.value" :field="field" :multiple="field.multiple"/>
+    </template>
   </panel-item>
 </template>
 
