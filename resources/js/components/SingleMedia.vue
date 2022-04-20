@@ -2,16 +2,16 @@
   <gallery-item class="gallery-item-image" :class="{ 'show-statistics': field.showStatistics }">
     <div class="gallery-item-info p-3">
       <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
-        <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
+        <Icon type="download" view-box="0 0 20 22" width="16" height="16"/>
       </a>
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
-        <icon type="delete" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon type="trash" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('edit-custom-properties')" title="Edit custom properties">
-        <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon type="pencil" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a class="preview" href="#" @click.prevent="showPreview">
-        <icon type="search" view-box="0 0 20 20" width="30" height="30"/>
+        <Icon type="search" view-box="0 0 20 20" width="30" height="30"/>
       </a>
       <a v-if="croppable" class="icon crop" href="#" @click.prevent="$emit('crop-start', image)">
         <scissors-icon brand="var(--info)" view-box="0 0 20 20" width="16" height="16"/>
@@ -209,7 +209,7 @@
 
         .delete {
           right: 10px;
-          color: var(--danger);
+          color: rgb(var(--colors-red-500));
         }
 
         .crop {
@@ -257,7 +257,7 @@
       cursor: pointer;
       position: absolute;
       top: 10px;
-      color: var(--info);
+      color: rgb(var(--info));
     }
 
     .edit {
