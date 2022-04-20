@@ -1,7 +1,7 @@
 <template>
   <PanelItem :index="index" :field="field" >
-    <template #field>
-      <gallery slot="value" :value="field.value" :field="field" :multiple="field.multiple"/>
+    <template #value>
+      <gallery :modelValue="field.value" :field="field" :multiple="field.multiple"/>
     </template>
   </PanelItem>
 </template>

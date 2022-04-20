@@ -1,6 +1,7 @@
 <template>
     <Modal
       :show="true"
+      maxWidth="2xl"
       @modal-close="handleClose"
           :classWhitelist="[
             'flatpickr-current-month',

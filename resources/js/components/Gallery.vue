@@ -40,10 +40,10 @@
 
     <span v-if="editable" class="form-file">
       <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
-      <label :for="`__media__${field.attribute}`" class="form-file-btn btn btn-default btn-primary">
+      <label :for="`__media__${field.attribute}`" class="">
         <DefaultButton type="button" @click.prevent="focusFileInput">
-          <span v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</span>
-          <span v-else>{{ label }}</span>
+          <template v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</template>
+          <template v-else>{{ label }}</template>
         </DefaultButton>
       </label>
     </span>

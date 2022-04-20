@@ -300,7 +300,11 @@ Files::make('Multiple files', 'multiple_files')
 
 # Change log
 
-## v4.0 - 2022-04-18
+## v4.0.1 - 2022-04-20
+- Fix details component
+- Fix layout inconsistencies 
+
+## v4.0.0 - 2022-04-18
 - Upgrade to support Laravel Nova 4
 - Breaks compatibility with Laravel Nova 1,2 and 3. For those nova versions  use `v3.*`
 - Replaced [vuejs-clipper](https://www.npmjs.com/package/vuejs-clipper) with [vue-advanced-cropper](https://www.npmjs.com/package/vue-advanced-cropper) for vue3 support

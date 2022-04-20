@@ -1,25 +1,53 @@
 <template>
-  <div class="border-40 group px-4 pb-4 mb-4 w-1/6">
-    <div class="shadow">
-      <div class="overflow-hidden relative w-full" style="padding-top:100%;">
-        <img v-if="'__media_urls__' in item && 'indexView' in item.__media_urls__" :src="item.__media_urls__.indexView" class="absolute block h-full inset-0 w-full" style="object-fit: cover" />
-        <button type="button" class="absolute top-0 right-0 m-4 shadow bg-primary-500 hover:bg-primary-400 active:bg-primary-600 text-white dark:text-gray-900 cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring inline-flex items-center justify-center h-9 px-3 shadow bg-primary-500 hover:bg-primary-400 active:bg-primary-600 text-white dark:text-gray-900" @click="$emit('select')">{{__('Select')}}</button>
+  <div class="existing-media-item float-left border dark:border-gray-700 group mb-4 mr-4 shadow relative cursor-pointer group hover:scale-105 transition-all"
+       style="width: 200px;"
+       @click.prevent="$emit('select')">
+    <div class="overflow-hidden relative">
+      <img v-if="'__media_urls__' in item && 'indexView' in item.__media_urls__" :src="item.__media_urls__.indexView" class="block w-full" style="height: 200px; object-fit: contain;"/>
+      <div class="absolute top-0 right-0 mt-3 mr-3 hidden group-hover:block">
+        <DefaultButton type="button">{{ __('Select') }}</DefaultButton>
       </div>
-      <div class="p-3 border-l border-r border-b border-40">
-        <h4 class="truncate h-4 mb-1" v-if="'name' in item">{{ item.name }}</h4>
-        <h5 class="truncate text-80" v-if="'file_name' in item">{{ item.file_name }}</h5>
-      </div>
+    </div>
+    <div class="p-3">
+      <h4 class="truncate h-4 mb-1 font-bold truncate" v-if="'name' in item" :title="item.name">{{ item.name }}</h4>
+      <h5 class="truncate text-gray-600 text-xs truncate" v-if="'file_name' in item" :title="item.file_name">{{ item.file_name }}</h5>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      item: {
-        default: function () { return {}; },
-        type: Object
-      }
+export default {
+  props: {
+    item: {
+      default: function () {
+        return {};
+      },
+      type: Object
     }
   }
+}
 </script>
+
+<style lang="scss">
+.existing-media-item {
+
+  &.float-left {
+    float: left;
+  }
+
+  &.group:hover .group-hover\:block {
+    display: block;
+  }
+
+  &.hover\:scale\-105:hover {
+    transform: scale(1.05);
+  }
+
+  &.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+}
+</style>
