@@ -17,8 +17,8 @@
                class="gallery-list clearfix">
 
       <template #item="{element, index}">
-        <div style="float:left;">
-          <component :is="singleComponent" class="mb-3 p-3 mr-3"
+        <div style="float:left;" class="w-full">
+          <component :is="singleComponent" class="mb-3 p-4 mr-3"
                      :key="index" :image="element" :field="field" :editable="editable" :removable="removable || editable" @remove="remove(index)"
                      :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
                      @edit-custom-properties="customPropertiesImageIndex = index"
@@ -330,6 +330,8 @@ export default {
 
 <style lang="scss">
 .gallery {
+  display: flex;
+  flex-direction: column;
   &.editable {
     .gallery-item {
       cursor: grab;
