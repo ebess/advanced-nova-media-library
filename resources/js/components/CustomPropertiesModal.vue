@@ -1,7 +1,8 @@
 <template>
     <Modal
         :show="true"
-        maxWidth="2xl"
+        maxWidth=""
+        :style="{ maxWidth: '1200px', margin: 'auto' }"
         @modal-close="handleClose"
         :classWhitelist="[
             'flatpickr-current-month',
@@ -13,16 +14,26 @@
         ]"
     >
         <Card class="overflow-hidden">
-            <form class="rounded-lg shadow-lg overflow-hidden w-action-fields" @submit.prevent="handleUpdate"
-                autocomplete="off">
-                <div v-for="field in fields" :key="field.attribute" class="action">
+            <form
+                class="rounded-lg shadow-lg overflow-hidden w-action-fields"
+                @submit.prevent="handleUpdate"
+                autocomplete="off"
+            >
+                <div
+                    v-for="field in fields"
+                    :key="field.attribute"
+                    class="action"
+                >
                     <component :is="'form-' + field.component" :field="field" />
                 </div>
 
                 <div class="bg-30 px-6 py-3 flex">
                     <div class="flex items-center ml-auto">
-                        <button type="button" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
-                            @click.prevent="handleClose">
+                        <button
+                            type="button"
+                            class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
+                            @click.prevent="handleClose"
+                        >
                             {{__('Cancel')}}
                         </button>
 

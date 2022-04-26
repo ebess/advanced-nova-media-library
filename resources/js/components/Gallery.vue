@@ -22,7 +22,13 @@
             class="gallery-list flex flex-wrap w-full"
         >
             <template #item="{element, index}">
-                <div class="block w-1/2 md:w-1/4 pr-2 pb-3">
+                <div
+                    class="block pb-3"
+                    :class="{
+                        'w-1/2 md:w-1/4 pr-2': this.field.type === 'media',
+                        'w-full': this.field.type !== 'media',
+                    }"
+                >
                     <component
                         :is="singleComponent"
                         :key="index"
