@@ -5,6 +5,7 @@
           <Cropper
             v-if="image"
             ref="clipper"
+            :stencil-props="configs || {}"
             :src="imageUrl"
           />
         </div>

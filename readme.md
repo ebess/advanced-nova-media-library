@@ -300,6 +300,9 @@ Files::make('Multiple files', 'multiple_files')
 
 # Change log
 
+## v4.0.2 - 2022-04-26
+- Fix ratio for cropping in Nova 4. Config from `Images::( ... )->croppingConfigs()` are now passed along to the `stencil-props` property of the cropper. See [cropper docs](https://norserium.github.io/vue-advanced-cropper/components/rectangle-stencil.html#props) for more details on available props.
+
 ## v4.0.1 - 2022-04-20
 - Fix details component
 - Fix layout inconsistencies 
