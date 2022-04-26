@@ -1,6 +1,5 @@
 <template>
     <div
-        class="gallery"
         :class="{editable}"
         @mouseover="mouseOver = true"
         @mouseout="mouseOver = false"
@@ -19,7 +18,7 @@
         <draggable
             v-if="images.length > 0"
             v-model="images"
-            class="gallery-list flex flex-wrap w-full"
+            class="flex flex-wrap w-full"
         >
             <template #item="{element, index}">
                 <div
@@ -399,13 +398,3 @@
         },
     }
 </script>
-
-<style lang="scss">
-    .gallery {
-        &.editable {
-            .gallery-item {
-                cursor: grab;
-            }
-        }
-    }
-</style>

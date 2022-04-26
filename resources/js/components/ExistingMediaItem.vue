@@ -56,4 +56,10 @@
     .group:hover .group-hover\:block {
         display: block;
     }
+
+    @media(max-width: 768px) {
+        .group .group-hover\:block {
+            display: block;
+        }
+    }
 </style>
