@@ -1,12 +1,12 @@
 <template>
     <GalleryItem
-        class="flex items-center"
+        class="flex items-center overflow-hidden"
         :style="{
             cursor: (editable ? 'grab' : 'default'),
             userSelect: 'none',
         }"
     >
-        <span class="text-bold px-3">
+        <span class="text-bold px-3 truncate">
             {{ image.file_name }}
         </span>
 

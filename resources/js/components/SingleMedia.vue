@@ -6,7 +6,7 @@
             userSelect: 'none',
         }"
     >
-        <div class="flex items-center justify-end border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-end overflow-hidden border-b border-gray-200 dark:border-gray-700">
             <div
                 class="h-8 cursor-pointer flex-shrink-0 ico-button inline-flex items-center justify-center px-2 text-sm border-l border-gray-200 dark:border-gray-700 hover:opacity-50"
                 @click.prevent="showPreview"
