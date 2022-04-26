@@ -1,35 +1,35 @@
 <template>
     <GalleryItem
-        class="flex items-center px-4 py-3"
+        class="flex items-center"
         :style="{
             cursor: (editable ? 'grab' : 'default'),
             userSelect: 'none',
         }"
     >
-        <a
-            class="mr-2 cursor-pointer hover:opacity-50"
-            :href="image.__media_urls__.__original__"
-            target="_blank"
-        >
-            <Icon type="search" width="16" height="16" />
-        </a>
-
-        <a
-            v-if="downloadUrl"
-            class="mr-2 cursor-pointer hover:opacity-50"
-            :href="downloadUrl"
-        >
-            <Icon type="download" width="16" height="16" />
-        </a>
-
-        <span class="text-bold">
+        <span class="text-bold px-3">
             {{ image.file_name }}
         </span>
 
-        <div class="flex items-center ml-auto">
+        <div class="flex ml-auto">
+            <a
+                class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+                :href="image.__media_urls__.__original__"
+                target="_blank"
+            >
+                <Icon type="external-link" width="16" height="16" />
+            </a>
+
+            <a
+                v-if="downloadUrl"
+                class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+                :href="downloadUrl"
+            >
+                <Icon type="download" width="16" height="16" />
+            </a>
+
             <div
                 v-if="isCustomPropertiesEditable"
-                class="ml-2 cursor-pointer hover:opacity-50"
+                class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
                 @click.prevent="$emit('edit-custom-properties')"
             >
                 <Icon type="pencil" width="16" height="16" />
@@ -37,7 +37,7 @@
 
             <div
                 v-if="removable"
-                class="ml-2 cursor-pointer hover:opacity-50"
+                class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
                 @click.prevent="$emit('remove')"
             >
                 <Icon type="trash" class="text-red-500" width="16" height="16" />
