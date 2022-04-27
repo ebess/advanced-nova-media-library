@@ -1,23 +1,23 @@
 <template>
-    <PanelItem :index="index" :field="field">
-        <template #value>
-            <Gallery
-                :modelValue="field.value"
-                :field="field"
-                :multiple="field.multiple"
-            />
-        </template>
-    </PanelItem>
+  <PanelItem :index="index" :field="field">
+    <template #value>
+      <Gallery
+        :modelValue="field.value"
+        :field="field"
+        :multiple="field.multiple"
+      />
+    </template>
+  </PanelItem>
 </template>
 
 <script>
-    import Gallery from '../Gallery';
+  import Gallery from '../Gallery';
 
-    export default {
-        components: {
-            Gallery,
-        },
+  export default {
+    components: {
+      Gallery,
+    },
 
-        props: ['index', 'resource', 'resourceName', 'resourceId', 'field'],
-    }
+    props: ['index', 'resource', 'resourceName', 'resourceId', 'field'],
+  }
 </script>

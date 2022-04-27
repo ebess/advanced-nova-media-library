@@ -1,71 +1,71 @@
 <template>
-    <transition name="fade">
-        <CustomPropertiesModal
-            :fields="filledFields"
-            @close="handleClose"
-            @update="handleUpdate"
-        />
-    </transition>
+  <transition name="fade">
+    <CustomPropertiesModal
+      :fields="filledFields"
+      @close="handleClose"
+      @update="handleUpdate"
+    />
+  </transition>
 </template>
 
 <script>
-    import CustomPropertiesModal from './CustomPropertiesModal'
-    import tap from 'lodash/tap'
-    import get from 'lodash/get'
-    import set from 'lodash/set'
+  import CustomPropertiesModal from './CustomPropertiesModal'
+  import tap from 'lodash/tap'
+  import get from 'lodash/get'
+  import set from 'lodash/set'
 
-    export default {
-        props: {
-            modelValue: {
-                type: Object,
-                required: true,
-            },
-            fields: {
-                type: Array,
-                required: true,
-            },
-        },
+  export default {
+    props: {
+      modelValue: {
+        type: Object,
+        required: true,
+      },
+      fields: {
+        type: Array,
+        required: true,
+      },
+    },
 
-        components: {
-            CustomPropertiesModal,
-        },
+    components: {
+      CustomPropertiesModal,
+    },
 
-        data() {
-            return {
-                image: JSON.parse(JSON.stringify(this.modelValue)),
-            }
-        },
+    data() {
+      return {
+        image: JSON.parse(JSON.stringify(this.modelValue)),
+      }
+    },
 
-        computed: {
-            filledFields() {
-                return JSON.parse(JSON.stringify(this.fields)).map(field => tap(field, field => {
-                    field.value = this.getProperty(field.attribute)
-                }))
-            }
-        },
+    computed: {
+      filledFields() {
+        return JSON.parse(JSON.stringify(this.fields)).map(field => tap(field, field => {
+          field.value = this.getProperty(field.attribute)
+        }))
+      }
+    },
 
-        methods: {
-            handleClose() {
-                this.$emit('close')
-            },
+    methods: {
+      handleClose() {
+        this.$emit('close')
+      },
 
-            handleUpdate(formData) {
-                for (let [property, value] of formData.entries()) {
-                    this.setProperty(property, value)
-                }
+      handleUpdate(formData) {
+        for (let [property, value] of formData.entries()) {
+          this.setProperty(property, value)
+        }
 
-                this.$emit('update:modelValue', this.image)
+        this.$emit('update:modelValue', this.image)
 
-                this.handleClose()
-            },
+        this.handleClose()
+      },
 
-            getProperty(property) {
-                return get(this.image, `custom_properties.${property}`)
-            },
+      getProperty(property) {
+        return get(this.image, `custom_properties.${property}`)
+      },
 
-            setProperty(property, value) {
-                set(this.image, `custom_properties.${property}`, value)
-            },
-        },
-    }
+      setProperty(property, value) {
+        set(this.image, `custom_properties.${property}`, value)
+      },
+    },
+  }
 </script>
