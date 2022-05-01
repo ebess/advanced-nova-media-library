@@ -1,68 +1,65 @@
 <template>
-  <gallery-item class="gallery-item-file">
-    <div class="gallery-item-info">
-      <a class="download mr-2" :href="image.__media_urls__.__original__" target="_blank">
-        <icon type="search" view-box="0 0 20 20" width="16" height="16" />
+  <GalleryItem
+    class="flex items-center overflow-hidden"
+    :style="{
+      cursor: (editable ? 'grab' : 'default'),
+      userSelect: 'none',
+    }"
+  >
+    <span class="text-bold px-3 truncate">
+      {{ image.file_name }}
+    </span>
+
+    <div class="flex ml-auto">
+      <a
+        class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+        :href="image.__media_urls__.__original__"
+        target="_blank"
+      >
+        <Icon type="external-link" width="16" height="16" />
       </a>
-      <a v-if="downloadUrl" class="download mr-2" :href="downloadUrl">
-        <icon type="download" view-box="0 0 20 22" width="16" height="16" />
+
+      <a
+        v-if="downloadUrl"
+        class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+        :href="downloadUrl"
+      >
+        <Icon type="download" width="16" height="16" />
       </a>
-      <span class="label">
-        {{ image.file_name }}
-      </span>
-      <a v-if="isCustomPropertiesEditable" class="edit edit--file ml-2" href="#" @click.prevent="$emit('edit-custom-properties')">
-        <icon type="edit" view-box="0 0 20 20" width="16" height="16" />
-      </a>
-      <a v-if="removable" class="delete ml-2" href="#" @click.prevent="$emit('remove')">
-        <icon type="delete" view-box="0 0 20 20" width="16" height="16" />
-      </a>
+
+      <div
+        v-if="isCustomPropertiesEditable"
+        class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+        @click.prevent="$emit('edit-custom-properties')"
+      >
+        <Icon type="pencil" width="16" height="16" />
+      </div>
+
+      <div
+        v-if="removable"
+        class="h-10 w-10 cursor-pointer hover:opacity-50 border-l border-gray-200 dark:border-gray-700 px-2 inline-flex items-center justify-center"
+        @click.prevent="$emit('remove')"
+      >
+        <Icon type="trash" class="text-red-500" width="16" height="16" />
+      </div>
     </div>
-  </gallery-item>
+  </GalleryItem>
 </template>
 
 <script>
   import GalleryItem from './GalleryItem';
 
   export default {
-    props: ['image', 'removable', 'isCustomPropertiesEditable'],
+    props: ['image', 'removable', 'editable', 'isCustomPropertiesEditable'],
+
     components: {
       GalleryItem,
     },
+
     computed: {
       downloadUrl() {
         return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
       },
-    }
-  };
-</script>
-
-<style lang="scss">
-    .gallery .edit.edit--file {
-        position: relative;
-        top: auto;
-        right: auto;
-    }
-
-  .gallery-item-file {
-    &.gallery-item {
-      width: 100%;
-
-      .gallery-item-info {
-        display: flex;
-
-        .label {
-          flex-grow: 1;
-        }
-
-        .download {
-          color: var(--primary-dark);
-        }
-
-        .delete {
-          align-self: flex-end;
-          color: var(--danger);
-        }
-      }
-    }
+    },
   }
-</style>
+</script>

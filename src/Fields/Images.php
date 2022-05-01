@@ -42,7 +42,7 @@ class Images extends Media
 
     public function showDimensions(bool $showDimensions = true): self
     {
-        return $this->showStatistics();
+        return $this->showStatistics($showDimensions);
     }
 
     public function mustCrop(bool $mustCrop = true): self

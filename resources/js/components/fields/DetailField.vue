@@ -1,7 +1,11 @@
 <template>
-  <PanelItem :index="index" :field="field" >
+  <PanelItem :index="index" :field="field">
     <template #value>
-      <gallery :modelValue="field.value" :field="field" :multiple="field.multiple"/>
+      <Gallery
+        :modelValue="field.value"
+        :field="field"
+        :multiple="field.multiple"
+      />
     </template>
   </PanelItem>
 </template>
@@ -13,6 +17,7 @@
     components: {
       Gallery,
     },
+
     props: ['index', 'resource', 'resourceName', 'resourceId', 'field'],
-  };
+  }
 </script>

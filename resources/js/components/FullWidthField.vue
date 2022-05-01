@@ -2,14 +2,15 @@
   <field-wrapper>
     <div class="py-6">
       <div class="px-8">
-        <form-label :for="field.attribute" :class="{
-                      'mb-2': field.helpText && showHelpText
-                  }">
-          {{ fieldLabel }}&nbsp;<span
-            v-if="field.required"
-            class="text-danger text-sm"
-            >{{ __('*') }}</span
-          >
+        <form-label
+          :for="field.attribute"
+          :class="{ 'mb-2': field.helpText && showHelpText }"
+        >
+          {{ fieldLabel }}
+
+          <span v-if="field.required" class="text-danger text-sm">
+            {{ __('*') }}
+          </span>
         </form-label>
 
         <help-text :show-help-text="showHelpText">
@@ -17,7 +18,7 @@
         </help-text>
       </div>
 
-      <slot name="field"/>
+      <slot name="field" />
     </div>
   </field-wrapper>
 </template>
@@ -26,9 +27,17 @@
   // todo: extend from `default-field` somehow
   export default {
     props: {
-      field: { type: Object, required: true },
-      fieldName: { type: String },
-      showHelpText: { type: Boolean, default: true },
+      field: {
+        type: Object,
+        required: true,
+      },
+      fieldName: {
+        type: String,
+      },
+      showHelpText: {
+        type: Boolean,
+        default: true,
+      },
     },
 
     computed: {
@@ -42,5 +51,5 @@
         return this.fieldName || this.field.singularLabel || this.field.name
       },
     },
-  };
+  }
 </script>

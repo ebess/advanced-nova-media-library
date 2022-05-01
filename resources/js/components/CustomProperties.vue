@@ -9,63 +9,63 @@
 </template>
 
 <script>
-import CustomPropertiesModal from './CustomPropertiesModal'
-import tap from 'lodash/tap'
-import get from 'lodash/get'
-import set from 'lodash/set'
+  import CustomPropertiesModal from './CustomPropertiesModal'
+  import tap from 'lodash/tap'
+  import get from 'lodash/get'
+  import set from 'lodash/set'
 
-export default {
-  props: {
-    modelValue: {
-      type: Object,
-      required: true,
-    },
-    fields: {
-      type: Array,
-      required: true,
-    },
-  },
-
-  components: {
-    CustomPropertiesModal,
-  },
-
-  data() {
-    return {
-      image: JSON.parse(JSON.stringify(this.modelValue)),
-    }
-  },
-
-  computed: {
-    filledFields() {
-      return JSON.parse(JSON.stringify(this.fields)).map(field => tap(field, field => {
-        field.value = this.getProperty(field.attribute)
-      }))
-    }
-  },
-
-  methods: {
-    handleClose() {
-      this.$emit('close')
+  export default {
+    props: {
+      modelValue: {
+        type: Object,
+        required: true,
+      },
+      fields: {
+        type: Array,
+        required: true,
+      },
     },
 
-    handleUpdate(formData) {
-      for (let [property, value] of formData.entries()) {
-        this.setProperty(property, value)
+    components: {
+      CustomPropertiesModal,
+    },
+
+    data() {
+      return {
+        image: JSON.parse(JSON.stringify(this.modelValue)),
       }
-
-      this.$emit('update:modelValue', this.image)
-
-      this.handleClose()
     },
 
-    getProperty(property) {
-      return get(this.image, `custom_properties.${property}`)
+    computed: {
+      filledFields() {
+        return JSON.parse(JSON.stringify(this.fields)).map(field => tap(field, field => {
+          field.value = this.getProperty(field.attribute)
+        }))
+      }
     },
 
-    setProperty(property, value) {
-      set(this.image, `custom_properties.${property}`, value)
+    methods: {
+      handleClose() {
+        this.$emit('close')
+      },
+
+      handleUpdate(formData) {
+        for (let [property, value] of formData.entries()) {
+          this.setProperty(property, value)
+        }
+
+        this.$emit('update:modelValue', this.image)
+
+        this.handleClose()
+      },
+
+      getProperty(property) {
+        return get(this.image, `custom_properties.${property}`)
+      },
+
+      setProperty(property, value) {
+        set(this.image, `custom_properties.${property}`, value)
+      },
     },
   }
-}
 </script>

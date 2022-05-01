@@ -19,7 +19,7 @@ export default (base64, mime, fileName) => {
     byteArrays.push(byteArray);
   }
 
-  const file = new Blob(byteArrays, {type: mime});
+  const file = new Blob(byteArrays, { type: mime });
 
   file.name = fileName;
 
