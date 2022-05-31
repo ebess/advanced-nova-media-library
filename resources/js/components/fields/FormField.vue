@@ -18,18 +18,13 @@
         >
           {{ firstError }}
         </help-text>
-
-        <help-text class="help-text mt-2" v-if="showHelpText">
-          {{ field.helpText }}
-        </help-text>
       </div>
     </template>
   </component>
 </template>
 
 <script>
-import {FormField, HandlesValidationErrors} from 'laravel-nova'
-import Vapor from "laravel-vapor";
+import {FormField, HandlesValidationErrors} from 'laravel-nova';
 import Gallery from '../Gallery';
 import FullWidthField from '../FullWidthField';
 import ExistingMedia from '../ExistingMedia';
