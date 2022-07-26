@@ -384,15 +384,11 @@ class Media extends Field
      */
     private function makeMediaFromVaporUpload(array $file, HasMedia $model): FileAdder
     {
-        $url = Storage::createS3Driver([
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-        ])->temporaryUrl($file['key'], Carbon::now()->addHour());
+        $disk = config('filesystems.default');
+
+        $disk = config('filesystems.disks.' . $disk . 'driver') === 's3' ? $disk : 's3';
+
+        $url = Storage::disk($disk)->temporaryUrl($file['key'], Carbon::now()->addHour());
 
         return $model->addMediaFromUrl($url)
             ->usingFilename($file['file_name']);
