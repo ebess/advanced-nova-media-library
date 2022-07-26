@@ -225,13 +225,13 @@ class Media extends Field
                     $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
                     $fileName = $file->getClientOriginalName();
-                    $fileExtention = $file->getClientOriginalExtension();
+                    $fileExtension = $file->getClientOriginalExtension();
 
                 } else {
                     $media = $this->makeMediaFromVaporUpload($file, $model);
 
                     $fileName = $file['file_name'];
-                    $fileExtention = pathinfo($file['file_name'], PATHINFO_EXTENSION);
+                    $fileExtension = pathinfo($file['file_name'], PATHINFO_EXTENSION);
                 }
 
                 if ($this->responsive) {
@@ -244,7 +244,7 @@ class Media extends Field
 
                 if (is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
-                        call_user_func($this->setFileNameCallback, $fileName, $fileExtention, $model)
+                        call_user_func($this->setFileNameCallback, $fileName, $fileExtension, $model)
                     );
                 }
 
