@@ -214,6 +214,7 @@ class Media extends Field
 
     private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
     {
+
         return collect($data)
             ->filter(function ($value) {
                 // New files will come in as UploadedFile objects,
@@ -222,8 +223,15 @@ class Media extends Field
             })->map(function ($file, int $index) use ($request, $model, $collection) {
                 if ($file instanceof UploadedFile) {
                     $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
+
+                    $fileName = $file->getClientOriginalName();
+                    $fileExtension = $file->getClientOriginalExtension();
+
                 } else {
                     $media = $this->makeMediaFromVaporUpload($file, $model);
+
+                    $fileName = $file['file_name'];
+                    $fileExtension = pathinfo($file['file_name'], PATHINFO_EXTENSION);
                 }
 
                 if ($this->responsive) {
@@ -236,13 +244,13 @@ class Media extends Field
 
                 if (is_callable($this->setFileNameCallback)) {
                     $media->setFileName(
-                        call_user_func($this->setFileNameCallback, $file->getClientOriginalName(), $file->getClientOriginalExtension(), $model)
+                        call_user_func($this->setFileNameCallback, $fileName, $fileExtension, $model)
                     );
                 }
 
                 if (is_callable($this->setNameCallback)) {
                     $media->setName(
-                        call_user_func($this->setNameCallback, $file->getClientOriginalName(), $model)
+                        call_user_func($this->setNameCallback, $fileName, $model)
                     );
                 }
 
@@ -260,8 +268,8 @@ class Media extends Field
         $remainingIds = collect($data)->filter(function ($value) {
             // New files will come in as UploadedFile objects,
             // whereas Vapor-uploaded files will come in as arrays.
-            return ! $value instanceof UploadedFile
-            && ! is_array($value);
+            return !$value instanceof UploadedFile
+                && !is_array($value);
         });
 
         $medias->pluck('id')->diff($remainingIds)->each(function ($id) use ($medias) {
@@ -376,8 +384,12 @@ class Media extends Field
      */
     private function makeMediaFromVaporUpload(array $file, HasMedia $model): FileAdder
     {
-        $diskName = config('media-library.disk_name');
-        $url = Storage::disk($diskName)->url($file['key']);
+        $disk = config('filesystems.default');
+
+        $disk = config('filesystems.disks.' . $disk . 'driver') === 's3' ? $disk : 's3';
+
+        $url = Storage::disk($disk)->temporaryUrl($file['key'], Carbon::now()->addHour());
+
         return $model->addMediaFromUrl($url)
             ->usingFilename($file['file_name']);
     }
