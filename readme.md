@@ -192,7 +192,7 @@ Images::make('Gallery')->croppable(false);
 
 You can set all configurations like ratio e.g. as following: 
 ```php
-Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
+Images::make('Gallery')->croppingConfigs(['aspectRatio' => 4/3]);
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
 
