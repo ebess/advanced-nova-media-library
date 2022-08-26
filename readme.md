@@ -201,6 +201,15 @@ It is possible to enforce cropping on upload, for example to ensure the image ha
 Images::make('Gallery')->mustCrop();
 ```
 
+### Disabling cropping by default
+
+By default, the cropping feature is enabled. To disable it by default for all images set `default-croppable` in `config/nova-media-library.php` to `false`:
+```php
+return [
+    'default-croppable' => false,
+];
+```
+
 ## Custom properties
 
 ![Custom properties](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/custom-properties.gif)
