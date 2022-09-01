@@ -2606,7 +2606,7 @@ __webpack_require__.r(__webpack_exports__);
      * Request builders the request
      */
     createRequest: function createRequest() {
-      return Nova.request().get("/nova-vendor/ebess/advanced-nova-media-library/media", {
+      return Nova.request().get("/nova-vendor/workup/advanced-nova-media-library/media", {
         params: this.requestParams
       });
     }
@@ -3158,7 +3158,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     downloadUrl: function downloadUrl() {
-      return this.image.id ? "/nova-vendor/ebess/advanced-nova-media-library/download/".concat(this.image.id) : null;
+      return this.image.id ? "/nova-vendor/workup/advanced-nova-media-library/download/".concat(this.image.id) : null;
     }
   }
 });
@@ -3228,7 +3228,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     downloadUrl: function downloadUrl() {
-      return this.image.id ? "/nova-vendor/ebess/advanced-nova-media-library/download/".concat(this.image.id) : null;
+      return this.image.id ? "/nova-vendor/workup/advanced-nova-media-library/download/".concat(this.image.id) : null;
     },
     croppable: function croppable() {
       return this.editable && this.field.croppable && this.acceptedMimeTypes.includes(this.mimeType);
