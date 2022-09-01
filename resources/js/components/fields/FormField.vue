@@ -3,7 +3,7 @@
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
-                 v-model="value" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple"
+                 v-model="value" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
                  :has-error="hasError" :first-error="firstError"/>
 
         <div v-if="field.existingMedia">
@@ -29,6 +29,7 @@
 
 <script>
   import { FormField, HandlesValidationErrors } from 'laravel-nova'
+  import Vapor from "laravel-vapor";
   import Gallery from '../Gallery';
   import FullWidthField from '../FullWidthField';
   import ExistingMedia from '../ExistingMedia';
@@ -45,7 +46,7 @@
     data() {
       return {
         hasSetInitialValue: false,
-        existingMediaOpen: false
+        existingMediaOpen: false,
       }
     },
     computed: {
@@ -83,7 +84,18 @@
           const isNewImage = !file.id;
 
           if (isNewImage) {
-            formData.append(`__media__[${field}][${index}]`, file.file, file.name);
+            if (file.isVaporUpload) {
+              // In case of Vapor upload, do not send the file's binary data over the wire.
+              // The file can already be found in the bucket.
+              formData.append(`__media__[${field}][${index}][is_vapor_upload]`, true);
+              formData.append(`__media__[${field}][${index}][key]`, file.vaporFile.key);
+              formData.append(`__media__[${field}][${index}][uuid]`, file.vaporFile.uuid);
+              formData.append(`__media__[${field}][${index}][file_name]`, file.vaporFile.filename);
+              formData.append(`__media__[${field}][${index}][file_size]`, file.vaporFile.file_size);
+              formData.append(`__media__[${field}][${index}][mime_type]`, file.vaporFile.mime_type);
+            } else {
+              formData.append(`__media__[${field}][${index}]`, file.file, file.name);
+            }
           } else {
             formData.append(`__media__[${field}][${index}]`, file.id);
           }
