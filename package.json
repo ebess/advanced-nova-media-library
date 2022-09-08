@@ -27,7 +27,7 @@
         "laravel-vapor": "^0.4.0",
         "lodash": "^4.17.21",
         "slug": "^0.9.1",
-        "vue": "^2.5.17",
+        "vue": "^3.2.29",
         "vue-advanced-cropper": "^2.8.1",
         "vuedraggable": "^4.1.0",
         "vuex": "^4.0.2"
