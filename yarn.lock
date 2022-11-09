@@ -1628,11 +1628,6 @@ babel-plugin-polyfill-regenerator@^0.3.0:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.1"
 
-babel-plugin-syntax-jsx@^6.18.0:
-  version "6.18.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
-  integrity sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
-
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -2796,7 +2791,7 @@ follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.14.8:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
   integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
 
-form-backend-validation@^2.3.3, form-backend-validation@^2.4.0:
+form-backend-validation@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/form-backend-validation/-/form-backend-validation-2.4.0.tgz#9ef53d1dc5a25738adffb622ebdd22ea0f9edb66"
   integrity sha512-/AUVPYEqgWarqmMx/oe3AipthX18VzA7APZwvyweXDMvdZvKv4ClGakwLLz0NqeWweyhyiPg6et92Fepv2KTNA==
@@ -3171,11 +3166,6 @@ import-local@^3.0.2:
     pkg-dir "^4.2.0"
     resolve-cwd "^3.0.0"
 
-inflector-js@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/inflector-js/-/inflector-js-1.0.1.tgz#8f2b8dae06ba8c1a846e40a196a5e132721be0e0"
-  integrity sha1-jyuNrga6jBqEbkChlqXhMnIb4OA=
-
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -3440,15 +3430,6 @@ laravel-mix@^6.0:
     webpackbar "^5.0.0-3"
     yargs "^17.2.1"
 
-laravel-nova@^1.0.9:
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/laravel-nova/-/laravel-nova-1.12.3.tgz#01a24339dcbc674738c686dfa2b6c8108e2fb540"
-  integrity sha512-mK0z8pGmMCc6AYpvB7hBJM1VCgQo4t0w4LsLXkEyk6dsngGdgtSJPE/TpieiEStzg1pve9AShsUWwKTjSl6Ygw==
-  dependencies:
-    babel-plugin-syntax-jsx "^6.18.0"
-    form-backend-validation "^2.3.3"
-    inflector-js "^1.0.1"
-
 laravel-vapor@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/laravel-vapor/-/laravel-vapor-0.4.2.tgz#78bf3512d624f32a4a96efc14adf5331e2e9dd53"
@@ -3472,9 +3453,9 @@ loader-runner@^4.2.0:
   integrity sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==
 
 loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.0.tgz#c579b5e34cb34b1a74edc6c1fb36bfa371d5a613"
-  integrity sha512-qH0WSMBtn/oHuwjy/NucEgbx5dbxxnxup9s4PVXJUDHZBQY+s0NWA9rJf53RBnQZxfch7euUui7hpoAPvALZdA==
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.1.tgz#278ad7006660bccc4d2c0c1578e17c5c78d5c0e0"
+  integrity sha512-1Qo97Y2oKaU+Ro2xnDMR26g1BwMT29jNbem1EvcujW2jqt+j5COXyscjM7bLQkM9HaxI7pkWeW7gnI072yMI9Q==
   dependencies:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
@@ -3751,7 +3732,12 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.0, minimist@^1.2.6:
+minimist@^1.2.0:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
+  integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
+
+minimist@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
   integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
