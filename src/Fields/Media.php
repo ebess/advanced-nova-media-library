@@ -222,6 +222,12 @@ class Media extends Field
                 return $value instanceof UploadedFile || is_array($value);
             })->map(function ($file, int $index) use ($request, $model, $collection) {
                 if ($file instanceof UploadedFile) {
+                    foreach ($this->customPropertiesFields as $field) {
+                        $requestAttribute = "__media-custom-properties__.{$collection}.{$index}.{$field->attribute}";
+                        $properties[$field->attribute] = $request->input($requestAttribute);
+                        $this->customProperties($properties);
+                    }
+                    
                     $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
                     $fileName = $file->getClientOriginalName();
