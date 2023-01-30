@@ -19,7 +19,6 @@
           :multiple="field.multiple"
           :uploads-to-vapor="field.uploadsToVapor"
           :has-error="hasError"
-          :first-error="firstError"
         />
 
         <div class="block md:w-1/3 mt-2" v-if="field.existingMedia">
@@ -36,22 +35,13 @@
             @select="addExistingItem"
           />
         </div>
-
-        <help-text class="error-text mt-2 text-danger" v-if="showErrors && hasError">
-          {{ firstError }}
-        </help-text>
-
-        <help-text class="help-text mt-2" v-if="showHelpText">
-          {{ field.helpText }}
-        </help-text>
       </div>
     </template>
   </component>
 </template>
 
 <script>
-  import { FormField, HandlesValidationErrors } from 'laravel-nova'
-  import Vapor from "laravel-vapor";
+  import { FormField, HandlesValidationErrors } from 'laravel-nova';
   import Gallery from '../Gallery';
   import FullWidthField from '../FullWidthField';
   import ExistingMedia from '../ExistingMedia';
