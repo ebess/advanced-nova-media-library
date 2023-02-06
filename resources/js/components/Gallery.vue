@@ -53,7 +53,7 @@
 
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
-    <span v-if="editable" class="form-file block md:w-1/3">
+    <span v-if="editable" class="form-file block max-w-xs">
       <input
         :id="`__media__${field.attribute}`"
         :multiple="multiple"
