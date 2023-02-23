@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\Support\TemporaryDirectory;
 use Spatie\MediaLibrary\MediaCollections\Filesystem;
+use Spatie\MediaLibrary\Conversions\FileManipulator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -52,6 +53,14 @@ trait HandlesExistingMediaTrait
 
                 // Delete our temp collection
                 $temporaryDirectory->delete();
+
+                // Generate missing conversions
+                app(FileManipulator::class)->createDerivedFiles(
+                    $media,
+                    [],
+                    true,
+                    $this->responsive
+                );
 
                 return $media->getKey();
             });
