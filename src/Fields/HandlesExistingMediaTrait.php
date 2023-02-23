@@ -53,6 +53,14 @@ trait HandlesExistingMediaTrait
                 // Delete our temp collection
                 $temporaryDirectory->delete();
 
+                // Generate missing conversions
+                app(FileManipulator::class)->createDerivedFiles(
+                    $media,
+                    [],
+                    true,
+                    $this->responsive
+                );
+
                 return $media->getKey();
             });
     }
