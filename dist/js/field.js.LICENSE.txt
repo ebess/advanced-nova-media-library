@@ -4,12 +4,6 @@
   http://jedwatson.github.io/classnames
 */
 
-/*!
- * vuex v4.0.2
- * (c) 2021 Evan You
- * @license MIT
- */
-
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
