@@ -49,4 +49,9 @@ class Images extends Media
     {
         return $this->withMeta(['mustCrop' => $mustCrop]);
     }
+
+    public function allowedMimeTypes(array $allowedMimeTypes): self
+    {
+        return $this->withMeta(['allowedMimeTypes' => $allowedMimeTypes]);
+    }
 }

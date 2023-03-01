@@ -39,7 +39,7 @@
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
     <span v-if="editable" class="form-file">
-      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
+      <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add" :accept="allowedMimeTypes"/>
       <label :for="`__media__${field.attribute}`" class="">
         <DefaultButton type="button" @click.prevent="focusFileInput">
           <template v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</template>
@@ -84,6 +84,7 @@ export default {
     removable: Boolean,
     multiple: Boolean,
     uploadsToVapor: Boolean,
+    allowedMimeTypes: String,
     customProperties: {
       type: Boolean,
       default: false,
