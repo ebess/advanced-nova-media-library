@@ -9,15 +9,9 @@
       :configs="field.croppingConfigs"
     />
 
-    <template v-if="draggable"
-
-    ></template>
-
-    <draggable v-if="images.length > 0" v-model="images"
-               class="gallery-list clearfix">
-
+    <draggable v-if="images.length > 0" v-model="images" class="gallery-list clearfix">
       <template #item="{element, index}">
-        <div style="float:left;">
+        <div style="float:left; margin-right: 1em;">
           <component :is="singleComponent" class="mb-3 p-3 mr-3"
                      :key="index" :image="element" :field="field" :editable="editable" :removable="removable || editable" @remove="remove(index)"
                      :is-custom-properties-editable="customProperties && customPropertiesFields.length > 0"
@@ -33,12 +27,13 @@
           />
         </div>
       </template>
-
     </draggable>
 
     <span v-else-if="!editable" class="mr-3">&mdash;</span>
 
-    <span v-if="editable" class="form-file">
+    <br style="clear: both" />
+
+    <span v-if="editable" class="">
       <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
       <label :for="`__media__${field.attribute}`" class="">
         <DefaultButton type="button" @click.prevent="focusFileInput">
