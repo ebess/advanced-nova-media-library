@@ -4,6 +4,7 @@ namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
 use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\SupportsDependentFields;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Validation\Rule;
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Media extends Field
 {
-    use HandlesCustomPropertiesTrait, HandlesConversionsTrait, HandlesExistingMediaTrait;
+    use HandlesCustomPropertiesTrait, HandlesConversionsTrait, HandlesExistingMediaTrait, SupportsDependentFields;
 
     public $component = 'advanced-media-library-field';
 
