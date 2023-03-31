@@ -24,6 +24,7 @@ class Media extends Field
     protected $setNameCallback;
     protected $serializeMediaCallback;
     protected $responsive = false;
+    protected $diskName = 'public';
 
     protected $collectionMediaRules = [];
     protected $singleMediaRules = [];
@@ -134,6 +135,18 @@ class Media extends Field
     public function setAllowedFileTypes(array $types)
     {
         return $this->withMeta(['allowedFileTypes' => $types]);
+    }
+
+    /**
+     * Set disk name
+     *
+     * @param string $diskName
+     * @return Media
+     */
+    public function setDiskName(string $diskName)
+    {
+        $this->diskName = $diskName;
+        return $this;
     }
 
     /**
@@ -254,7 +267,7 @@ class Media extends Field
                     );
                 }
 
-                $media = $media->toMediaCollection($collection);
+                $media = $media->toMediaCollection($collection, $this->diskName);
 
                 // fill custom properties for recently created media
                 $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
