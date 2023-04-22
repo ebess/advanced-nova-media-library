@@ -122,7 +122,7 @@ If your media upload / custom properties on the media models are confidential, *
 
 * Publish the config files if you did not yet
 ```bash
-artisan vendor:publish --tag=nova-media-library
+php artisan vendor:publish --tag=nova-media-library
 ```
 * Enable this feature in config file *config/nova-media-library*
 ```php
@@ -146,13 +146,13 @@ The default filename of the new uploaded file is the original filename. You can 
 Images::make('Image 1', 'img1')
     ->setFileName(function($originalFilename, $extension, $model){
         return md5($originalFilename) . '.' . $extension;
-    });
+    }),
 
 // Set the filename to the model name
 Images::make('Image 2', 'img2')
     ->setFileName(function($originalFilename, $extension, $model){
         return str_slug($model->name) . '.' . $extension;
-    });
+    }),
 ```
 
 By default, the "name" field on the Media object is set to the original filename without the extension. To change this, you can use the `setName` function. Like `setFileName` above, it takes a callback function as the only param. This callback function has two params: `$originalFilename` and `$model`.
@@ -161,7 +161,7 @@ By default, the "name" field on the Media object is set to the original filename
 Images::make('Image 1', 'img1')
     ->setName(function($originalFilename, $model){
         return md5($originalFilename);
-    });
+    }),
 ```
 
 ## Responsive images
@@ -170,7 +170,7 @@ If you want to use responsive image functionality from the [Spatie MediaLibrary]
 
 ```php
 Images::make('Image 1', 'img1')
-    ->withResponsiveImages();
+    ->withResponsiveImages(),
 
 ```
 
@@ -187,18 +187,18 @@ All custom properties are copied form the old to the new model.
 
 To disable this feature use the `croppable` method:
 ```php
-Images::make('Gallery')->croppable(false);
+Images::make('Gallery')->croppable(false),
 ```
 
 You can set all configurations like ratio e.g. as following: 
 ```php
-Images::make('Gallery')->croppingConfigs(['aspectRatio' => 4/3]);
+Images::make('Gallery')->croppingConfigs(['aspectRatio' => 4/3]),
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
 
 It is possible to enforce cropping on upload, for example to ensure the image has the set aspect ratio:
 ```php
-Images::make('Gallery')->mustCrop();
+Images::make('Gallery')->mustCrop(),
 ```
 
 ### Disabling cropping by default
@@ -219,20 +219,20 @@ Images::make('Gallery')
     ->customPropertiesFields([
         Boolean::make('Active'),
         Markdown::make('Description'),
-    ]);
+    ]),
     
 Files::make('Multiple files', 'multiple_files')
     ->customPropertiesFields([
         Boolean::make('Active'),
         Markdown::make('Description'),
-    ]);
+    ]),
     
 // custom properties without user input
 Files::make('Multiple files', 'multiple_files')
     ->customProperties([
         'foo' => auth()->user()->foo,
         'bar' => $api->getNeededData(),
-    ]);
+    ]),
 ```
 
 ## Show image statistics *(size, dimensions, type)*
@@ -241,7 +241,7 @@ Files::make('Multiple files', 'multiple_files')
 
 ```php
 Images::make('Gallery')
-    ->showStatistics();
+    ->showStatistics(),
 ```
 
 ## Custom headers
@@ -250,7 +250,7 @@ Images::make('Gallery')
 Images::make('Gallery')
     ->customHeaders([
         'header-name' => 'header-value', 
-    ]);
+    ]),
 ```
 
 ## Media Field (Video)
@@ -266,7 +266,7 @@ class Category extends Resource
     {
         Media::make('Gallery') // media handles videos
             ->conversionOnIndexView('thumb')
-            ->singleMediaRules('max:5000'); // max 5000kb
+            ->singleMediaRules('max:5000'), // max 5000kb
     }
 }
 
@@ -291,7 +291,7 @@ a temporary signed URL. This function expects a valid Carbon instance that will 
 
 ```
 Images::make('Image 1', 'img1')
-    ->temporary(now()->addMinutes(5))
+    ->temporary(now()->addMinutes(5)),
 
 Files::make('Multiple files', 'multiple_files')
     ->temporary(now()->addMinutes(10),
