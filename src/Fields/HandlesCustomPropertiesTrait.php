@@ -69,6 +69,10 @@ trait HandlesCustomPropertiesTrait
             $field->fillInto($request, $media, $targetAttribute, $requestAttribute);
         }
 
+        if($this->translatable) {
+            $media['custom_properties->locale'] = $request["__media-custom-properties__.{$collection}.{$index}.locale"];
+        }
+
         $media->save();
     }
 }

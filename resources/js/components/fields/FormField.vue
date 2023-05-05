@@ -2,9 +2,21 @@
   <component :is="field.fullSize ? 'full-width-field' : 'default-field'" :field="field" full-width-content>
     <template slot="field">
       <div :class="{'px-8 pt-6': field.fullSize}">
+        <a
+          v-if="field.translatable"
+          class="inline-block font-bold cursor-pointer mr-2 animate-text-color select-none"
+          :class="{ 'text-60': localeKey !== currentLocale, 'text-primary': localeKey === currentLocale }"
+          :key="`a-${localeKey}`"
+          v-for="(locale, localeKey) in field.locales"
+          @click="changeTab(localeKey)"
+        >
+          {{ locale }}
+        </a>
+        <div class="flex flex-row items-center">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
-                 v-model="value" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
+                 :value="displayValue" @input="handleChange" :editable="!field.readonly" :removable="field.removable" custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
                  :has-error="hasError" :first-error="firstError"/>
+        </div>
 
         <div v-if="field.existingMedia">
           <button type="button" class="form-file-btn btn btn-default btn-primary mt-2" @click="existingMediaOpen = true">
@@ -14,7 +26,7 @@
         </div>
         <help-text
           class="error-text mt-2 text-danger"
-          v-if="showErrors && hasError"
+          v-if="hasError"
         >
           {{ firstError }}
         </help-text>
@@ -47,7 +59,17 @@
       return {
         hasSetInitialValue: false,
         existingMediaOpen: false,
+        locales: Object.keys(this.field?.locales || {}),
+        currentLocale: null,
       }
+    },
+    mounted() {
+      this.currentLocale = this.locales[0] || null;
+      Nova.$on('localeChanged', locale => {
+        if (this.currentLocale !== locale) {
+          this.changeTab(locale, true);
+        }
+      });
     },
     computed: {
         openExistingMediaLabel () {
@@ -58,16 +80,31 @@
         }
 
         return this.__(`Use Existing ${type}`);
-      }
+      },
+      displayValue () {
+        return this.field.translatable ?
+          this.value.filter(i => _.get(i, 'custom_properties.locale') === this.currentLocale)
+          : this.value
+      },
     },
     methods: {
+      changeTab(locale, dontEmit) {
+        if (this.currentLocale !== locale) {
+          if (!dontEmit) {
+            Nova.$emit('localeChanged', locale);
+          }
+
+          this.currentLocale = locale;
+        }
+      },
+
       /*
        * Set the initial, internal value for the field.
        */
       setInitialValue() {
         let value = this.field.value || [];
 
-        if (!this.field.multiple) {
+        if (!this.field.multiple && !this.field.translatable) {
           value = value.slice(0, 1);
         }
 
@@ -107,7 +144,11 @@
       },
 
       getImageCustomProperties(image) {
-        return (this.field.customPropertiesFields || []).reduce((properties, { attribute: property }) => {
+        let customProperties = (this.field.customPropertiesFields || []).map(p => p.attribute)
+        if(this.field.translatable) {
+          customProperties.push('locale')
+        }
+        return customProperties.reduce((properties, property) => {
           properties[property] = _.get(image, `custom_properties.${property}`);
 
           // Fixes checkbox problem
@@ -123,7 +164,16 @@
        * Update the field's internal value.
        */
       handleChange(value) {
-        this.value = value
+        if(this.displayValue === value) {
+          return
+        }
+        if(! this.field.translatable) {
+          this.value = value
+          return
+        }
+
+        this.value = this.value.filter(i => _.get(i, 'custom_properties.locale') !== this.currentLocale)
+          .concat(value.map(i => _.set(i, 'custom_properties.locale', this.currentLocale)))
       },
 
       addExistingItem(item) {
@@ -131,11 +181,11 @@
         // https://github.com/vuejs/vue/issues/2164
         let copiedArray = this.value.slice(0)
 
-        if (!this.field.multiple) {
+        if (!this.field.multiple && !this.field.translatable) {
           copiedArray.splice(0, 1);
         }
 
-        copiedArray.push(item);
+        copiedArray.push(_.set(item, 'custom_properties.locale', this.currentLocale));
         this.value = copiedArray
       }
     },
