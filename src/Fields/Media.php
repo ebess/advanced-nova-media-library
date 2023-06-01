@@ -391,6 +391,7 @@ class Media extends Field
         $url = Storage::disk($disk)->temporaryUrl($file['key'], Carbon::now()->addHour());
 
         return $model->addMediaFromUrl($url)
-            ->usingFilename($file['file_name']);
+            ->usingFilename($file['file_name'])
+            ->withCustomProperties($this->customProperties);
     }
 }
