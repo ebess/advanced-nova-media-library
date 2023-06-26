@@ -179,7 +179,7 @@ Images::make('Image 1', 'img1')
 ![Cropping](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/cropping.gif)
 
 By default you are able to crop / rotate images by clicking the scissors in the left bottom corner on the edit view. 
-The [vue-js-clipper](https://github.com/timtnleeProject/vuejs-clipper) is used for this purpose. The cropping feature is 
+The [vue-advanced-cropper](https://github.com/advanced-cropper/vue-advanced-cropper#rectanglestencil) is used for this purpose. The cropping feature is 
 limited to mime type of `image/jpg`, `image/jpeg` and `image/png`.
 
 **Important:** By cropping an existing image the original media model is deleted and replaced by the cropped image. 
