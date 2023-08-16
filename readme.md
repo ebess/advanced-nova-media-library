@@ -328,8 +328,9 @@ Full change log in [PR #317](https://github.com/ebess/advanced-nova-media-librar
 - You need to have Nova installed of course in your Laravel app
 - Work directly in the package in the `vendor` directory (webpack needs Nova to be installed)
 - Then from the `vendor/xxx/advanced-nova-media-library` folder:
+    - Use a least `nvm use 14`
     - `yarn install` 
-    - `yarn npm watch` 
+    - `yarn run watch` 
     - Work hard 🤘
     - `yarn npm production` when job is finished
     - Make a PR
