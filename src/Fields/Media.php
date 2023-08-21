@@ -2,14 +2,14 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
-use Illuminate\Support\Carbon;
-use Laravel\Nova\Fields\Field;
-use Spatie\MediaLibrary\HasMedia;
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -162,8 +162,8 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        $attr = $request['__media__'] ?? [];
-        $data = $attr[$requestAttribute] ?? [];
+        $key = str_replace($attribute, '__media__.'.$attribute, $requestAttribute);
+        $data = $request[$key] ?? [];
 
         if ($attribute === 'ComputedField') {
             $attribute = call_user_func($this->computedCallback, $model);
@@ -190,11 +190,11 @@ class Media extends Field
         Validator::make($requestToValidateCollectionMedia, [$requestAttribute => $this->collectionMediaRules])
             ->validate();
 
-        return function () use ($request, $data, $attribute, $model) {
+        return function () use ($request, $data, $attribute, $model, $requestAttribute) {
             $this->handleMedia($request, $model, $attribute, $data);
 
             // fill custom properties for existing media
-            $this->fillCustomPropertiesFromRequest($request, $model, $attribute);
+            $this->fillCustomPropertiesFromRequest($request, $requestAttribute, $model, $attribute);
         };
     }
 
@@ -283,7 +283,7 @@ class Media extends Field
     }
 
     /**
-     * @param HasMedia|HasMediaTrait $resource
+     * @param HasMedia|InteractsWithMedia $resource
      * @param null $attribute
      */
     public function resolve($resource, $attribute = null)
@@ -319,7 +319,7 @@ class Media extends Field
     }
 
     /**
-     * @param HasMedia|HasMediaTrait $resource
+     * @param HasMedia|InteractsWithMedia $resource
      */
     protected function checkCollectionIsMultiple(HasMedia $resource, string $collectionName)
     {
