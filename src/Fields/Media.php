@@ -162,8 +162,8 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        $attr = $request['__media__'] ?? [];
-        $data = $attr[$requestAttribute] ?? [];
+        $key = str_replace($attribute, '__media__.'.$attribute, $requestAttribute);
+        $data = $request[$key] ?? [];
 
         if ($attribute === 'ComputedField') {
             $attribute = call_user_func($this->computedCallback, $model);
