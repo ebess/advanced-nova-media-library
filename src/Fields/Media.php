@@ -326,9 +326,9 @@ class Media extends Field
     {
         $resource->registerMediaCollections();
         $isSingle = collect($resource->mediaCollections)
-                ->where('name', $collectionName)
-                ->first()
-                ->singleFile ?? false;
+            ->where('name', $collectionName)
+            ->first()
+            ->singleFile ?? false;
 
         $this->withMeta(['multiple' => ! $isSingle]);
     }
@@ -382,6 +382,7 @@ class Media extends Field
      * The file is uploaded using a pre-signed S3 URL, via Vapor.store.
      * This method will use addMediaFromUrl(), passing it the
      * temporary location of the file.
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
      */
     private function makeMediaFromVaporUpload(array $file, HasMedia $model): FileAdder
     {
