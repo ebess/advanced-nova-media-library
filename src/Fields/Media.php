@@ -192,18 +192,18 @@ class Media extends Field
             ->validate();
 
         return function () use ($request, $data, $attribute, $model, $requestAttribute) {
-            $this->handleMedia($request, $model, $attribute, $data);
+            $this->handleMedia($request, $model, $attribute, $data, $requestAttribute);
 
             // fill custom properties for existing media
             $this->fillCustomPropertiesFromRequest($request, $requestAttribute, $model, $attribute);
         };
     }
 
-    protected function handleMedia(NovaRequest $request, $model, $attribute, $data)
+    protected function handleMedia(NovaRequest $request, $model, $attribute, $data, $requestAttribute)
     {
         $remainingIds = $this->removeDeletedMedia($data, $model->getMedia($attribute));
-        $newIds = $this->addNewMedia($request, $data, $model, $attribute);
-        $existingIds = $this->addExistingMedia($request, $data, $model, $attribute, $model->getMedia($attribute));
+        $newIds = $this->addNewMedia($request, $data, $model, $attribute, $requestAttribute);
+        $existingIds = $this->addExistingMedia($request, $data, $model, $attribute, $model->getMedia($attribute), $requestAttribute);
         $this->setOrder($remainingIds->union($newIds)->union($existingIds)->sortKeys()->all());
     }
 
@@ -213,7 +213,7 @@ class Media extends Field
         $mediaClass::setNewOrder($ids);
     }
 
-    private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection): Collection
+    private function addNewMedia(NovaRequest $request, $data, HasMedia $model, string $collection, string $requestAttribute): Collection
     {
 
         return collect($data)
@@ -221,7 +221,7 @@ class Media extends Field
                 // New files will come in as UploadedFile objects,
                 // whereas Vapor-uploaded files will come in as arrays.
                 return $value instanceof UploadedFile || is_array($value);
-            })->map(function ($file, int $index) use ($request, $model, $collection) {
+            })->map(function ($file, int $index) use ($request, $model, $collection, $requestAttribute) {
                 if ($file instanceof UploadedFile) {
                     $media = $model->addMedia($file)->withCustomProperties($this->customProperties);
 
@@ -258,7 +258,7 @@ class Media extends Field
                 $media = $media->toMediaCollection($collection);
 
                 // fill custom properties for recently created media
-                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection);
+                $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection, $requestAttribute);
 
                 return $media->getKey();
             });
