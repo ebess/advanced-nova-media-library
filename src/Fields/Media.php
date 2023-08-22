@@ -2,6 +2,7 @@
 
 namespace Ebess\AdvancedNovaMediaLibrary\Fields;
 
+// @TODO Rule contract is deprecated since laravel/framework v10.0, replace with ValidationRule once min version is 10.
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
