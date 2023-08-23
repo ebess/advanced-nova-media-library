@@ -46,7 +46,7 @@ class AdvancedNovaMediaLibraryServiceProvider extends ServiceProvider
     protected function loadTranslations()
     {
         $this->loadJSONTranslationsFrom(__DIR__ . '/../resources/lang');
-        $this->loadJSONTranslationsFrom(resource_path('lang/vendor/advanced-nova-media-library'));
+        $this->loadJSONTranslationsFrom(lang_path('vendor/advanced-nova-media-library'));
     }
 
     /**
@@ -59,6 +59,6 @@ class AdvancedNovaMediaLibraryServiceProvider extends ServiceProvider
         $locale = $this->app->getLocale();
 
         Nova::translations(__DIR__ . "/../resources/lang/{$locale}.json");
-        Nova::translations(resource_path("lang/vendor/advanced-nova-media-library/$locale.json"));
+        Nova::translations(lang_path("vendor/advanced-nova-media-library/$locale.json"));
     }
 }
