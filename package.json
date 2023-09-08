@@ -26,6 +26,7 @@
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.43.4",
         "sass-loader": "^12.3.0",
+        "tailwindcss": "^3.0.24",
         "vue-loader": "^16.8.3",
         "vue-template-compiler": "^2.6.14",
         "vuex": "^4.1.0",
@@ -37,7 +38,6 @@
         "slug": "^0.9.1",
         "vue": "^3.0",
         "vue-advanced-cropper": "^2.8.1",
-        "vuedraggable": "^4.1.0",
-        "vuex": "^4.0.2"
+        "vuedraggable": "^4.1.0"
     }
 }
