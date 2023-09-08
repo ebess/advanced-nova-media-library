@@ -30,7 +30,7 @@
     },
     computed: {
       downloadUrl() {
-        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}?uuid=${this.image.uuid}` : null;
+        return this.image.id ? `/nova-vendor/workup/advanced-nova-media-library/download/${this.image.id}?uuid=${this.image.uuid}` : null;
       },
     }
   };
