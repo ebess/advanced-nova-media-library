@@ -1,5 +1,8 @@
 <template>
-    <modal @modal-close="handleClose"
+    <Modal
+      :show="true"
+      maxWidth="2xl"
+      @modal-close="handleClose"
           :classWhitelist="[
             'flatpickr-current-month',
             'flatpickr-next-month',
@@ -10,11 +13,10 @@
             ]"
      >
         <card class="overflow-hidden">
-            <form class="bg-white rounded-lg shadow-lg overflow-hidden w-action-fields"
+            <form class="rounded-lg shadow-lg overflow-hidden w-action-fields"
                 @submit.prevent="handleUpdate"
                 autocomplete="off"
             >
-
                 <div v-for="field in fields" :key="field.attribute" class="action">
                     <component :is="'form-' + field.component" :field="field"/>
                 </div>
@@ -30,10 +32,9 @@
                         </button>
                     </div>
                 </div>
-
             </form>
         </card>
-    </modal>
+    </Modal>
 </template>
 
 <script>

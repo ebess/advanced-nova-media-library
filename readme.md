@@ -16,6 +16,7 @@ images and order them by drag and drop.
 * [Custom properties](#custom-properties)
 * [Custom headers](#custom-headers)
 * [Media Field (Video)](#media-field-video)  
+* [Change log](#change-log)  
 
 ## Examples
 ![Cropping](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/cropping.gif)
@@ -191,13 +192,22 @@ Images::make('Gallery')->croppable(false);
 
 You can set all configurations like ratio e.g. as following: 
 ```php
-Images::make('Gallery')->croppingConfigs(['ratio' => 4/3]);
+Images::make('Gallery')->croppingConfigs(['aspectRatio' => 4/3]);
 ```
 Available cropping configuration, see https://github.com/timtnleeProject/vuejs-clipper#clipper-basic.
 
 It is possible to enforce cropping on upload, for example to ensure the image has the set aspect ratio:
 ```php
 Images::make('Gallery')->mustCrop();
+```
+
+### Disabling cropping by default
+
+By default, the cropping feature is enabled. To disable it by default for all images set `default-croppable` in `config/nova-media-library.php` to `false`:
+```php
+return [
+    'default-croppable' => false,
+];
 ```
 
 ## Custom properties
@@ -296,3 +306,31 @@ Files::make('Multiple files', 'multiple_files')
 # Alternatives
 
 * [dmitrybubyakin/nova-medialibrary-field](https://github.com/dmitrybubyakin/nova-medialibrary-field)
+
+# Change log
+
+## v4.0.2 - 2022-04-26
+- Fix ratio for cropping in Nova 4. Config from `Images::( ... )->croppingConfigs()` are now passed along to the `stencil-props` property of the cropper. See [cropper docs](https://norserium.github.io/vue-advanced-cropper/components/rectangle-stencil.html#props) for more details on available props.
+
+## v4.0.1 - 2022-04-20
+- Fix details component
+- Fix layout inconsistencies 
+
+## v4.0.0 - 2022-04-18
+- Upgrade to support Laravel Nova 4
+- Breaks compatibility with Laravel Nova 1,2 and 3. For those nova versions  use `v3.*`
+- Replaced [vuejs-clipper](https://www.npmjs.com/package/vuejs-clipper) with [vue-advanced-cropper](https://www.npmjs.com/package/vue-advanced-cropper) for vue3 support
+
+Full change log in [PR #317](https://github.com/ebess/advanced-nova-media-library/pull/317)
+
+# How to contribute
+
+- You need to have Nova installed of course in your Laravel app
+- Work directly in the package in the `vendor` directory (webpack needs Nova to be installed)
+- Then from the `vendor/xxx/advanced-nova-media-library` folder:
+    - Use a least `nvm use 14`
+    - `yarn install` 
+    - `yarn run watch` 
+    - Work hard 🤘
+    - `yarn npm production` when job is finished
+    - Make a PR

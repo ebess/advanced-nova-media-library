@@ -2,28 +2,28 @@
   <gallery-item class="gallery-item-image" :class="{ 'show-statistics': field.showStatistics }">
     <div class="gallery-item-info p-3">
       <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
-        <icon type="download" view-box="0 0 20 22" width="16" height="16"/>
+        <Icon type="download" view-box="0 0 20 22" width="16" height="16"/>
       </a>
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
-        <icon type="delete" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon type="trash" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('edit-custom-properties')" title="Edit custom properties">
-        <icon type="edit" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon type="pencil" view-box="0 0 20 20" width="16" height="16"/>
       </a>
       <a class="preview" href="#" @click.prevent="showPreview">
-        <icon type="search" view-box="0 0 20 20" width="30" height="30"/>
+        <Icon type="search" view-box="0 0 20 20" width="30" height="30"/>
       </a>
       <a v-if="croppable" class="icon crop" href="#" @click.prevent="$emit('crop-start', image)">
-        <scissors-icon brand="var(--info)" view-box="0 0 20 20" width="16" height="16"/>
+        <scissors-icon brand="var(--colors-black)" view-box="0 0 20 20" width="16" height="16"/>
       </a>
     </div>
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
-    <div v-if="field.showStatistics" class="statistics">
+    <div v-if="field.showStatistics" class="statistics my-1">
       <div v-if="size" class="size"><strong>{{ size }}</strong></div>
       <div class="dimensions"><strong>{{ width }}×{{ height }}</strong> px</div>
       <div class="ratio"> <strong>{{ aspectRatio }}</strong> (<i>{{ ratio }}</i>)</div>
     </div>
-    <div v-if="field.showStatistics" class="type">
+    <div v-if="field.showStatistics" class="type my-1">
       {{ mimeType }}
     </div>
   </gallery-item>
@@ -50,7 +50,7 @@
     }),
     computed: {
       downloadUrl() {
-        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
+        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}?uuid=${this.image.uuid}` : null;
       },
       croppable() {
         return this.editable &&
@@ -184,8 +184,8 @@
       }
 
       &.show-statistics {
-        padding-top: 15px;
-        padding-bottom: 32px;
+        padding-top: 22px;
+        padding-bottom: 43px;
         height: #{$item-max-size + 23px};
       }
 
@@ -204,12 +204,12 @@
         right: 0;
 
         .preview {
-          color: var(--black);
+          color: var(--colors-black);
         }
 
         .delete {
           right: 10px;
-          color: var(--danger);
+          color: rgb(var(--colors-red-500));
         }
 
         .crop {
@@ -257,7 +257,7 @@
       cursor: pointer;
       position: absolute;
       top: 10px;
-      color: var(--info);
+      color: rgb(var(--colors-black));
     }
 
     .edit {

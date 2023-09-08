@@ -37,6 +37,14 @@ class MediaController extends Controller
 
             $query->latest();
         }
+        
+        if (!empty($hideCollections)) {
+            if (!is_array($hideCollections)) {
+                $hideCollections = [ $hideCollections ];
+            }
+            
+            $query->whereNotIn('collection_name', $hideCollections);
+        }
 
         if (!empty($hideCollections)) {
             if (!is_array($hideCollections)) {
