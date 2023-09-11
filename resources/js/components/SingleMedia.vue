@@ -194,8 +194,6 @@ $border-radius: 10px;
 
       .name {
         bottom: 10px;
-        padding-left: 4px;
-        padding-right: 4px;
       }
     }
 
@@ -205,8 +203,6 @@ $border-radius: 10px;
 
       .name {
         bottom: 40px;
-        padding-left: 4px;
-        padding-right: 4px;
       }
     }
 
@@ -256,6 +252,12 @@ $border-radius: 10px;
       font-size: .75rem;
       line-height: 0.95;
       text-align: center;
+    }
+
+    .name {
+      padding-left: 4px;
+      padding-right: 4px;
+      word-break: break-word;
     }
 
     .statistics {
