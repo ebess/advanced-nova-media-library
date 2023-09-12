@@ -1,9 +1,11 @@
 <template>
-  <PanelItem :index="index" :field="field" >
-    <template #value>
-      <gallery :modelValue="field.value" :field="field" :multiple="field.multiple"/>
-    </template>
-  </PanelItem>
+  <div class="advanced-nova-media-library">
+    <PanelItem :index="index" :field="field" >
+      <template #value>
+        <gallery :modelValue="field.value" :field="field" :multiple="field.multiple"/>
+      </template>
+    </PanelItem>
+  </div>
 </template>
 
 <script>

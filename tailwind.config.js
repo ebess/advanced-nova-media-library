@@ -2,8 +2,14 @@ const path = require('path');
 
 module.exports = {
   content: [
-    path.resolve(__dirname, 'resources/**/*.{vue,js,ts,jsx,tsx,css,scss}')
+    "./resources/**/*.js",
+    './resources/js/**/*.vue',
   ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  important: '.advanced-nova-media-library',
   darkMode: 'class',
   safelist: [],
 };

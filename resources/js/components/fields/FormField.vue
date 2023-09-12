@@ -1,40 +1,42 @@
 <template>
-  <component :is="field.fullSize ? 'FullWidthField' : 'DefaultField'" :field="field" :errors="errors"
-             :show-help-text="showHelpText">
-    <template #field>
-      <div :class="{'px-8 pt-6': field.fullSize}">
-        <a
-          v-if="field.translatable"
-          class="inline-block font-bold cursor-pointer mr-2 animate-text-color select-none"
-          :class="{ 'text-60': localeKey !== currentLocale, 'text-primary': localeKey === currentLocale }"
-          :key="`a-${localeKey}`"
-          v-for="(locale, localeKey) in field.locales"
-          @click="changeTab(localeKey)"
-        >
-          {{ locale }}
-        </a>
-        <div class="flex flex-row items-center">
-          <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
-                   :value="displayValue" @input="handleChange" :editable="!field.readonly" :removable="field.removable"
-                   custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
-                   :has-error="hasError" :first-error="firstError"/>
-        </div>
+  <div class="advanced-nova-media-library">
+    <component :is="field.fullSize ? 'FullWidthField' : 'DefaultField'" :field="field" :errors="errors"
+               :show-help-text="showHelpText">
+      <template #field>
+        <div :class="{'px-8 pt-6': field.fullSize}">
+          <a
+            v-if="field.translatable"
+            class="inline-block font-bold cursor-pointer mr-2 animate-text-color select-none"
+            :class="{ 'text-60': localeKey !== currentLocale, 'text-primary': localeKey === currentLocale }"
+            :key="`a-${localeKey}`"
+            v-for="(locale, localeKey) in field.locales"
+            @click="changeTab(localeKey)"
+          >
+            {{ locale }}
+          </a>
+          <div class="flex flex-row items-center">
+            <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
+                     :value="displayValue" @input="handleChange" :editable="!field.readonly" :removable="field.removable"
+                     custom-properties :field="field" :multiple="field.multiple" :uploads-to-vapor="field.uploadsToVapor"
+                     :has-error="hasError" :first-error="firstError"/>
+          </div>
 
-        <div v-if="field.existingMedia">
-          <OutlineButton type="button" class="mt-2" @click.prevent="existingMediaOpen = true">
-            {{ openExistingMediaLabel }}
-          </OutlineButton>
-          <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
+          <div v-if="field.existingMedia">
+            <OutlineButton type="button" class="mt-2" @click.prevent="existingMediaOpen = true">
+              {{ openExistingMediaLabel }}
+            </OutlineButton>
+            <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
+          </div>
+          <help-text
+            class="error-text mt-2 text-danger"
+            v-if="hasError"
+          >
+            {{ firstError }}
+          </help-text>
         </div>
-        <help-text
-          class="error-text mt-2 text-danger"
-          v-if="hasError"
-        >
-          {{ firstError }}
-        </help-text>
-      </div>
-    </template>
-  </component>
+      </template>
+    </component>
+  </div>
 </template>
 
 <script>
