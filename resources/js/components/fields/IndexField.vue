@@ -7,7 +7,8 @@
     <span v-if="field.multiple">
       {{ field.value.map(({ file_name }) => file_name).join(', ') }}
     </span>
-    <span v-else>{{ field.value[0].file_name }}</span>
+    <span v-else-if="value">{{ field.value[0].file_name }}</span>
+    <span v-else>&mdash;</span>
   </div>
 </template>
 
