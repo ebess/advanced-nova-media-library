@@ -51,9 +51,9 @@ class Media extends Field
     {
         $this->translatable = true;
 
-//        $this->customProperties = array_merge($this->customProperties, [
-//            Text::make('locale')->hideWhenCreating()->hideWhenUpdating(),
-//        ]);
+        $this->customProperties = array_merge($this->customProperties, [
+            Text::make('locale')->hideWhenCreating()->hideWhenUpdating(),
+        ]);
 
         return $this->withMeta([
             'translatable' => true,
