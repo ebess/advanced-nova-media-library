@@ -2,15 +2,15 @@
 
 namespace Workup\AdvancedNovaMediaLibrary\Http\Controllers;
 
+use Exception;
 use Workup\AdvancedNovaMediaLibrary\Http\Requests\MediaRequest;
 use Workup\AdvancedNovaMediaLibrary\Http\Resources\MediaResource;
-use Exception;
 
 class MediaController extends Controller
 {
     public function index(MediaRequest $request)
     {
-        if (!config('nova-media-library.enable-existing-media')) {
+        if (! config('nova-media-library.enable-existing-media')) {
             throw new Exception('You need to enable the `existing media` feature via config.');
         }
 
@@ -37,18 +37,18 @@ class MediaController extends Controller
 
             $query->latest();
         }
-        
-        if (!empty($hideCollections)) {
-            if (!is_array($hideCollections)) {
-                $hideCollections = [ $hideCollections ];
+
+        if (! empty($hideCollections)) {
+            if (! is_array($hideCollections)) {
+                $hideCollections = [$hideCollections];
             }
-            
+
             $query->whereNotIn('collection_name', $hideCollections);
         }
 
-        if (!empty($hideCollections)) {
-            if (!is_array($hideCollections)) {
-                $hideCollections = [ $hideCollections ];
+        if (! empty($hideCollections)) {
+            if (! is_array($hideCollections)) {
+                $hideCollections = [$hideCollections];
             }
 
             $query->whereNotIn('collection_name', $hideCollections);
