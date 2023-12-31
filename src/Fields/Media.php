@@ -37,33 +37,33 @@ class Media extends Field
 
     public $meta = ['type' => 'media'];
 
-    public function serializeMediaUsing(callable $serializeMediaUsing): self
+    public function serializeMediaUsing(callable $serializeMediaUsing): static
     {
         $this->serializeMediaCallback = $serializeMediaUsing;
 
         return $this;
     }
 
-    public function fullSize(): self
+    public function fullSize(): static
     {
         return $this->withMeta(['fullSize' => true]);
     }
 
-    public function rules($rules): self
+    public function rules($rules): static
     {
         $this->collectionMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
 
         return $this;
     }
 
-    public function singleMediaRules($rules): self
+    public function singleMediaRules($rules): static
     {
         $this->singleMediaRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
 
         return $this;
     }
 
-    public function customHeaders(array $headers): self
+    public function customHeaders(array $headers): static
     {
         $this->customHeaders = $headers;
 
@@ -151,7 +151,7 @@ class Media extends Field
         return $this;
     }
 
-    public function uploadsToVapor(bool $uploadsToVapor = true): self
+    public function uploadsToVapor(bool $uploadsToVapor = true): static
     {
         return $this->withMeta(['uploadsToVapor' => $uploadsToVapor]);
     }
@@ -163,7 +163,7 @@ class Media extends Field
      */
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        $key = str_replace($attribute, '__media__.'.$attribute, $requestAttribute);
+        $key = str_replace($attribute, '__media__.' . $attribute, $requestAttribute);
         $data = $request[$key] ?? [];
 
         if ($attribute === 'ComputedField') {
@@ -227,7 +227,6 @@ class Media extends Field
 
                     $fileName = $file->getClientOriginalName();
                     $fileExtension = $file->getClientOriginalExtension();
-
                 } else {
                     $media = $this->makeMediaFromVaporUpload($file, $model);
 
@@ -239,7 +238,7 @@ class Media extends Field
                     $media->withResponsiveImages();
                 }
 
-                if (! empty($this->customHeaders)) {
+                if (!empty($this->customHeaders)) {
                     $media->addCustomHeaders($this->customHeaders);
                 }
 
@@ -330,7 +329,7 @@ class Media extends Field
             ->first()
             ->singleFile ?? false;
 
-        $this->withMeta(['multiple' => ! $isSingle]);
+        $this->withMeta(['multiple' => !$isSingle]);
     }
 
     public function serializeMedia(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
