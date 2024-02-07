@@ -15,6 +15,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Workup\NovaTranslatableField\NovaTranslatableField;
 
 
 class Media extends Field
@@ -420,5 +421,22 @@ class Media extends Field
         return $model->addMediaFromUrl($url)
             ->usingFilename($file['file_name'])
             ->withCustomProperties($this->customProperties);
+    }
+
+    /**
+     * Set SEO attributes for the element.
+     *
+     * @return $this
+     */
+    public function seoAttributes(): self
+    {
+        $this->customPropertiesFields([
+            NovaTranslatableField::make(__('Alt attribute'), 'alt_attribute')
+                ->singleLine(),
+            NovaTranslatableField::make(__('Title attribute'), 'title_attribute')
+                ->singleLine()
+        ]);
+
+        return $this;
     }
 }
