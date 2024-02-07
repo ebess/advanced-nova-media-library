@@ -11,6 +11,8 @@ class Images extends Media
         parent::__construct($name, $attribute, $resolveCallback);
 
         $this->croppable(config('nova-media-library.default-croppable', true));
+
+        $this->seoAttributes();
     }
 
     /**
