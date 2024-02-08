@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\FileBag;
 trait HandlesCustomPropertiesTrait
 {
     protected $customPropertiesFields = [];
+
     protected $customProperties = [];
 
     public function customPropertiesFields(array $customPropertiesFields): self
@@ -32,7 +33,6 @@ trait HandlesCustomPropertiesTrait
     }
 
     /**
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute  The form attribute of the media field.
      * @param  \Spatie\MediaLibrary\HasMedia  $model  The model which has associated media.
      * @param  string  $collection  The selected media collection.
@@ -66,7 +66,6 @@ trait HandlesCustomPropertiesTrait
     /**
      * Fills custom properties for a given Media model from the request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Spatie\MediaLibrary\MediaCollections\Models\Media  $media  The Media model with custom properties.
      * @param  int  $index  The file's index in the corresponding Media collection, to retrieve its custom properties from the request.
      * @param  string  $collection  The selected media collection.
@@ -77,17 +76,19 @@ trait HandlesCustomPropertiesTrait
         // prevent overriding the custom properties set by other processes like generating conversions
         $media->refresh();
 
+        $originalRequestAttribute = $requestAttribute;
+
         /** @var Field $field */
         foreach ($this->customPropertiesFields as $field) {
             // If we are dealing with nested resources or multiple panels, custom property fields are prefixed.
-            $key = str_replace($collection, '__media-custom-properties__.'.$collection, $requestAttribute);
+            $key = str_replace($collection, '__media-custom-properties__.'.$collection, $originalRequestAttribute);
             $targetAttribute = "custom_properties->{$field->attribute}";
             $requestAttribute = "{$key}.{$index}.{$field->attribute}";
 
             $field->fillInto($request, $media, $targetAttribute, $requestAttribute);
         }
 
-        if($this->translatable) {
+        if ($this->translatable) {
             $media['custom_properties->locale'] = $request["__media-custom-properties__.{$collection}.{$index}.locale"];
         }
 
