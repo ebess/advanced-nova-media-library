@@ -40,6 +40,11 @@ class Images extends Media
         return $this->withMeta(compact('showStatistics'));
     }
 
+    public function showName(bool $showName = true): self
+    {
+        return $this->withMeta(compact('showName'));
+    }
+
     public function showDimensions(bool $showDimensions = true): self
     {
         return $this->showStatistics();
