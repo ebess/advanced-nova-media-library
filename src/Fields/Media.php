@@ -181,7 +181,9 @@ class Media extends Field
 
                 Validator::make($requestToValidateSingleMedia, [
                     $requestAttribute => array_merge($this->defaultValidatorRules, (array)$this->singleMediaRules),
-                ])->validate();
+                ])
+                ->addCustomAttributes($this->getValidationAttributeNames($request))
+                ->validate();
             });
 
         $requestToValidateCollectionMedia = array_merge($request->toArray(), [
@@ -189,6 +191,7 @@ class Media extends Field
         ]);
 
         Validator::make($requestToValidateCollectionMedia, [$requestAttribute => $this->collectionMediaRules])
+            ->addCustomAttributes($this->getValidationAttributeNames($request))
             ->validate();
 
         return function () use ($request, $data, $attribute, $model, $requestAttribute) {
