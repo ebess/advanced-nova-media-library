@@ -43,10 +43,6 @@
       </label>
     </span>
 
-    <help-text v-if="field.type !== 'media'" :show-span="showHelpText" class="mt-2">
-      {{ field.helpText }}
-    </help-text>
-
     <p v-if="hasError" class="my-2 text-danger">
       {{ firstError }}
     </p>

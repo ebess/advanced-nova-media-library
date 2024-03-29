@@ -332,5 +332,5 @@ Full change log in [PR #317](https://github.com/ebess/advanced-nova-media-librar
     - `yarn install` 
     - `yarn run watch` 
     - Work hard 🤘
-    - `yarn npm production` when job is finished
+    - `yarn run production` when job is finished
     - Make a PR
