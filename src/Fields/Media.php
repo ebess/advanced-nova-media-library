@@ -439,4 +439,13 @@ class Media extends Field
 
         return $this;
     }
+
+    /**
+     * Force the field to accept only one media
+     * @return self
+     */
+    public function single(): self
+    {
+        return $this->withMeta(['single' => true]);
+    }
 }

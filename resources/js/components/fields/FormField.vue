@@ -16,8 +16,8 @@
                     </a>
                     <div class="flex flex-row items-center">
                         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
-                                 v-model="value" :editable="!field.readonly" :removable="field.removable"
-                                 custom-properties :field="field" :multiple="field.multiple"
+                                 v-model="gallery" :editable="!field.readonly" :removable="field.removable"
+                                 custom-properties :field="field" :multiple="field.multiple && !field.single"
                                  :uploads-to-vapor="field.uploadsToVapor"
                                  :has-error="hasError" :first-error="firstError"/>
                     </div>
@@ -62,6 +62,7 @@ export default {
             existingMediaOpen: false,
             locales: Object.keys(this.field?.locales || {}),
             currentLocale: null,
+            gallery: [],
         }
     },
     mounted() {
@@ -71,6 +72,8 @@ export default {
                 this.changeTab(locale, true);
             }
         });
+
+        this.gallery = this.displayValue
     },
     computed: {
         openExistingMediaLabel() {
@@ -88,6 +91,11 @@ export default {
                 : this.value
         },
     },
+    watch: {
+        gallery(gallery) {
+            this.handleChange(gallery)
+        },
+    },
     methods: {
         changeTab(locale, dontEmit) {
             if (this.currentLocale !== locale) {
@@ -96,6 +104,8 @@ export default {
                 }
 
                 this.currentLocale = locale;
+
+                this.gallery = this.displayValue
             }
         },
         /*
@@ -104,7 +114,7 @@ export default {
         setInitialValue() {
             let value = this.field.value || [];
 
-            if (!this.field.multiple && !this.field.translatable) {
+            if ((!this.field.multiple || this.field.single) && !this.field.translatable) {
                 value = value.slice(0, 1);
             }
 
@@ -181,12 +191,19 @@ export default {
         addExistingItem(item) {
             let copiedArray = this.value.slice(0)
 
-            if (!this.field.multiple && !this.field.translatable) {
+            if ((!this.field.multiple || this.field.single) && !this.field.translatable) {
                 copiedArray.splice(0, 1);
+            } else if (this.field.single && this.field.translatable) {
+                const index = copiedArray.findIndex((element) => {
+                    return element.custom_properties.locale === this.currentLocale;
+                });
+                copiedArray.splice(index, index >= 0 ? 1 : 0);
             }
 
             copiedArray.push(_.set(item, 'custom_properties.locale', this.currentLocale));
             this.value = copiedArray
+
+            this.gallery = this.displayValue
         }
     },
 };
