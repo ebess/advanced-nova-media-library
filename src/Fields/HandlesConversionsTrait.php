@@ -7,34 +7,23 @@ namespace Ebess\AdvancedNovaMediaLibrary\Fields;
  */
 trait HandlesConversionsTrait
 {
-    /**
-     * @return $this
-     */
-    public function conversionOnIndexView(string $conversionOnIndexView)
+    public function conversionOnIndexView(string $conversionOnIndexView): static
     {
         return $this->withMeta(compact('conversionOnIndexView'));
     }
 
-    /**
-     * @return $this
-     */
-    public function conversionOnDetailView(string $conversionOnDetailView)
+
+    public function conversionOnDetailView(string $conversionOnDetailView): static
     {
         return $this->withMeta(compact('conversionOnDetailView'));
     }
 
-    /**
-     * @return $this
-     */
-    public function conversionOnForm(string $conversionOnForm)
+    public function conversionOnForm(string $conversionOnForm): static
     {
         return $this->withMeta(compact('conversionOnForm'));
     }
 
-    /**
-     * @return $this
-     */
-    public function conversionOnPreview(string $conversionOnPreview)
+    public function conversionOnPreview(string $conversionOnPreview): static
     {
         return $this->withMeta(compact('conversionOnPreview'));
     }
