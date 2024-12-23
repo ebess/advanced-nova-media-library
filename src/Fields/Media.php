@@ -217,10 +217,10 @@ class Media extends Field
     }
 
     /**
-     * @param HasMedia|HasMediaTrait $resource
+     * @param HasMedia|InteractsWithMedia $resource
      * @param null $attribute
      */
-    public function resolve($resource, $attribute = null)
+    public function resolve($resource, ?string $attribute = null): void
     {
         $collectionName = $attribute ?? $this->attribute;
 
