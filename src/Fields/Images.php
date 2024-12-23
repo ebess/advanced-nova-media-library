@@ -10,7 +10,7 @@ class Images extends Media
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
-        $this->croppable();
+        $this->croppable(config('nova-media-library.default-croppable', true));
     }
 
     /**
@@ -25,7 +25,7 @@ class Images extends Media
         return $this;
     }
 
-    public function croppable(bool $croppable = true): self
+    public function croppable(bool $croppable): self
     {
         return $this->withMeta(compact('croppable'));
     }
@@ -35,8 +35,18 @@ class Images extends Media
         return $this->withMeta(['croppingConfigs' => $configs]);
     }
 
+    public function showStatistics(bool $showStatistics = true): self
+    {
+        return $this->withMeta(compact('showStatistics'));
+    }
+
     public function showDimensions(bool $showDimensions = true): self
     {
-        return $this->withMeta(compact('showDimensions'));
+        return $this->showStatistics();
+    }
+
+    public function mustCrop(bool $mustCrop = true): self
+    {
+        return $this->withMeta(['mustCrop' => $mustCrop]);
     }
 }

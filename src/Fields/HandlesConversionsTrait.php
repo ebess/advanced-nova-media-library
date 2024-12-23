@@ -27,7 +27,7 @@ trait HandlesConversionsTrait
         return $this->withMeta(compact('conversionOnPreview'));
     }
 
-    public function getConversionUrls(\Spatie\MediaLibrary\Models\Media $media): array
+    public function getConversionUrls(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
     {
         return [
             // original needed several purposes like cropping
@@ -36,6 +36,18 @@ trait HandlesConversionsTrait
             'detailView' => $media->getFullUrl($this->meta['conversionOnDetailView'] ?? ''),
             'form' => $media->getFullUrl($this->meta['conversionOnForm'] ?? ''),
             'preview' => $media->getFullUrl($this->meta['conversionOnPreview'] ?? ''),
+        ];
+    }
+
+    public function getTemporaryConversionUrls(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): array
+    {
+        return [
+            // original needed several purposes like cropping
+            '__original__' => $media->getTemporaryUrl($this->secureUntil),
+            'indexView' => $media->getTemporaryUrl($this->secureUntil, $this->meta['conversionOnIndexView'] ?? ''),
+            'detailView' => $media->getTemporaryUrl($this->secureUntil, $this->meta['conversionOnDetailView'] ?? ''),
+            'form' => $media->getTemporaryUrl($this->secureUntil, $this->meta['conversionOnForm'] ?? ''),
+            'preview' => $media->getTemporaryUrl($this->secureUntil, $this->meta['conversionOnPreview'] ?? ''),
         ];
     }
 }

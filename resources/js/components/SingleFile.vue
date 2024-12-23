@@ -11,10 +11,10 @@
         {{ image.file_name }}
       </span>
       <a v-if="isCustomPropertiesEditable" class="edit edit--file ml-2" href="#" @click.prevent="$emit('edit-custom-properties')">
-        <icon type="edit" view-box="0 0 20 20" width="16" height="16" />
+        <icon type="pencil" view-box="0 0 20 20" width="16" height="16" />
       </a>
       <a v-if="removable" class="delete ml-2" href="#" @click.prevent="$emit('remove')">
-        <icon type="delete" view-box="0 0 20 20" width="16" height="16" />
+        <icon type="trash" view-box="0 0 20 20" width="16" height="16" />
       </a>
     </div>
   </gallery-item>
@@ -30,7 +30,7 @@
     },
     computed: {
       downloadUrl() {
-        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}` : null;
+        return this.image.id ? `/nova-vendor/ebess/advanced-nova-media-library/download/${this.image.id}?uuid=${this.image.uuid}` : null;
       },
     }
   };
