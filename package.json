@@ -24,6 +24,7 @@
         "@inertiajs/inertia": "^0.11.0",
         "axios": "^0.26.1",
         "form-backend-validation": "^2.4.0",
+        "laravel-nova-ui": "^0.4.12",
         "laravel-vapor": "^0.4.0",
         "lodash": "^4.17.21",
         "slug": "^0.9.1",

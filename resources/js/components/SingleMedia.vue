@@ -2,19 +2,19 @@
   <gallery-item class="gallery-item-image" :class="{ 'show-statistics': field.showStatistics }">
     <div class="gallery-item-info p-3">
       <a v-if="downloadUrl" class="icon download" :href="downloadUrl" title="Download">
-        <Icon type="download" view-box="0 0 20 22" width="16" height="16"/>
+        <Icon name="download"/>
       </a>
       <a v-if="removable" class="icon delete" href="#" @click.prevent="$emit('remove')" title="Remove">
-        <Icon type="trash" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon name="trash"/>
       </a>
       <a v-if="isCustomPropertiesEditable" class="icon edit" href="#" @click.prevent="$emit('edit-custom-properties')" title="Edit custom properties">
-        <Icon type="pencil" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon name="pencil"/>
       </a>
       <a class="preview" href="#" @click.prevent="showPreview">
-        <Icon type="search" view-box="0 0 20 20" width="30" height="30"/>
+        <Icon name="magnifying-glass"/>
       </a>
       <a v-if="croppable" class="icon crop" href="#" @click.prevent="$emit('crop-start', image)">
-        <scissors-icon brand="var(--colors-black)" view-box="0 0 20 20" width="16" height="16"/>
+        <Icon name="scissors"/>
       </a>
     </div>
     <img :src="src" :alt="image.name" ref="image" class="gallery-image">
@@ -30,13 +30,13 @@
 </template>
 
 <script>
-  import ScissorsIcon from './icons/Scissors';
+  import { Icon } from 'laravel-nova-ui'
   import GalleryItem from './GalleryItem';
 
   export default {
     components: {
-      ScissorsIcon,
       GalleryItem,
+      Icon,
     },
     props: ['image', 'field', 'removable', 'editable', 'isCustomPropertiesEditable'],
     data: () => ({
@@ -204,7 +204,7 @@
         right: 0;
 
         .preview {
-          color: var(--colors-black);
+          color: rgb(var(--colors-primary-500));
         }
 
         .delete {
@@ -261,7 +261,7 @@
     }
 
     .edit {
-      right: 30px;
+      left: 10px;
     }
 
     .download {
