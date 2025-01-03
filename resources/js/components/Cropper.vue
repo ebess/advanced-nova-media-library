@@ -10,16 +10,31 @@
           />
         </div>
         <div class="bg-30 px-6 py-3 footer rounded-lg">
-          <OutlineButton v-if="!cropAnyway" type="button"  @click="onCancel">{{__('Cancel')}}</OutlineButton>
+          <Button
+            v-if="!cropAnyway"
+            @click.prevent="onCancel"
+            variant="link"
+            :label="__('Cancel')"
+          />
 
-          <button v-if="!cropAnyway" type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click.prevent="rotate(-90)" :title="__('Rotate -90')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M17.026 22.957c10.957-11.421-2.326-20.865-10.384-13.309l2.464 2.352h-9.106v-8.947l2.232 2.229c14.794-13.203 31.51 7.051 14.794 17.675z"/></svg>
-          </button>
-          <button v-if="!cropAnyway" type="button" class="btn btn-link text-80 font-normal h-9 px-3" @click.prevent="rotate(+90)" :title="__('Rotate +90')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M6.974 22.957c-10.957-11.421 2.326-20.865 10.384-13.309l-2.464 2.352h9.106v-8.947l-2.232 2.229c-14.794-13.203-31.51 7.051-14.794 17.675z"/></svg>
-          </button>
+          <Button v-if="!cropAnyway"
+            @click.prevent="rotate(-90)"
+            variant="action"
+            :title="__('Rotate -90')"
+            icon="arrow-uturn-left"
+          />
+          <Button v-if="!cropAnyway"
+            @click.prevent="rotate(+90)"
+            variant="action"
+            :title="__('Rotate +90')"
+            icon="arrow-uturn-right"
+          />
 
-          <DefaultButton type="button" class="btn btn-default btn-primary" @click="onSave" ref="updateButton">{{__('Update')}}</DefaultButton>
+          <Button
+            @click.prevent="onSave"
+            variant="solid"
+            :label="__('Update')"
+          />
         </div>
       </card>
     </Modal>
@@ -29,10 +44,12 @@
   import Converter from '../converter';
   import { Cropper } from 'vue-advanced-cropper'
   import 'vue-advanced-cropper/dist/style.css';
+  import { Button} from "laravel-nova-ui";
 
   export default {
     components: {
-      Cropper
+      Cropper,
+      Button,
     },
     props: {
       image: Object,
