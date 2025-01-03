@@ -18,34 +18,34 @@ class Images extends Media
      * @param $singleImageRules
      * @return Images
      */
-    public function singleImageRules($singleImageRules): self
+    public function singleImageRules($singleImageRules): static
     {
         $this->singleMediaRules = $singleImageRules;
 
         return $this;
     }
 
-    public function croppable(bool $croppable): self
+    public function croppable(bool $croppable): static
     {
         return $this->withMeta(compact('croppable'));
     }
 
-    public function croppingConfigs(array $configs): self
+    public function croppingConfigs(array $configs): static
     {
         return $this->withMeta(['croppingConfigs' => $configs]);
     }
 
-    public function showStatistics(bool $showStatistics = true): self
+    public function showStatistics(bool $showStatistics = true): static
     {
         return $this->withMeta(compact('showStatistics'));
     }
 
-    public function showDimensions(bool $showDimensions = true): self
+    public function showDimensions(bool $showDimensions = true): static
     {
         return $this->showStatistics();
     }
 
-    public function mustCrop(bool $mustCrop = true): self
+    public function mustCrop(bool $mustCrop = true): static
     {
         return $this->withMeta(['mustCrop' => $mustCrop]);
     }
