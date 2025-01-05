@@ -19,7 +19,7 @@
           <!-- Search -->
           <div class="px-4 self-center">
             <div class="relative">
-              <icon type="search" class="inline-block absolute ml-2 text-gray-400" width="20" style="top:4px;"/>
+              <Icon name="magnifying-glass" class="inline-block absolute ml-2 text-gray-400" style="top:4px;"/>
               <input type="search"
                      v-bind:placeholder="__('Search by name or file name')"
                      class="appearance-none rounded-full h-8 pl-10 w-full bg-gray-100 dark:bg-gray-800 focus:bg-white focus:outline-none focus:ring"
@@ -32,7 +32,11 @@
 
           <!-- Close -->
           <div class="px-4 ml-auto self-center">
-            <OutlineButton type="button" @click="close">{{ __('Close') }}</OutlineButton>
+            <Button
+              @click.prevent="close"
+              variant="link"
+              :label="__('Close')"
+              />
           </div>
         </div>
 
@@ -50,7 +54,13 @@
 
         <!-- Next page -->
         <div class="flex-shrink border-t dark:border-gray-700 pt-3 mt-4 text-right" v-if="showNextPage">
-          <DefaultButton type="button" class="ml-auto" @click="nextPage">{{ __('Load Next Page') }}</DefaultButton>
+          <Button
+            @click.prevent="nextPage"
+            variant="solid"
+            class="ml-auto"
+            :disabled="loading"
+            :label="loading ? __('Loading...') : __('Load Next Page')"
+          />
         </div>
       </div>
     </card>
@@ -58,12 +68,15 @@
 </template>
 
 <script>
+import { Button, Icon } from 'laravel-nova-ui'
 import ExistingMediaItem from './ExistingMediaItem';
 import debounce from 'lodash/debounce';
 
 export default {
   components: {
-    ExistingMediaItem
+    ExistingMediaItem,
+    Button,
+    Icon,
   },
   data() {
     let aThis = this;

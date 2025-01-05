@@ -7,9 +7,12 @@
                  :has-error="hasError" :first-error="firstError"/>
 
         <div v-if="field.existingMedia">
-          <OutlineButton type="button" class="mt-2" @click.prevent="existingMediaOpen = true">
-            {{ openExistingMediaLabel }}
-          </OutlineButton>
+          <Button
+            class="mt-2"
+            icon="arrows-pointing-out"
+            :label="openExistingMediaLabel"
+            @click.prevent="existingMediaOpen = true"
+            />
           <existing-media :open="existingMediaOpen" @close="existingMediaOpen = false" @select="addExistingItem"/>
         </div>
         <help-text
@@ -30,10 +33,12 @@ import FullWidthField from '../FullWidthField';
 import ExistingMedia from '../ExistingMedia';
 import objectToFormData from 'object-to-formdata';
 import get from 'lodash/get';
+import {Button} from "laravel-nova-ui";
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
   components: {
+    Button,
     Gallery,
     FullWidthField,
     ExistingMedia
