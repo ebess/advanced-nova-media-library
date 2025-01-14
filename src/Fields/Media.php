@@ -35,6 +35,8 @@ class Media extends Field
 
     protected $defaultValidatorRules = [];
 
+    protected string $disk = '';
+
     public $meta = ['type' => 'media'];
 
     public function serializeMediaUsing(callable $serializeMediaUsing): self
@@ -135,6 +137,13 @@ class Media extends Field
     public function setAllowedFileTypes(array $types)
     {
         return $this->withMeta(['allowedFileTypes' => $types]);
+    }
+
+    public function disk(string $diskName): self
+    {
+        $this->disk = $diskName;
+
+        return $this;
     }
 
     /**
@@ -255,7 +264,7 @@ class Media extends Field
                     );
                 }
 
-                $media = $media->toMediaCollection($collection);
+                $media = $media->toMediaCollection($collection, $this->disk);
 
                 // fill custom properties for recently created media
                 $this->fillMediaCustomPropertiesFromRequest($request, $media, $index, $collection, $requestAttribute);
