@@ -11,10 +11,11 @@
         "@vue/compiler-sfc": "^3.2.33",
         "cross-env": "^5.0.0",
         "laravel-mix": "^6.0",
-        "object-to-formdata": "^1.5.2",
-        "resolve-url-loader": "2.3.1",
+        "laravel-nova": "^1.0",
+        "object-to-formdata": "^1.6.4",
+        "resolve-url-loader": "5.0.0",
         "sass": "^1.19.0",
-        "sass-loader": "7.*",
+        "sass-loader": "^16.0.5",
         "vue-loader": "^16.2.0",
         "vue-template-compiler": "^2.6.10"
     },
@@ -25,12 +26,12 @@
         "axios": "^0.26.1",
         "form-backend-validation": "^2.4.0",
         "laravel-nova-ui": "^0.4.12",
-        "laravel-vapor": "^0.4.0",
+        "laravel-vapor": "^0.7.1",
         "lodash": "^4.17.21",
-        "slug": "^0.9.1",
-        "vue": "^2.5.17",
-        "vue-advanced-cropper": "^2.8.1",
+        "slug": "^10.0.0",
+        "vue": "^3.0",
+        "vue-advanced-cropper": "^2.8.9",
         "vuedraggable": "^4.1.0",
-        "vuex": "^4.0.2"
+        "vuex": "^4.1.0"
     }
 }
