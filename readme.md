@@ -294,7 +294,7 @@ Images::make('Image 1', 'img1')
     ->temporary(now()->addMinutes(5))
 
 Files::make('Multiple files', 'multiple_files')
-    ->temporary(now()->addMinutes(10),
+    ->temporary(now()->addMinutes(10)),
 ```
 
 **Note**: This feature does not work with the existing media feature. 
