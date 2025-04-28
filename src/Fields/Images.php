@@ -52,7 +52,7 @@ class Images extends Media
 
     public function allowSvg(bool $allowSvg = false): self
     {
-        if($allowSvg) {
+        if($allowSvg && intval(app()->version()) >= 12) {
             $this->defaultValidatorRules = ['image:allow_svg'];
         }
         return $this;
