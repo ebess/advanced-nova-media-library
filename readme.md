@@ -235,6 +235,16 @@ Files::make('Multiple files', 'multiple_files')
     ]);
 ```
 
+It is possible to open the custom properties modal automatically right after uploading a file (or after selecting an existing image).
+```php
+Images::make('Gallery')
+    ->openPropertiesModalAfterUpload();
+    ->customProperties([
+        Boolean::make('Active'),
+        Markdown::make('Description'),
+    ]);
+```
+
 ## Show image statistics *(size, dimensions, type)*
 
 ![Image statistics](https://raw.githubusercontent.com/ebess/advanced-nova-media-library/master/docs/show-statistics.png)
