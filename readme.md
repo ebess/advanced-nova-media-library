@@ -238,7 +238,7 @@ Files::make('Multiple files', 'multiple_files')
 It is possible to open the custom properties modal automatically right after uploading a file (or after selecting an existing image).
 ```php
 Images::make('Gallery')
-    ->openPropertiesModalAfterUpload();
+    ->openPropertiesModalAfterUpload()
     ->customProperties([
         Boolean::make('Active'),
         Markdown::make('Description'),
