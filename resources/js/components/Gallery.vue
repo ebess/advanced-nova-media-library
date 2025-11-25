@@ -203,8 +203,8 @@ export default {
         }
         this.images = copiedArray
 
-        // Auto-open custom properties modal after upload
-        if (this.customPropertiesFields.length > 0) {
+        // Auto-open custom properties modal after upload if enabled
+        if (this.field.openPropertiesModalAfterUpload && this.customPropertiesFields.length > 0) {
           this.$nextTick(() => {
             this.customPropertiesImageIndex = this.images.length - 1;
           });

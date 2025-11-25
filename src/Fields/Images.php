@@ -49,4 +49,9 @@ class Images extends Media
     {
         return $this->withMeta(['mustCrop' => $mustCrop]);
     }
+
+    public function openPropertiesModalAfterUpload(bool $open = true): self
+    {
+        return $this->withMeta(['openPropertiesModalAfterUpload' => $open]);
+    }
 }
