@@ -202,6 +202,13 @@ export default {
           copiedArray = [fileData];
         }
         this.images = copiedArray
+
+        // Auto-open custom properties modal after upload
+        if (this.customPropertiesFields.length > 0) {
+          this.$nextTick(() => {
+            this.customPropertiesImageIndex = this.images.length - 1;
+          });
+        }
       };
     },
     retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
