@@ -1,4 +1,19 @@
-# Laravel Advanced Nova Media Library
+# ⚠️ Maintenance Status
+
+**Important Notice:** This package is currently seeking new maintainers.
+
+As the current maintainer, I no longer have access to Laravel Nova which is required for testing and developing this package. I'm unable to:
+- Test changes effectively
+- Verify bug reports
+- Implement new features
+
+**Looking for:** 
+- Co-maintainers with active Laravel Nova subscriptions
+- Someone to take over primary maintenance
+
+If you're interested in helping maintain this package, please [open an issue](https://github.com/ebess/advanced-nova-media-library/issues/new).
+
+## Laravel Advanced Nova Media Library
 
 Manage images of [spatie's media library package](https://github.com/spatie/laravel-medialibrary). Upload multiple
 images and order them by drag and drop.
