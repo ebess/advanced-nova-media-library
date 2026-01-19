@@ -6,7 +6,7 @@ class Images extends Media
 {
     protected $defaultValidatorRules = ['image'];
 
-    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    public function __construct($name, $attribute = null, ?callable $resolveCallback = null)
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
@@ -48,5 +48,10 @@ class Images extends Media
     public function mustCrop(bool $mustCrop = true): self
     {
         return $this->withMeta(['mustCrop' => $mustCrop]);
+    }
+
+    public function openPropertiesModalAfterUpload(bool $open = true): self
+    {
+        return $this->withMeta(['openPropertiesModalAfterUpload' => $open]);
     }
 }
