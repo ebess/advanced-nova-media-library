@@ -1,5 +1,5 @@
 <template>
-  <component :is="field.fullSize ? 'FullWidthField' : 'DefaultField'" :field="field" :errors="errors" :show-help-text="showHelpText">
+  <component :is="field.fullSize ? 'FullWidthField' : 'DefaultField'" :field="currentField" :errors="errors" :show-help-text="showHelpText">
     <template #field>
       <div :class="{'px-8 pt-6': field.fullSize}">
         <gallery slot="value" ref="gallery" v-if="hasSetInitialValue"
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {FormField, HandlesValidationErrors} from 'laravel-nova';
+import {DependentFormField, HandlesValidationErrors} from 'laravel-nova';
 import Gallery from '../Gallery';
 import FullWidthField from '../FullWidthField';
 import ExistingMedia from '../ExistingMedia';
@@ -36,7 +36,7 @@ import get from 'lodash/get';
 import {Button} from "laravel-nova-ui";
 
 export default {
-  mixins: [FormField, HandlesValidationErrors],
+  mixins: [DependentFormField, HandlesValidationErrors],
   components: {
     Button,
     Gallery,
