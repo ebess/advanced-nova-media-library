@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Http\Middleware\Authenticate;
 
 class AdvancedNovaMediaLibraryServiceProvider extends ServiceProvider
 {
@@ -33,7 +34,7 @@ class AdvancedNovaMediaLibraryServiceProvider extends ServiceProvider
             return;
         }
 
-        Route::middleware(['nova'])
+        Route::middleware(['nova', Authenticate::class])
             ->prefix('nova-vendor/ebess/advanced-nova-media-library')
             ->group(__DIR__.'/../routes/api.php');
     }
