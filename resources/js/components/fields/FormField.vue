@@ -138,6 +138,15 @@ export default {
 
       copiedArray.push(item);
       this.value = copiedArray;
+
+      // Auto-open custom properties modal after selecting existing media if enabled
+      if (this.field.openPropertiesModalAfterUpload && (this.field.customPropertiesFields || []).length > 0) {
+        this.$nextTick(() => {
+          if (this.$refs.gallery) {
+            this.$refs.gallery.customPropertiesImageIndex = copiedArray.length - 1;
+          }
+        });
+      }
     }
   },
 };
