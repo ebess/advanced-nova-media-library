@@ -49,4 +49,12 @@ class Images extends Media
     {
         return $this->withMeta(['mustCrop' => $mustCrop]);
     }
+
+    public function allowSvg(bool $allowSvg = false): self
+    {
+        if($allowSvg && intval(app()->version()) >= 12) {
+            $this->defaultValidatorRules = ['image:allow_svg'];
+        }
+        return $this;
+    }
 }
