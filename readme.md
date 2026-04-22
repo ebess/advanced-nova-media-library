@@ -132,7 +132,7 @@ public function fields(Request $request)
 If you upload the same media files to multiple models and you do not want to select it from the file system
 all over again, use this feature. Selecting an already existing media will **copy it**.
 
-**Attention**: This feature will expose an endpoint to every user of your application to search existing media. 
+**Attention**: This feature will expose an endpoint to every Nova authenticated user of your application to search existing media. 
 If your media upload / custom properties on the media models are confidential, **do not enable this feature!** 
 
 * Publish the config files if you did not yet
