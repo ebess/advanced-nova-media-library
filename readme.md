@@ -137,7 +137,7 @@ If your media upload / custom properties on the media models are confidential, *
 
 * Publish the config files if you did not yet
 ```bash
-artisan vendor:publish --tag=nova-media-library
+php artisan vendor:publish --tag=nova-media-library
 ```
 * Enable this feature in config file *config/nova-media-library*
 ```php
