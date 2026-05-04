@@ -230,7 +230,7 @@ export default {
     },
     validateFileSize(file) {
       if (this.field.maxFileSize && ((file.size / 1024) > this.field.maxFileSize)) {
-        this.$toasted.error(this.__(
+        Nova.error(this.__(
           'Maximum file size is :amount MB',
           {amount: String(this.field.maxFileSize / 1024)}
         ));
@@ -249,7 +249,7 @@ export default {
         }
       }
 
-      this.$toasted.error(this.__(
+      Nova.error(this.__(
         'File type must be: :types',
         {types: this.field.allowedFileTypes.join(' / ')}
       ));
