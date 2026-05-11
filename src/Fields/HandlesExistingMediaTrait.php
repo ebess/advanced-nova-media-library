@@ -32,6 +32,10 @@ trait HandlesExistingMediaTrait
                 $mediaClass = config('media-library.media_model');
                 $existingMedia = $mediaClass::find($model_id);
 
+                if (! $existingMedia) {
+                    return null;
+                }
+
                 // Mimic copy behaviour
                 // See Spatie\MediaLibrary\Models\Media->copy()
                 $temporaryDirectory = TemporaryDirectory::create();
@@ -56,6 +60,6 @@ trait HandlesExistingMediaTrait
                 $temporaryDirectory->delete();
 
                 return $media->getKey();
-            });
+            })->filter();
     }
 }
