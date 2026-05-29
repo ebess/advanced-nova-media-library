@@ -36,10 +36,13 @@
     <span v-if="editable" class="">
       <input :id="`__media__${field.attribute}`" :multiple="multiple" ref="file" class="form-file-input" type="file" :disabled="uploading" @change="add"/>
       <label :for="`__media__${field.attribute}`" class="">
-        <DefaultButton type="button" @click.prevent="focusFileInput">
-          <template v-if="uploading">{{ __('Uploading') }} ({{ uploadProgress }}%)</template>
-          <template v-else>{{ label }}</template>
-        </DefaultButton>
+          <Button
+            variant="solid"
+            @click.prevent="focusFileInput"
+            :icon="uploading ? 'arrows-up-down' : 'plus'"
+            :disabled="uploading"
+            :label="uploading ? __('Uploading') + ' (' + uploadProgress + '%)' : label"
+          />
       </label>
     </span>
 
@@ -61,6 +64,7 @@ import SingleFile from './SingleFile';
 import Cropper from './Cropper';
 import CustomProperties from './CustomProperties';
 import Draggable from 'vuedraggable';
+import { Button } from 'laravel-nova-ui'
 
 export default {
   components: {
@@ -69,6 +73,7 @@ export default {
     SingleFile,
     CustomProperties,
     Cropper,
+    Button,
   },
   props: {
     hasError: Boolean,
